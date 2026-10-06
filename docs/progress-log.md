@@ -1,0 +1,198 @@
+# Progress log
+
+One entry per completed task, newest on top. Format: Did / Files / Issues / Next.
+
+### 2026-10-06 — Phase 1.5: documentation alignment (documentation only, D-040)
+- Did: made the approved WordPress architecture official across the docs: PRD v1.8 (Astra Free + Elementor Free v3 + minimal Astra child theme + Novamira CLI; Elementor Free limitations; projects as static cards + one Elementor page each; Global Kit and eyebrow; responsive and animation architecture; WP phases replace former Phases 4–5; licence-PDF question added); CLAUDE.md (WordPress build section, roadmap, current state); `docs/wp-mapping.md` restructured into Implemented / Planned / Known limitations / Historical; D-040 added, D-030 marked superseded, D-038 eyebrow item marked approved; README and the spike steps marked historical where they described the old plan.
+- Not changed: WordPress, Elementor, Astra, the homepage, the child theme, CSS/JS, assets, plugins, database, the static prototype. No Novamira write operations.
+- Open: confirm the "27 projects" breakdown (22 projects + Wall Cladding showcase + 4 team-experience buildings); licence PDFs; SEO plugin; starter-content cleanup.
+- Next: WP Phase 2 (not started; waiting for the owner's prompt).
+
+### 2026-10-06 — WP Phase 1 complete (summary)
+- WP Phase 1 (foundation + English homepage) is complete and verified; **WP Phase 2 has not started.**
+- Built: Astra Free header and footer (Header/Footer Builder), Elementor Global Kit, 191 images + company profile PDF migrated with alt text, minimal Astra child theme (custom CSS/JS), CTA band as an Elementor saved template, homepage rebuilt in Containers + native widgets (10 sections). Image-wipe regression fixed (D-039).
+- Verified (results as logged in the two entries below): `wp-check.mjs` 20/20 functional checks; seven widths (320, 375, 390, 768, 1024, 1280, 1440) with no console errors and no horizontal overflow; reduced motion passed; image wipes match the prototype; Elementor editor opens, saves and re-renders the page.
+- Decisions: D-038 (Astra + Elementor architecture), D-039 (image reveal fix).
+
+### 2026-10-06 — WP phase 1 fix: scroll-triggered image wipes (D-039)
+- Did: diagnosed the 3 image wipes (hero, chairman, why-us): observer fired correctly, but Elementor's widget `transition` rule overrode the clip-path transition, so images snapped open; hero also missed its 200 ms delay. Fixed by specificity (`.tp-js .elementor-element.tp-img-reveal`), added `tp-delay-1…5`, added `tp-delay-2` to the hero image widget (single setting change, no rebuild).
+- Files: `wp-theme/taameer-astra-child/assets/css/taameer.css`, `scripts/wp/05-home.php` (class), `scripts/wp/06-fix-hero-reveal-delay.php` (new), `scripts/wp/wp-reveal-check.mjs` (new), `source/screenshots/wp-phase-1/` (refreshed).
+- Verified: `wp-reveal-check.mjs` slow scroll from the top at 320/375/390/768/1024/1280/1440: all wipes animate 1.3 s clip-path (hero +0.2 s), trigger at the prototype's point (frame top ≈ 680–780 px of the viewport, within one 120 px scroll step of the static site), none early, all finish open, open again after a reload mid-page, no overflow, no console errors; reduced motion: nothing masked at any width. `wp-check.mjs` 20/20; `wp-shots.mjs` 7 widths + reduced 0 overflow / 0 errors; `wp-editor-check.mjs` open/save/re-render OK and classes kept. Transient Google Fonts timeouts during one run were re-run clean (network, not the site).
+- Next: owner review; STOP (no Phase 2).
+
+### 2026-10-06 — WP phase 1: Astra + Elementor foundation and Homepage (owner prompt `docs/prompts/taameer-wp-phase-1-prompt.md`, D-038)
+- Did: foundation (site identity, https URLs, Elementor v3 feature set pinned, child theme active); Astra Header/Footer Builder, menus, footer widgets; Elementor Global Kit (7 colours, 14 typography styles, buttons, 1320 px layout, breakpoints 1023/767); 191 images + company profile PDF in the Media Library with alt text; CTA band as an Elementor saved template; Home page (10 sections) in Containers + native widgets, set as the static front page; child theme `wp-theme/taameer-astra-child/`.
+- Files: `wp-theme/taameer-astra-child/{style.css,functions.php,assets/css/taameer.css,assets/js/taameer.js}`, `scripts/wp/{00-alt-map.py,alt-map.json,01-foundation.php,02-media.php,03-astra.php,04-kit.php,05-home.php,wp-shots.mjs,wp-check.mjs,wp-editor-check.mjs}`, `source/screenshots/wp-phase-1/`, docs (D-038, wp-mapping "WP phase 1 build").
+- Verified: `wp-check.mjs` 20/20 (one h1, alts, no broken images, entrance animations complete, counters 2015/100, sticky header, before/after keyboard, marquee, split headline name, mobile menu open/Esc/focus, reduced motion, no console errors); `wp-shots.mjs` 320/375/390/768/1024/1280/1440 + reduced motion: 0 overflow, 0 errors; `wp-editor-check.mjs`: editor opens (230 elements), saves via Update, front end renders the same (253 elements), 0 editor console errors (the editor drops default-valued settings only). PHP error log: nothing from the theme/build.
+- Issues: 18 links 404 by design (later-phase pages). The two licence "PDFs" are JPEGs (not uploaded). Novamira MCP server fails (CONNECTION_CLOSED); the CLI works with `NODE_OPTIONS=--use-system-ca`. One upload loop retried after Novamira output errors (PDF thumbnail warnings); verified no duplicates (192 attachments, all mapped).
+- Next: owner visual review of https://taameer.local/; STOP (no other pages until approved).
+
+### 2026-10-01 — Phase 4 spike · Part B: owner steps written
+- Did: `docs/spike-owner-steps.md` (variables, six global classes with responsive/hover/filter, Spike EN page, form, loop, Spike AR via Polylang, export). Waiting for the owner's "done" before Part C.
+- Next: Part C checks.
+
+### 2026-10-01 — Phase 4 spike · Part A: environment and minimal child theme
+- Did: `wp db check` OK after `DB_HOST=localhost:10011` (D-037). Versions: WordPress 7.1.2, PHP 8.2.29, MySQL 8.4.0, URL http://taameer.local. Installed and activated Hello Elementor 3.5.1, Elementor 4.3.3, Polylang 3.8.10 (nothing else). **Atomic editor needs no toggle:** `e_atomic_elements` (beta) and `e_opt_in_v4` (alpha) are active by default (`state=default`); `container`, `nested-elements`, `e_optimized_markup` also on; `e_optimized_css_files`, `e_assets_manager` off. Child theme `wp-theme/taameer-child/` linked into Local by directory junction; `wp theme list` sees it, activated; the four files are enqueued after Elementor (verified in the front-end HTML). Polylang EN (default, no prefix) + AR (`/ar/`, RTL); `/ar/` returns 200. 2 throwaway `tp_spike_project` posts (ids 7, 8).
+- Files: `wp-theme/taameer-child/{style.css,functions.php,assets/css/{animations,theme}.css,assets/js/{animations,interactions}.js}`, `wp-cli.yml`.
+- Issues: Bash cannot run `wp.bat` (spaces in path); use PowerShell. `wp rewrite structure` prints a "Could not open input file: C:\Program" hard-flush error but the structure is saved.
+- Next: Part B, `docs/spike-owner-steps.md`, then wait for the owner.
+
+### 2026-10-01 — Phase 3 · owner fixes before the client review
+- Did: feminine job titles (Nicole Rowe: مديرة الموارد البشرية الإقليمية; Maitha Ahli: مالكة Bella Cure Beauty Lounge; gender ⚠ removed); Carpentry LLC is now نجارة تعمير بلس ش.ذ.م.م (trade license, PDF p8; ⚠ removed); R11 marked resolved; pages regenerated (`build_ar.py`), `check-partials` and `check-links` OK, `docs/ar-copy-review.md` regenerated (43 rows left marked ⚠: names, Chairman's message, translated letters). LCP diagnosis on ar/services recorded as D-036 (LCP element is the first text paragraph; render delay 89% from render-blocking CSS/fonts and the 1 s `tp-reveal` fade; images are not the cause).
+- ar-test.mjs, repeated runs. Failures seen: (1) menu focus check, **timing**: `interactions.js` moves focus one animation frame after opening and the test read it synchronously; the test now waits for focus (fixed). (2) `ERR_CONNECTION_REFUSED` / `ERR_NO_BUFFER_SPACE` on local images and fonts under `python -m http.server`'s small connection backlog, and (3) `ERR_CONNECTION_TIMED_OUT` on the Google Fonts request when the network from this machine was unreliable: both **environmental, not product bugs**. Final three consecutive runs against a server with a larger backlog: run 1 51/52 (only the Google Fonts timeout), runs 2 and 3 52/52.
+- Next: client review of docs/ar-copy-review.md; Phase 4 not started.
+
+### 2026-10-01 — Phase 3 · Parts B–E: Arabic glossary, content, pages, checks
+- Did: **B** `docs/glossary-ar.md`. **C** every `ar` field in `data/*.json` (177 strings, `scripts/ar_data.py`). **D** the 8 pages in `ar/` generated by `scripts/build_ar.py` from the English pages (`scripts/ar_text.py` holds the page copy): `lang="ar" dir="rtl"`, Arabic fonts only on Arabic pages, hreflang/canonical live in both languages, language switcher to the equivalent page (project keeps `?id=`), `<bdi>` around Latin runs, `dir="ltr"` on tel/mailto/WhatsApp/Instagram links, "ترجمة عن الأصل الإنجليزي" labels on testimonial excerpts. Arabic typography is a `:lang(ar)` token block in `tokens.css` (text-transform, italics and quotation marks became tokens). String tables for Arabic in `interactions.js`, `projects.js`, `project-page.js`, `contact-form.js`. **E** `check-partials.py` (two partial sets + skeleton match), `check-links.py` (both languages, switcher + hreflang targets), `scripts/ar-test.mjs` (52 checks), `scripts/ar-screenshots.mjs` (32 shots in `source/screenshots/phase-3/`), Lighthouse, `docs/ar-copy-review.md` (`scripts/gen-ar-review.py`, 51 rows marked for confirmation). D-034, D-035; REPORT R10 (Arabic typography mapping, options a/b) and R11.
+- Verified: check-partials OK (16 pages), check-links OK (1200 references), contrast 0 failing, validate-tokens 0 violations, ar-test 52/52, English interaction-test and projects-test (49/49) still pass, Lighthouse Arabic accessibility 100 on all 8 pages (performance 57-82, reference only; details in `source/lighthouse/phase-3/scores.md`).
+- Issues found and fixed: stale licence assertions (Part 0); language switcher markup differed from the English skeleton; quotation marks, italic `<em>` and uppercase were hard-coded; phone numbers reorder under RTL without `dir="ltr"`; Arabic small text read too small (+8% size tokens); JSON-rendered images/data needed the `../` prefix on Arabic pages.
+- Next: client approval of the Arabic copy (`docs/ar-copy-review.md`); then Phase 4 (spike first). Not started.
+
+### 2026-10-01 — Phase 3 · Part B: Arabic glossary
+- Did: `docs/glossary-ar.md` (rules, company/business terms, navigation/interface, places in UAE forms, people, durations with number–noun agreement). People and the Carpentry LLC name are marked for client confirmation.
+- Next: Part C (Arabic content in data/*.json and page copy).
+
+### 2026-10-01 — Phase 3 · Part A done: font chosen
+- Did: owner chose El Messiri 500 (headings, quote, stats) + IBM Plex Sans Arabic. Token `--tp-font-display-ar` updated, `--tp-fw-display-ar: 500` added, D-034 written, test page reduced to the final combination (H1–H4 + stat + quote + body + mixed), screenshots at 1280 and 375; H3/H4 legible on mobile.
+- Next: Part B glossary.
+
+### 2026-10-01 — Phase 3 · Part A: Arabic heading font test (waiting for the owner)
+- Did: `source/font-test/index.html` (not part of the site): El Messiri, Noto Naskh Arabic and Amiri side by side with the real tokens, IBM Plex Sans Arabic body, no letter-spacing, heading line-height `--tp-lh-snug` (1.35; the English 1.05 clips Arabic marks). Screenshots `source/screenshots/phase-3/font-test-1280.png` and `-375.png`; no horizontal overflow. Chairman quote is a draft translation. CLAUDE.md docs index gained the `docs/prompts/` line.
+- Next: owner picks the font; record it in decisions.md, then Part B.
+
+### 2026-10-01 — Part 0 complete (PRD v1.6 decisions + animation options as classes)
+- Did: every animation `data-` attribute converted to a class and removed from all 7 pages: `data-tp-delay` → `tp-delay-1…5`; `data-tp-target/-suffix` dropped (`tp-counter` reads number and suffix from its text); `data-tp-from` → `tp-counter--year`; `data-tp-speed` → `tp-parallax--slow/--fast`; `data-tp-stagger="false"` inverted to a `tp-stagger` class in markup; `data-tp-start` (before/after) removed. New tokens `--tp-delay-step`, `--tp-parallax-speed-*`. Wrote D-033 (data-attribute rule + theme-template exception); wp-mapping: E2 header-menu wording, R1/R2/R3/R5/R6 resolved, R5 per-section replacement table; CLAUDE.md animation table updated; page comments for R2/R5 no longer say REPORT.
+- Verified: check-partials OK, contrast 0 failing, check-links OK, projects-test 49/49, interaction-test all pass, browser check (delay var, parallax speed 0.1, counters end at 2015 / 100+, no console errors). `interaction-test.mjs` licence block was stale since the R6 change (licences open the PDF directly, no lightbox): rewritten to assert that.
+- Note: delays are coarser (100 ms steps) and the default parallax is 0.1 (was 0.15); details in D-033.
+- Next: Part A (font test page).
+
+### 2026-10-01 — Phase 2B · Part F: Phase 2 acceptance
+- Did: `scripts/check-links.py` (602 references in 8 pages, project ids, anchors, data images: all resolve; ar/ links skipped until Phase 3); screenshots of all 8 pages plus project states (ongoing/render, before/after, not found) at 375/768/1280/1920 LTR, 375/1280 RTL and 1280 reduced motion in `source/screenshots/phase-2/`: 0 console/network issues, no horizontal overflow; `scripts/projects-test.mjs` 49/49 and `interaction-test.mjs` all PASS (filter bar, lightbox from About licenses / Services gallery / project gallery / testimonials letters, form validation, not-found); Lighthouse mobile via `scripts/lighthouse-run.mjs` → `source/lighthouse/phase-2/`; validate-tokens 0 violations; contrast 0 failing; no `ELEMENTOR:` annotation left. `serve.json` added (clean URLs redirect and dropped `?id=`/`?type=` under `npx serve`). Hero reveal delays shortened (LCP was the animated lead paragraph). `project.html` keeps a viewport of space while data loads (CLS 0.8 → 0).
+- Lighthouse (mobile, simulated slow 4G, `npx serve`): Accessibility 100 on all 8; Best Practices 96; SEO 100 (404 = 63 because of its required noindex); Performance index 83, about 89, services 88, projects 87, project 82, testimonials 90, contact 92, 404 91; CLS 0 and TBT 0 everywhere. Below 90: render-blocking resources dominate (7 stylesheets + Google Fonts, ~1.4–1.8 s est. savings; the no-build-step rule forbids concatenating them; WordPress ships one aggregated theme.css and Elementor's inlined CSS) and `uses-responsive-images` (project covers served at 1200px). Making fonts non-blocking cut CLS in the wrong direction (0.8 on the project page) and was reverted. Re-measure on the WordPress build.
+- Next: Phase 3 (Arabic RTL) — not started.
+
+### 2026-10-01 — Phase 2B · Part E: 404.html
+- Did: on-brand 404 (large "404" with the "+" motif, message, buttons to Home and Projects, 3 featured projects from the card template), `noindex`, no active nav item, no CTA band. Relative asset paths in the prototype; the WordPress `404.php` prints absolute theme URIs so it works from any path.
+- Verified: projects-test 404 block 2/2; check-partials OK on 8 pages.
+- Next: Part F acceptance.
+
+### 2026-10-01 — Phase 2B · Part D: contact.html
+- Did: page hero with the website's contact intro; contact details from `data/site.json` (address, office and mobile `tel:`, `mailto:`, WhatsApp, Instagram; no office hours); location block with the "+" motif and an "Open in Google Maps" button (no iframe); form (name, email, phone, project type = 6 services + Other, message, honeypot) with native constraints, inline errors linked by `aria-describedby`, `role="alert"` summary, focus to the first invalid field, success state, nothing sent (`contact-form.js`, PROTOTYPE ONLY). `GeneralContractor` JSON-LD on contact.html and index.html (parsed with `json.loads`).
+- Verified: projects-test contact block 7/7; check-partials OK.
+- Questions: success-message wording and whether the form should also reach a CRM; office hours.
+- Next: Part E 404.html.
+
+### 2026-10-01 — Phase 2B · Part C: testimonials.html
+- Did: page hero; 4 editorial letter rows written in plain HTML (company, author, title, date, excerpt, link to the related project where set, original letter as a prominent framed sheet with "View original letter" opening the lightbox as one group of 4); rows alternate sides on desktop; Jan's Noodles shows only the company name and its letter (no excerpt, nothing invented); shared CTA. Each letter has an id (`#atlas-copco`…) used by the project page's testimonial link.
+- Verified: projects-test testimonials block 4/4; check-partials OK.
+- Next: Part D contact.html.
+
+### 2026-10-01 — Phase 2B · Part B: project.html
+- Did: single template for `?id=<slug>` filled by `project-page.js` (PROTOTYPE ONLY): not-found state in the hero (message, links to Projects and Home, `noindex`, no redirect; also for missing id and the showcase), title/description/OG from the data, spec block, cover (framed below 1200px or portrait, capped at 80vh, never upscaled), 3D Visualization notice, CSS-columns masonry gallery in one lightbox group, before/after only with a before image, related testimonial, previous/next in Projects-grid order with wrapping, up to 3 related projects. Templates for spec rows and gallery items. `projects.js` `render` accepts options instead of mutating data attributes. All card links already use `project.html?id=<slug>` (verified in Home, Services, Projects).
+- Verified: `projects-test.mjs` ids/detail/notfound blocks all PASS: all 22 ids render one H1, title, full gallery and no console errors.
+- Next: Part C testimonials.html.
+
+### 2026-10-01 — Phase 2B · Part A: projects.html
+- Did: page hero ("Our Projects", intro from the website's portfolio text); filter bar (All / Construction / Renovation & Decoration / Fit-out / Landscaping with counts, `aria-pressed`, visually hidden `aria-live` "Showing N projects"); `?type=` read on load and written with `history.replaceState`; 22 project cards (showcase excluded) ordered ongoing first then newest completion; FLIP filter animation with the Web Animations API (instant under reduced motion; grid keeps its height during the move); cards cloned from `<template id="tp-project-card">`; "Team experience" section (About component and framing) below the grid; shared CTA. Even-column grid `tp-projects-grid--even` so hiding items never leaves gaps in the 7/5 rhythm.
+- Verified: `scripts/projects-test.mjs` filter block 20/20 (counts, ARIA, live region, URL state, invalid type, keyboard, no scroll jump, reduced motion, RTL); check-partials OK.
+- Files: projects.html, assets/css/theme.css, assets/css/inner-pages.css, assets/js/interactions.js (filter), scripts/projects-test.mjs, docs/wp-mapping.md.
+- Next: Part B project.html.
+
+### 2026-10-01 — Phase 2B · Part 0: align with Elementor v4 (PRD v1.5)
+- Did: header is now solid, sticky and in flow (transparent state, scrolled class, backdrop-filter and all hero top-padding compensation removed). Front end reorganised to the four theme files: new `theme.css` (header, menu, footer, WhatsApp, lightbox dialog, before/after handle, scroll-nav chips; filter bar added in Part A), new `interactions.js` (menu, lightbox, before/after, scrollspy, filter in one IIFE, each activated by class), `counters.js` merged into `animations.js`; header/lightbox/before-after/service-nav/counters scripts and lightbox.css deleted. tokens/base/layout/components/inner-pages marked `ELEMENTOR SOURCE`; `projects.js` marked `PROTOTYPE ONLY` and now clones `<template id="tp-project-card">` (added to Home and Services). Behaviours run from plain markup: `.tp-lightbox` container, `.tp-before-after` two images (JS builds the handle), `.tp-scrollspy`, counters read the number from the text. Dialog classes renamed `tp-lbox*`. Direction audit: `-rtl` classes for the 4 classes with physical values. Heading classes `tp-h1`–`tp-h4` (explicit colour). Every `ELEMENTOR:` comment on Home/About/Services replaced by ATOMIC / THEME / INTERACTION / REPORT. `docs/elementor-mapping.md` replaced by `docs/wp-mapping.md` (destinations, atomic trees, responsive notes, generated master tables: 135 variables, 269 global-class rules). CLAUDE.md rules and D-031 updated.
+- Verified: check-partials OK; contrast 0 failing; interaction-test all PASS (menu, slider LTR/RTL, lightbox LTR/RTL, licenses, scroll-nav, related projects); screenshots of Home/About/Services (375/768/1280/1920 LTR+RTL+reduced) with 0 console issues and no overflow.
+- Issues: the header menu toggle needs JS but is not in E2; list/dl semantics, the marquee and the services hover image swap are not atomic (REPORT items in docs/wp-mapping.md).
+- Next: Part A projects.html.
+
+### 2026-09-30 — Decision: Elementor v4 (Atomic) page building
+- Did: recorded the move to Elementor v4 atomic elements in CLAUDE.md, docs/decisions.md (D-030) and docs/PRD.md (v1.3: scope 4.1, 8.1, 8.2 rewritten, 8.3, 9, 11, Phase 4, risks, change log). No other content changed.
+- Note: the PRD was already at 1.3 (Homepage approved), so the change extends the 1.3 row instead of adding a second 1.3.
+
+### 2026-09-30 — Phase 2A · Part D: services.html
+- Did: page hero; sticky scrollable chip navigation (service-nav.js, IntersectionObserver, aria-current="true"); 6 alternating service blocks with anchor ids matching the homepage/footer links (no homepage change needed); website text + PDF paragraphs (Construction, Design & Build, Turnkey); related projects (projects.js `data-tp-service`, mapping in site.json, D-027); wall cladding showcase (6 images, lightbox); shared CTA.
+- Verified: interaction tests (chip keyboard activation, sticky offsets, highlight on scroll, related 3/3/3 and none for Design & Build / Maintenance / Turnkey); screenshots 375/768/1280/1920 LTR + RTL → source/screenshots/phase-2/; 0 console issues, no overflow.
+- Issues: all 6 wall-cladding photos are small (383–768px): shown as 4:3 thumbnails and never upscaled in the lightbox.
+
+### 2026-09-30 — Phase 2A · Part C: about.html
+- Did: page hero; full chairman's message (editorial, sticky portrait); About Us with highlighted 2015 fact; 4 aims; Why choose us; leadership (`tp-team`) + philosophy; team experience (`tp-exp`, labelled prior experience); 14-logo partner grid; two license cards with fields as text and lightbox/PDF; shared CTA.
+- License fields were read from the license scans (D-029).
+- Files: about.html, assets/css/inner-pages.css, data/site.json (licenses), assets/docs/license-*.pdf.
+
+### 2026-09-30 — Phase 2A · Part B: shared inner-page components
+- Did: PARTIAL markers (sprite/header/footer/whatsapp/cta) + `scripts/check-partials.py` (D-026); `aria-current` in header, mobile menu and footer; `tp-page-hero` + breadcrumbs; `lightbox.js/.css` (dialog, Esc, arrows mirrored in RTL, focus trap + return, swipe, counter, next/prev preload only, scroll lock, reduced motion, PDF rendition + View PDF); shared CTA marked as a partial; per-page SEO head pattern (D-025), index.html's live hreflang converted to comments; CLAUDE.md rules 14–15; interaction-test.mjs extended.
+
+### 2026-09-30 — Phase 2A · Part A: Official brand locked in
+- Did: created git tag `v1-bronze` (it did not exist), merged brand-official.css into tokens.css, deleted bronze/official/overrides CSS, switcher JS/CSS, first-paint script, `data-brand`, Cormorant + Manrope, brand-compare.mjs, brand-style-diff.mjs. Renamed docs/brand-official.md → docs/brand.md; updated CLAUDE.md, elementor-mapping.md, contrast.py (reads tokens.css).
+- Verified: contrast 0 failing; validate-tokens 0 violations; interaction-test all PASS; homepage screenshots (375/768/1280/1920 LTR+RTL+reduced) in source/screenshots/phase-2/, 0 console issues, no overflow; pixel diff vs brand-compare/official-* differs only where scroll/animation state differs (accordion image mid-crossfade).
+- Housekeeping: `git worktree prune` + `git worktree list` → only the main worktree; no stale worktree registered.
+- Issues: playwright 1.63 copy in npm-cache `_npx/e41f203b7505f1fb` matches installed browsers (1.61 copy does not).
+
+### 2026-09-30 — Official brand variant + review switcher
+- Did: git init, commit `Phase 1: bronze design (v1)`, tag `v1-bronze`. Extracted the taameer.ae identity (docs/brand-official.md). Audit: the CSS had no hard-coded colours, font names, shadows, radii or durations (grep of base/layout/components/animations found only `transparent`, `currentColor` and the `--tp-mask-solid` token); the only findings were two token-usage bugs in `.tp-fab` (foreground `--tp-color-text` on the accent fill; hover swapping text/bg instead of the button-hover tokens), fixed with unchanged bronze values. Split tokens into `tokens.css` (shared) + `brands/brand-bronze.css` (moved unchanged) + `brands/brand-official.css` + empty `brand-official-overrides.css`. Review switcher: `brand-switcher.js/.css` (REVIEW ONLY); a head script applies `?brand=` / the saved choice before first paint. `contrast.py` takes a brand argument. New `scripts/brand-compare.mjs`.
+- Verified: bronze vs `v1-bronze` tag = 0 computed-style differences on 506 elements (full-page pixel diffs differ only through marquee/animation timing); 12 screenshots (both brands × 375/768/1280/1920, plus RTL at 375/1280) in source/screenshots/brand-compare/ with no console errors, no horizontal overflow, `data-brand` set before DOMContentLoaded; official contrast 0 failing pairs; RTL mirrors in both brands.
+- Files: assets/css/tokens.css, assets/css/brands/*, assets/css/brand-switcher.css, assets/js/brand-switcher.js, index.html, components.css (2 lines), scripts/contrast.py, scripts/brand-compare.mjs, docs/*
+- Issues: Phase 2 pages must copy the `data-brand` attribute, the head script and the brand `<link>`s from index.html. Both font families load until the client chooses (D-022).
+- Next: client chooses bronze or official; then delete the other brand file, the switcher (js, css, head script, link/script tags) and unused font families. Phase 2 not started.
+
+### 2026-09-30 — QA pass (Phase 1 verification)
+- Did: scripts/screenshot.mjs (Playwright: 375/768/1280/1920 LTR + RTL injected at runtime + reduced motion; console, network and overflow checks) → source/screenshots/phase-1/. scripts/interaction-test.mjs (17 checks: skip link, menu open/cover/focus/trap/Esc, before-after keys + pointer in LTR and RTL). Token validator (design-system skill) 0 violations; contrast 0 failing pairs.
+- Bugs found and fixed: icon sprite `<svg hidden>` displayed (base `svg{display:block}` beat `hidden`) → global `[hidden]` rule; `tp-img-reveal` never revealed (Chrome IO ignores fully clipped targets) → observe the parent; `tp-split` put the superscript "+" on its own line → decorations join the current line; frame images not filling aspect-ratio boxes → absolute fill; mobile menu trapped in header by `backdrop-filter` → removed while open (D-018); wrong alt text on gym photos; invented heading replaced (D-016).
+- Files: scripts/screenshot.mjs, scripts/interaction-test.mjs, assets/css/*, assets/js/*, index.html
+- Issues: English copy under dir="rtl" shows expected bidi punctuation shifts (".since 2015", "+100") — disappears with Arabic copy (Phase 3). Full-page screenshots show fixed elements (header, skip link) where the capture was stitched — artifact only.
+- Questions for client (Phase 1): (1) vector logo (SVG/AI/PDF); (2) original high-res photos — Palm Jumeirah hero is only 576px, 108 of 191 images < 1200px; unwatermarked Jumeirah Golf photos; (3) confirm relatedProject links for Atlas Copco and Bella Cure letters; which project was Jan's Noodles (Thai restaurant, Deira?); any text version of that letter; (4) the "R" monogram partner logo — company name for alt text; (5) review of edited copy (content-corrections.md), incl. "Al-Ali"/"Al-Otaibi" spelling; (6) the site's services banner and hero background return 404 — do originals exist?; (7) office hours; (8) partner logos linked or not.
+- Next: Phase 2 (after client approval of the homepage)
+
+### 2026-09-30 — English homepage (index.html)
+- Did: 13 sections per brief §9 with ELEMENTOR annotations; header (transparent → solid, mobile overlay menu), hero, partners marquee, about + stats, chairman quote, services list, why us, featured projects (JSON), before/after, letters, CTA, footer, WhatsApp FAB.
+- Files: index.html, docs/elementor-mapping.md
+- Next: QA
+
+### 2026-09-30 — JS: animations, counters, header, projects, before-after
+- Did: 5 standalone IIFE `defer` scripts, only global `window.TP`; class-driven animation system (one IntersectionObserver, rAF parallax, line split, marquee clone); `data-tp-from` added to counters (2015 counts up from 1990 rather than 0).
+- Files: assets/js/*.js
+- Next: homepage markup
+
+### 2026-09-30 — CSS design system
+- Did: tokens.css (primitive → semantic → component layers), base, layout (Elementor container mirror), components (all homepage blocks, one marked [dir="rtl"] block), animations (reduced-motion safe). Contrast script + adjustments (D-013). Design direction (D-014) after loading frontend-design, ui-ux-pro-max and design-system skills.
+- Files: assets/css/*.css, scripts/contrast.py
+- Next: JS
+
+### 2026-09-30 — Data files
+- Did: data/projects.json (22 projects + Wall Cladding showcase + 4 teamExperience, website facts applied, 6 featured), team.json (3, website bios), testimonials.json (4; Jan's Noodles image-only), site.json (contact, nav, stats, whyUs, 6 services with photos, 14 partners). scripts/image_meta.py fills `imageMeta` ([w, h, hasMd]) for JS-rendered images.
+- Files: data/*.json, scripts/image_meta.py
+- Issues: added `description` field (PRD 6.1) and `types` label map beyond the brief's field list. Testimonial→project links inferred from dates (Atlas Copco Aug 2023; Bella Cure Nov 2022) — client to confirm.
+- Next: design tokens + base CSS
+
+### 2026-09-30 — Merge website images with PDF exports
+- Did: scripts/build_site_images.py — site project photos (1200px) replace PDF copies (~450–600px); PDF-only photos appended after crop-tolerant hash matching + a manual duplicate list (verified visually); team portraits from site; licenses rendered from the site's renewed vector PDFs; 14 partner logos (7 black-box logos knocked out to transparency); Perfume Shop gallery added. Regenerates docs/image-map.md.
+- Files: scripts/build_site_images.py, assets/img/*, source/site/export-manifest.json, docs/image-map.md
+- Issues: 191 final images, 108 below 1200px (all PDF-only projects, chairman, team, logos). Site Jumeirah Golf photos carry a faint "TAAMEER" watermark (kept: 2x resolution). Palm Jumeirah (hero) exists only in the PDF at ~576px.
+- Next: data files
+
+### 2026-09-30 — Mirror taameer.ae
+- Did: scripts/fetch_site.py (polite sequential crawl, retries, custom UA — host returns 406 to urllib default); 111 files into source/site/ incl. 13 project galleries (from the inline `projectGalleries` JS map + probing), team, chairman, landmarks, 14 partners, logos, service icons, 2 license PDFs, profile PDF. scripts/site_to_text.py → source/site-content.md.
+- Files: scripts/fetch_site.py, scripts/site_to_text.py, source/site/*, source/site-content.md
+- Issues: images/hero/background.jpg and images/services/banner.jpg are referenced but 404. The site has no letter images (section empty). Site profile PDF = same text on all 37 pages as ours, recompressed (5.0 MB vs 12.2 MB). Licenses: Contracting 741846 renewed to 06/09/2027 (PDF copy: 06/09/2026, expired); Carpentry 1314264 unchanged, expires 18/02/2027.
+- Next: merge images
+
+### 2026-09-30 — Finish PDF WebP export
+- Did: added `--export` flag to extract_pdf.py (skips text/raw dump); renamed slug al-amir-villas → al-awir-villas (D-002); exported all 130 PDF images to assets/img/ (+ -md where > 900px); wrote source/extracted/manifest.json.
+- Files: scripts/extract_pdf.py, assets/img/*, source/extracted/manifest.json
+- Issues: 122 of 130 images are below 1200px wide (PDF embeds downsampled photos). Rasterized: p8 licenses, p35–36 letters (300 DPI crops); p22–24 collages split by gutter boxes.
+- Next: fetch website assets (scripts/fetch_site.py)
+
+### 2026-09-30 — Docs skeleton
+- Did: created the docs system (this file, decisions, image-map, image-credits, content-corrections, elementor-mapping) and README; updated CLAUDE.md summary to reflect PRD v1.2 (two sources).
+- Files: docs/*.md, README.md, CLAUDE.md
+- Issues: none
+- Next: finish PDF image export
+
+### 2026-09-30 — PDF text + raw image extraction (earlier session)
+- Did: wrote scripts/extract_pdf.py; extracted text to source/pdf-text.md; dumped 146 native images + 5 300-DPI renders (licenses p8, letters p35–36) to source/extracted/. WebP export stopped midway (92 files, up to Wadi Alshabak).
+- Files: scripts/extract_pdf.py, source/pdf-text.md, source/extracted/*
+- Issues: session interrupted before export finished and before any docs were written
+- Next: finish export
+
+### 2026-09-30 — Scaffold + CLAUDE.md (earlier session)
+- Did: folder structure, CLAUDE.md
+- Files: CLAUDE.md, folders

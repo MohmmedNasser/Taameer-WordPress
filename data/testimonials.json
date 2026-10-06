@@ -1,0 +1,49 @@
+{
+  "_note": "Mirrors the WP 'testimonial' CPT. Excerpts are from the letters (PDF p35–36), trimmed and lightly joined (TODAY: two sentences merged); no facts changed. relatedProject is inferred from matching dates and scope — client to confirm.",
+  "testimonials": [
+    {
+      "id": "atlas-copco",
+      "order": 1,
+      "excerpt": { "en": "They made very good recommendations during the design phase of the project and the communication from their team was very good. It was a pleasure working with your team.", "ar": "قدّموا توصيات ممتازة جداً خلال مرحلة تصميم المشروع، وكان التواصل مع فريقهم جيداً للغاية. وكان من دواعي سرورنا العمل مع فريقكم." },
+      "authorName": { "en": "Nicole Rowe", "ar": "نيكول رو" },
+      "authorTitle": { "en": "Regional Human Resources Manager, Power Technique", "ar": "مديرة الموارد البشرية الإقليمية، Power Technique" },
+      "company": { "en": "Atlas Copco Services Middle East OMC", "ar": "Atlas Copco Services Middle East OMC" },
+      "date": "2023-08-30",
+      "relatedProject": "atlas-copco-headquarters",
+      "letterImage": "assets/img/letter-atlas-copco.webp"
+    },
+    {
+      "id": "bella-cure",
+      "order": 2,
+      "excerpt": { "en": "Taameer Plus Contracting LLC team accomplished designing and constructing work for the beauty lounge successfully, and adhered professionally to project completion budget, schedule, and quality.", "ar": "أنجز فريق تعمير بلس للمقاولات ش.ذ.م.م أعمال تصميم صالون التجميل وتنفيذه بنجاح، والتزم باحترافية بميزانية إنجاز المشروع وجدوله الزمني ومعايير جودته." },
+      "authorName": { "en": "Maitha Ahli", "ar": "ميثاء الأهلي" },
+      "authorTitle": { "en": "Owner", "ar": "مالكة Bella Cure Beauty Lounge" },
+      "company": { "en": "Bella Cure Beauty Lounge", "ar": "Bella Cure Beauty Lounge" },
+      "date": "2022-11",
+      "relatedProject": "beauty-lounge-spa-mirdif",
+      "letterImage": "assets/img/letter-bella-cure.webp"
+    },
+    {
+      "id": "today-engineering",
+      "order": 3,
+      "excerpt": { "en": "M/s Taameer Plus Contracting LLC have completed the entire works in accordance with the contract specifications and specified construction timeline, showing a satisfactory degree of proper planning, coordination, safety, and quality of workmanship.", "ar": "أنجزت شركة تعمير بلس للمقاولات ش.ذ.م.م جميع الأعمال وفق مواصفات العقد والجدول الزمني المحدد للإنشاء، وأظهرت درجة مرضية من التخطيط السليم والتنسيق والسلامة وجودة التنفيذ." },
+      "authorName": { "en": "Abdulla Al Zaabi", "ar": "عبدالله الزعابي" },
+      "authorTitle": { "en": "Chairman", "ar": "رئيس مجلس الإدارة" },
+      "company": { "en": "TODAY Engineering Consultants", "ar": "TODAY Engineering Consultants" },
+      "date": "2022-12-27",
+      "relatedProject": null,
+      "letterImage": "assets/img/letter-today-engineering.webp"
+    },
+    {
+      "id": "jans-noodles",
+      "order": 4,
+      "excerpt": null,
+      "authorName": null,
+      "authorTitle": null,
+      "company": { "en": "Jan's Noodles Restaurant", "ar": "مطعم Jan's Noodles" },
+      "date": null,
+      "relatedProject": null,
+      "letterImage": "assets/img/letter-jans-noodles.webp"
+    }
+  ]
+}

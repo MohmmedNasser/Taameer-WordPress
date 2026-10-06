@@ -1,0 +1,171 @@
+/* ELEMENTOR SOURCE — recreated as global variables/classes, not shipped */
+/* ==========================================================================
+   base.css — reset, element defaults, typography, focus, utilities
+   Used by: every page. Element-level styles only (no components).
+   WP: not shipped. Recreated as Elementor v4 global variables / global classes (docs/wp-mapping.md).
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-block-start: calc(var(--tp-header-h) + var(--tp-space-4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--tp-color-bg);
+  color: var(--tp-color-text);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-base);
+  font-weight: var(--tp-fw-regular);
+  line-height: var(--tp-lh-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* guards against off-canvas reveal transforms causing horizontal scroll */
+}
+
+/* Body scroll lock while the mobile menu is open (set by interactions.js). */
+body.tp-is-locked {
+  overflow: hidden;
+}
+
+/* The hidden attribute must win over the display rules below (icon sprite, closed mobile menu). */
+[hidden] {
+  display: none !important;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* Emphasis is italic in Latin only (Arabic never uses italics: --tp-style-quote is normal under :lang(ar)). */
+em,
+i { font-style: var(--tp-style-quote); }
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-heading);
+  letter-spacing: var(--tp-tracking-display);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--tp-fs-h1); line-height: var(--tp-lh-tight); }
+h2 { font-size: var(--tp-fs-h2); }
+h3 { font-size: var(--tp-fs-h3); font-weight: var(--tp-fw-regular); }
+h4 { font-size: var(--tp-fs-h4); font-weight: var(--tp-fw-medium); }
+
+/* Global-class equivalents of the element rules above (Elementor headings carry classes, not element styles).
+   Colour is set explicitly so a heading never depends on inherited colour. */
+.tp-h1, .tp-h2, .tp-h3, .tp-h4 {
+  margin: 0;
+  color: var(--tp-color-text);
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-heading);
+  letter-spacing: var(--tp-tracking-display);
+  text-wrap: balance;
+}
+.tp-h1 { font-size: var(--tp-fs-h1); line-height: var(--tp-lh-tight); }
+.tp-h2 { font-size: var(--tp-fs-h2); }
+.tp-h3 { font-size: var(--tp-fs-h3); font-weight: var(--tp-fw-regular); }
+.tp-h4 { font-size: var(--tp-fs-h4); font-weight: var(--tp-fw-medium); }
+
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--tp-color-accent-text);
+  text-decoration-thickness: var(--tp-border-w);
+  text-underline-offset: 0.2em;
+  transition: color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+a:hover {
+  color: var(--tp-color-text);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+address {
+  font-style: normal;
+}
+
+:focus-visible {
+  outline: var(--tp-focus-ring);
+  outline-offset: var(--tp-focus-offset);
+}
+
+::selection {
+  background: var(--tp-color-stone);
+  color: var(--tp-color-text);
+}
+
+/* ---- Utilities ---- */
+
+.tp-visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.tp-skip-link {
+  position: fixed;
+  inset-block-start: var(--tp-space-3);
+  inset-inline-start: var(--tp-space-3);
+  z-index: var(--tp-z-skip);
+  padding: var(--tp-space-3) var(--tp-space-5);
+  background: var(--tp-color-surface);
+  color: var(--tp-color-text);
+  border-radius: var(--tp-radius-sm);
+  box-shadow: var(--tp-shadow-md);
+  transform: translateY(-200%);
+}
+
+.tp-skip-link:focus-visible {
+  transform: none;
+}

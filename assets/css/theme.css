@@ -1,0 +1,779 @@
+/* ==========================================================================
+   theme.css — the child theme stylesheet (approved exception E1, see docs/PRD.md 8.2.1)
+   Covers ONLY parts the client does not edit in Elementor: header + mobile menu + language switcher,
+   footer, WhatsApp button, 404, project archive/single templates (E3), and the UI generated or
+   driven by interactions.js (lightbox overlay, before/after handle, filter bar, services scroll nav).
+   Contents (in order): header/nav/menu · before/after handle · footer · WhatsApp · services scroll nav ·
+   lightbox overlay · then the new filter bar, archive/single project templates and 404 (appended below).
+   Tokens only (assets/css/tokens.css); logical properties only.
+   WP: child theme wp_enqueue_style('tp-theme', get_stylesheet_directory_uri().'/theme.css').
+   ========================================================================== */
+
+/* ---- 1. Header, nav, language switcher, mobile menu (theme template header.php) ----
+   Solid and sticky on every page (PRD 5.1): in normal flow, so the page starts below it — no overlay,
+   no transparent state, no padding compensation in any hero. */
+
+.tp-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--tp-z-header);
+  background: var(--tp-color-bg);
+  border-block-end: var(--tp-hairline);
+}
+
+.tp-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tp-space-5);
+  block-size: var(--tp-header-h-mobile);
+}
+
+.tp-header__logo { flex: none; display: block; }
+.tp-header__logo img { block-size: var(--tp-logo-h); inline-size: auto; }
+
+.tp-nav { display: none; }
+
+.tp-nav__list {
+  display: flex;
+  gap: var(--tp-nav-gap);
+}
+
+.tp-nav__link {
+  position: relative;
+  display: block;
+  padding-block: var(--tp-space-2);
+  font-size: var(--tp-fs-sm);
+  font-weight: var(--tp-fw-medium);
+  color: var(--tp-color-text);
+  text-decoration: none;
+}
+
+/* Hairline that draws in from inline-start on hover / current page. */
+.tp-nav__link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: var(--tp-border-w);
+  background: var(--tp-color-accent);
+  transform: scaleX(0);
+  transform-origin: var(--tp-origin-start, left);
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-nav__link:hover::after,
+.tp-nav__link[aria-current="page"]::after { transform: scaleX(1); }
+
+.tp-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-4);
+}
+
+.tp-header__cta { display: none; }
+
+.tp-lang {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-sm);
+}
+
+.tp-lang abbr { text-decoration: none; font-weight: var(--tp-fw-semibold); }
+.tp-lang__sep { color: var(--tp-color-stone); }
+.tp-lang__link { color: var(--tp-color-text); text-decoration: none; padding: var(--tp-space-2) var(--tp-space-1); }
+.tp-lang__link:hover { color: var(--tp-color-accent-text); }
+.tp-header__actions > .tp-lang { display: none; }
+
+.tp-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-3);
+  min-block-size: var(--tp-touch);
+  padding: var(--tp-space-2) var(--tp-space-3);
+  background: none;
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+}
+
+/* "+" turns into "×": the logo motif as the menu icon. */
+.tp-menu-toggle__icon {
+  color: var(--tp-color-accent);
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-menu-toggle[aria-expanded="true"] .tp-menu-toggle__icon { transform: rotate(45deg); }
+
+.tp-menu {
+  position: fixed;
+  inset: var(--tp-header-h-mobile) 0 0;
+  z-index: var(--tp-z-menu);
+  overflow-y: auto;
+  background: var(--tp-color-bg);
+  border-block-start: var(--tp-hairline);
+  opacity: 0;
+  transition: opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-menu.is-open { opacity: 1; }
+
+.tp-menu__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--tp-space-7);
+  min-block-size: 100%;
+  padding-block: var(--tp-space-7);
+}
+
+.tp-menu__link {
+  display: block;
+  padding-block: var(--tp-space-2);
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-h2);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-heading);
+  color: var(--tp-color-text);
+  text-decoration: none;
+}
+
+.tp-menu__link[aria-current="page"] { color: var(--tp-color-accent-text); }
+
+.tp-menu__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tp-space-4);
+  padding-block-start: var(--tp-space-6);
+  border-block-start: var(--tp-hairline);
+}
+
+.tp-menu__contact { color: var(--tp-color-text); text-decoration: none; }
+
+@media (min-width: 64em) {
+  .tp-header__inner { block-size: var(--tp-header-h); }
+  .tp-nav,
+  .tp-header__cta,
+  .tp-header__actions > .tp-lang { display: flex; }
+  .tp-menu-toggle,
+  .tp-menu { display: none; }
+}
+
+/* ---- 2. Before / after (interactions.js, class tp-before-after) ---- */
+
+/* Plain markup (no JS): the two images stack. interactions.js adds .tp-ba and builds the slider. */
+.tp-before-after {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+  inline-size: 100%;
+  max-inline-size: var(--tp-ba-max-w);
+}
+.tp-before-after img { inline-size: 100%; block-size: auto; border-radius: var(--tp-radius-md); }
+
+.tp-ba {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: var(--tp-ba-max-w);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--tp-radius-md);
+  box-shadow: var(--tp-shadow-lg);
+  touch-action: pan-y; /* vertical scroll still works; horizontal drag moves the divider */
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.tp-ba__img,
+.tp-ba__before {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.tp-ba__img { object-fit: cover; pointer-events: none; }
+
+.tp-ba__before { clip-path: inset(0 calc(100% - var(--tp-ba-pos)) 0 0); }
+
+.tp-ba__label {
+  position: absolute;
+  inset-block-end: var(--tp-space-4);
+  padding: var(--tp-space-1) var(--tp-space-3);
+  background: var(--tp-color-surface);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+}
+
+.tp-ba__label--before { inset-inline-start: var(--tp-space-4); }
+.tp-ba__label--after { inset-inline-end: var(--tp-space-4); }
+
+.tp-ba__handle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--tp-ba-pos);
+  display: grid;
+  place-items: center;
+  inline-size: var(--tp-ba-handle);
+  transform: translateX(-50%);
+  cursor: ew-resize;
+}
+
+/* The divider line */
+.tp-ba__handle::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: var(--tp-border-w);
+  background: var(--tp-color-surface);
+}
+
+.tp-ba__handle svg {
+  position: relative;
+  box-sizing: content-box;
+  padding: var(--tp-space-3);
+  background: var(--tp-color-surface);
+  border-radius: var(--tp-radius-round);
+  color: var(--tp-color-accent-text);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-ba__handle:focus-visible { outline: none; }
+.tp-ba__handle:focus-visible svg { outline: var(--tp-focus-ring); outline-offset: var(--tp-focus-offset); }
+
+/* ---- 3. Footer (theme template footer.php) ---- */
+
+.tp-footer {
+  padding-block: var(--tp-space-9) calc(var(--tp-fab-size) + var(--tp-space-7)); /* bottom room so the FAB never covers text */
+  background: var(--tp-color-sand);
+  border-block-start: var(--tp-hairline);
+  font-size: var(--tp-fs-sm);
+}
+
+.tp-footer a { color: var(--tp-color-text); text-decoration: none; }
+.tp-footer a:hover { color: var(--tp-color-accent-text); }
+
+.tp-footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tp-space-7);
+}
+
+@media (min-width: 40em) {
+  .tp-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64em) {
+  .tp-footer__grid { grid-template-columns: minmax(0, 4fr) repeat(2, minmax(0, 2fr)) minmax(0, 3fr); }
+  .tp-footer { padding-block-end: var(--tp-space-6); }
+}
+
+.tp-footer__brand { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tp-space-5); }
+.tp-footer__logo { block-size: var(--tp-logo-h-footer); inline-size: auto; }
+.tp-footer__blurb { max-inline-size: var(--tp-footer-blurb-w); color: var(--tp-color-text-muted); }
+
+.tp-footer__download {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  padding-block: var(--tp-space-2);
+  font-weight: var(--tp-fw-semibold);
+  border-block-end: var(--tp-hairline-accent);
+}
+
+.tp-footer__meta { font-weight: var(--tp-fw-regular); color: var(--tp-color-text-muted); }
+
+.tp-footer__heading {
+  margin-block-end: var(--tp-space-5);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-eyebrow-color);
+}
+
+.tp-footer__list { display: flex; flex-direction: column; gap: var(--tp-space-3); }
+.tp-footer__list a { display: inline-block; padding-block: var(--tp-space-1); }
+.tp-footer__label { display: inline-block; min-inline-size: var(--tp-footer-label-w); color: var(--tp-color-text-muted); }
+.tp-footer__social { display: flex; flex-wrap: wrap; gap: var(--tp-space-5); }
+.tp-footer__social a { display: inline-flex; align-items: center; gap: var(--tp-space-2); }
+
+.tp-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--tp-space-4);
+  margin-block-start: var(--tp-space-8);
+  padding-block-start: var(--tp-space-5);
+  border-block-start: var(--tp-hairline);
+  color: var(--tp-color-text-muted);
+}
+
+/* ---- 4. Floating WhatsApp button (theme template footer.php) ---- */
+
+.tp-fab {
+  position: fixed;
+  inset-block-end: var(--tp-space-5);
+  inset-inline-end: var(--tp-space-5);
+  z-index: var(--tp-z-fab);
+  display: grid;
+  place-items: center;
+  inline-size: var(--tp-fab-size);
+  block-size: var(--tp-fab-size);
+  background: var(--tp-color-accent);
+  color: var(--tp-color-on-accent);
+  border-radius: var(--tp-radius-round);
+  box-shadow: var(--tp-shadow-lg);
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out), color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-fab:hover { background: var(--tp-btn-bg-hover); color: var(--tp-btn-fg-hover); }
+
+
+/* ---- Before/after, RTL (physical values: clip-path and transform) ---- */
+[dir="rtl"] .tp-ba__before { clip-path: inset(0 0 0 calc(100% - var(--tp-ba-pos))); }
+[dir="rtl"] .tp-ba__handle { transform: translateX(50%); }
+
+/* ---- 5. Footer: current-page link ---- */
+
+.tp-footer__list a[aria-current="page"] {
+  color: var(--tp-color-accent-text);
+  font-weight: var(--tp-fw-semibold);
+  border-block-end: var(--tp-hairline-accent);
+}
+
+/* ---- 6. Service navigation (class tp-scrollspy; sticky, horizontally scrollable chips) ----
+   Elementor: no native equivalent — custom widget "tp-service-nav" (repeater: label, anchor). Sticky under the header. */
+
+.tp-service-nav {
+  position: sticky;
+  inset-block-start: var(--tp-header-h-mobile);
+  z-index: var(--tp-z-subnav);
+  background: var(--tp-color-header-scrolled);
+  backdrop-filter: blur(var(--tp-blur-header));
+  border-block-end: var(--tp-hairline);
+}
+
+@media (min-width: 64em) {
+  :root { --tp-sticky-offset: calc(var(--tp-header-h) + var(--tp-chipbar-h)); }
+  .tp-service-nav { inset-block-start: var(--tp-header-h); }
+}
+
+.tp-chips {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  min-block-size: var(--tp-chipbar-h);
+  padding-block: var(--tp-space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.tp-chips::-webkit-scrollbar { display: none; }
+
+.tp-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tp-touch);
+  padding-inline: var(--tp-space-4);
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--tp-color-text);
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out), color var(--tp-dur-fast) var(--tp-ease-out), border-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+/* Inset ring: the scrolling list would clip an outside outline. */
+.tp-chip:focus-visible { outline-offset: calc(-1 * var(--tp-space-1)); }
+.tp-chip:hover { border-color: var(--tp-color-accent); color: var(--tp-color-text); }
+
+.tp-chip[aria-current="true"] {
+  background: var(--tp-btn-bg);
+  border-color: var(--tp-btn-bg);
+  color: var(--tp-btn-fg);
+}
+
+/* ---- 7. Lightbox dialog (built by interactions.js, class tp-lightbox on the trigger container) ----
+   Light veil (never a dark overlay). Images are shown at their natural size, never upscaled: several
+   sources are only 380–770px wide. No transitions under prefers-reduced-motion. */
+
+.tp-lbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--tp-z-menu);
+  display: grid;
+  grid-template-columns: var(--tp-lbox-btn) minmax(0, 1fr) var(--tp-lbox-btn);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--tp-space-3);
+  padding: var(--tp-lbox-pad);
+  opacity: 0;
+  transition: opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-lbox.is-open { opacity: 1; }
+
+.tp-lbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--tp-color-lightbox);
+  backdrop-filter: blur(var(--tp-blur-header));
+}
+
+.tp-lbox__fig {
+  position: relative;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tp-space-4);
+  min-block-size: 0;
+  max-block-size: 100%;
+  pointer-events: none; /* clicks beside the image fall through to the backdrop */
+}
+
+.tp-lbox__img {
+  flex: 0 1 auto;
+  min-block-size: 0;
+  max-inline-size: 100%;
+  max-block-size: calc(100dvh - 2 * var(--tp-lbox-pad) - var(--tp-lbox-chrome));
+  inline-size: auto;
+  block-size: auto;
+  object-fit: contain;
+  background: var(--tp-color-surface);
+  border-radius: var(--tp-radius-sm);
+  box-shadow: var(--tp-shadow-lg);
+  pointer-events: auto;
+  transition: opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-lbox.is-loading .tp-lbox__img { opacity: 0; }
+
+.tp-lbox__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--tp-space-2) var(--tp-space-5);
+  inline-size: 100%;
+  max-inline-size: var(--tp-container-narrow);
+  pointer-events: auto;
+}
+
+.tp-lbox__caption {
+  flex: 1 1 14rem;
+  font-size: var(--tp-fs-sm);
+  color: var(--tp-color-text);
+}
+
+.tp-lbox__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--tp-space-5);
+}
+
+.tp-lbox__count {
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  color: var(--tp-meta-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-lbox__btn {
+  position: relative;
+  z-index: var(--tp-z-base);
+  display: grid;
+  place-items: center;
+  inline-size: var(--tp-lbox-btn);
+  block-size: var(--tp-lbox-btn);
+  padding: 0;
+  background: var(--tp-color-surface);
+  color: var(--tp-color-text);
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-round);
+  box-shadow: var(--tp-shadow-sm);
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out), color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-lbox__btn:hover {
+  background: var(--tp-btn-bg-hover);
+  color: var(--tp-btn-fg-hover);
+}
+
+.tp-lbox__prev { grid-column: 1; grid-row: 1; }
+.tp-lbox__next { grid-column: 3; grid-row: 1; }
+
+.tp-lbox__close {
+  position: absolute;
+  inset-block-start: var(--tp-lbox-pad);
+  inset-inline-end: var(--tp-lbox-pad);
+}
+
+/* The logo "+" rotated 45° is the close mark. */
+.tp-lbox__close svg { transform: rotate(45deg); }
+
+/* Previous points toward the inline-start edge, next toward the inline-end edge. */
+.tp-lbox__prev svg { transform: scaleX(-1); }
+
+@media (max-width: 40em) {
+  /* Small screens: buttons drop below the image row; swipe also navigates. */
+  .tp-lbox { grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; row-gap: var(--tp-space-4); }
+  .tp-lbox__fig { grid-column: 1 / -1; grid-row: 1; }
+  .tp-lbox__prev { grid-column: 1; grid-row: 2; justify-self: start; }
+  .tp-lbox__next { grid-column: 2; grid-row: 2; justify-self: end; }
+  .tp-lbox__img { max-block-size: calc(100dvh - 2 * var(--tp-lbox-pad) - var(--tp-lbox-chrome-mobile)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-lbox,
+  .tp-lbox__img,
+  .tp-lbox__btn { transition: none; }
+}
+
+/* ---- [dir="rtl"] — mirrored arrows (the dialog gets dir from <html>) ---- */
+[dir="rtl"] .tp-lbox__prev svg { transform: none; }
+[dir="rtl"] .tp-lbox__next svg { transform: scaleX(-1); }
+
+
+/* ---- 8. Project archive: filter bar (archive-project.php, behaviour in interactions.js `tp-filter`) ---- */
+
+.tp-archive { padding-block-start: var(--tp-section-pad-tight); }
+
+.tp-filter__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-space-2);
+  margin-block-end: var(--tp-space-7);
+}
+
+.tp-filter__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  min-block-size: var(--tp-touch);
+  padding-inline: var(--tp-space-4);
+  background: transparent;
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-color-text);
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out), color var(--tp-dur-fast) var(--tp-ease-out), border-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-filter__btn:hover { border-color: var(--tp-color-accent); }
+
+.tp-filter__btn[aria-pressed="true"] {
+  background: var(--tp-btn-bg);
+  border-color: var(--tp-btn-bg);
+  color: var(--tp-btn-fg);
+}
+
+.tp-filter__count {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--tp-fw-regular);
+  opacity: 0.7;
+}
+
+.tp-filter__empty {
+  padding-block: var(--tp-space-8);
+  text-align: center;
+  color: var(--tp-color-text-muted);
+}
+
+/* ---- 9. Project single template (single-project.php) ---- */
+
+/* Prototype only: while projects.js/project-page.js fetch the data the body keeps a viewport of space so the
+   footer does not jump (CLS). WordPress renders the page server-side and needs neither state. */
+.tp-project-body[data-state="loading"] { min-block-size: 100vh; visibility: hidden; }
+.tp-project-body[data-state="empty"] { display: none; }
+
+.tp-project-title { max-inline-size: 22ch; }
+
+/* Cover: never wider than its source (framed below 1200px) nor taller than the viewport allows. */
+.tp-project-cover-wrap { align-items: flex-start; }
+
+.tp-project-cover {
+  inline-size: min(100%, var(--tp-cover-w, 100%), calc(var(--tp-project-cover-h) * var(--tp-cover-ratio, 1.5)));
+}
+
+.tp-project-cover .tp-frame { inline-size: 100%; }
+.tp-project-cover .tp-frame__clip { aspect-ratio: var(--tp-cover-ratio, 1.5); }
+
+.tp-project-cover__plain {
+  inline-size: 100%;
+  aspect-ratio: var(--tp-cover-ratio, 1.5);
+  object-fit: cover;
+  border-radius: var(--tp-radius-sm);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-render-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tp-space-3);
+  padding: var(--tp-space-4) var(--tp-space-5);
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-sm);
+  color: var(--tp-color-text-muted);
+}
+
+.tp-render-note svg { flex: none; margin-block-start: var(--tp-space-1); color: var(--tp-color-accent); }
+.tp-render-note strong { color: var(--tp-color-text); }
+
+/* Masonry with CSS columns only (no layout library). Items keep their own aspect ratio and are never upscaled past
+   their column; DOM order stays the reading and lightbox order. */
+.tp-masonry {
+  column-width: var(--tp-masonry-col);
+  column-gap: var(--tp-space-4);
+}
+
+.tp-masonry__item {
+  display: block;
+  margin-block-end: var(--tp-space-4);
+  break-inside: avoid;
+  overflow: hidden;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-color-stone);
+}
+
+.tp-masonry__img {
+  inline-size: 100%;
+  block-size: auto;
+  transition: transform var(--tp-dur-slow) var(--tp-ease-out);
+}
+
+.tp-masonry__item:hover .tp-masonry__img,
+.tp-masonry__item:focus-visible .tp-masonry__img { transform: scale(var(--tp-hover-zoom)); }
+
+.tp-project-compare__media { display: flex; justify-content: flex-start; }
+
+.tp-project-letter__fig {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tp-space-5);
+  max-inline-size: var(--tp-measure);
+}
+
+.tp-project-letter__quote {
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-h3);
+  font-weight: var(--tp-fw-regular);
+  line-height: var(--tp-lh-snug);
+}
+
+.tp-project-letter__quote p::before { content: var(--tp-quote-open); color: var(--tp-color-accent); }
+.tp-project-letter__quote p::after { content: var(--tp-quote-close); color: var(--tp-color-accent); }
+
+.tp-project-letter__by { display: flex; flex-direction: column; gap: var(--tp-space-1); }
+
+/* Previous / next */
+.tp-project-nav { border-block-start: var(--tp-hairline); }
+
+.tp-project-nav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-space-5);
+  justify-content: space-between;
+}
+
+.tp-project-nav__link {
+  flex: 1 1 18rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-2);
+  padding-block: var(--tp-space-4);
+  color: var(--tp-color-text);
+  text-decoration: none;
+}
+
+.tp-project-nav__next { align-items: flex-end; text-align: end; }
+
+.tp-project-nav__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-meta-color);
+}
+
+/* The arrow glyph points inline-end; the previous link flips it. */
+.tp-project-nav__prev .tp-project-nav__label svg { transform: scaleX(-1); }
+
+.tp-project-nav__title {
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-h4);
+  line-height: var(--tp-lh-heading);
+  transition: color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-project-nav__link:hover .tp-project-nav__title { color: var(--tp-color-accent-text); text-decoration: underline; text-decoration-thickness: var(--tp-border-w); text-underline-offset: 0.2em; }
+.tp-project-nav__link:hover .tp-project-nav__label { color: var(--tp-color-text); }
+
+/* Not-found state inside the hero */
+.tp-notfound { margin-block-start: var(--tp-space-5); }
+
+/* ---- single template: RTL (physical flips) ---- */
+[dir="rtl"] .tp-project-nav__prev .tp-project-nav__label svg { transform: none; }
+[dir="rtl"] .tp-project-nav__next .tp-project-nav__label svg { transform: scaleX(-1); }
+
+/* ---- 10. 404 (404.php) ---- */
+
+.tp-404__hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-space-8);
+  padding-block-end: var(--tp-space-9);
+}
+
+.tp-404__code {
+  position: relative;
+  flex: 0 1 auto;
+  font-family: var(--tp-font-display);
+  font-size: clamp(6rem, 3rem + 14vw, 14rem);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-tight);
+  letter-spacing: var(--tp-tracking-display);
+  padding-inline-end: 0.3em;
+  color: var(--tp-color-text);
+}
+
+.tp-404__plus {
+  position: absolute;
+  inset-block-start: 0.1em;
+  inset-inline-end: 0;
+  color: var(--tp-color-accent);
+}
+
+.tp-404__text { flex: 1 1 22rem; display: flex; flex-direction: column; align-items: flex-start; gap: var(--tp-space-5); }
+
+.tp-404__projects { padding-block-start: var(--tp-space-8); border-block-start: var(--tp-hairline); }

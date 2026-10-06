@@ -1,0 +1,687 @@
+/* ELEMENTOR SOURCE — recreated as global variables/classes, not shipped */
+/* ==========================================================================
+   components.css — every UI block of the site (BEM, tp- prefix)
+   Used by: index.html (Phase 1); later all pages. Sections in order:
+     1 text atoms · 2 buttons & links · 3 frame + setting-out marks · 5 hero · 6 partners
+     7 about/stats · 8 chairman quote · 9 section head · 10 services list · 11 why us
+     12 projects grid/cards · 13 spec (title block) · 15 letters · 16 CTA · 19 [dir="rtl"] / -rtl exceptions
+     (Header, footer, WhatsApp, before/after and lightbox moved to theme.css — Part 0 of Phase 2B.)
+   CSS Grid appears only where Flexbox Containers cannot express it (prototype only): tp-service-list, tp-projects-grid.
+   WP: not shipped. Recreated as Elementor v4 global variables / global classes (docs/wp-mapping.md).
+   ========================================================================== */
+
+/* ---- 1. Text atoms ---- */
+
+.tp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-3);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  line-height: var(--tp-lh-heading);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-eyebrow-color);
+}
+
+/* The logo "+" as section marker. */
+.tp-eyebrow::before {
+  content: "";
+  flex: none;
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-color-accent), var(--tp-color-accent)) center / 100% var(--tp-border-w) no-repeat,
+    linear-gradient(var(--tp-color-accent), var(--tp-color-accent)) center / var(--tp-border-w) 100% no-repeat;
+}
+
+.tp-lead {
+  font-size: var(--tp-fs-lg);
+  max-inline-size: var(--tp-measure);
+}
+
+.tp-caption {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-xs);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-meta-color);
+}
+
+.tp-caption svg { color: var(--tp-color-accent); }
+
+/* ---- 2. Buttons & links ---- */
+
+.tp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tp-space-2);
+  min-block-size: var(--tp-touch); /* 44px touch target */
+  padding: var(--tp-btn-pad-block) var(--tp-btn-pad-inline);
+  border: var(--tp-border-w) solid transparent;
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--tp-dur-fast) var(--tp-ease-out),
+    color var(--tp-dur-fast) var(--tp-ease-out),
+    border-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-btn--primary {
+  background: var(--tp-btn-bg);
+  color: var(--tp-btn-fg);
+}
+
+.tp-btn--primary:hover {
+  background: var(--tp-btn-bg-hover);
+  color: var(--tp-btn-fg-hover);
+}
+
+.tp-btn--ghost {
+  border-color: var(--tp-color-text);
+  color: var(--tp-color-text);
+}
+
+.tp-btn--ghost:hover {
+  background: var(--tp-color-text);
+  color: var(--tp-color-bg);
+}
+
+.tp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-sm);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  text-decoration: none;
+  color: var(--tp-color-accent-text);
+  padding-block: var(--tp-space-2);
+  border-block-end: var(--tp-hairline-accent);
+}
+
+.tp-link svg { transition: transform var(--tp-dur-fast) var(--tp-ease-out); }
+.tp-link:hover svg { transform: translateX(var(--tp-space-1)); }
+
+/* ---- 3. Frame + setting-out marks (signature) ----
+   Bronze "+" registration crosses at two opposite corners of framed images, like the setting-out
+   marks on architectural drawings. Used only on hero, chairman and why-us images. */
+
+.tp-frame {
+  position: relative;
+  color: var(--tp-mark-color);
+}
+
+.tp-frame::before,
+.tp-frame::after {
+  content: "";
+  position: absolute;
+  z-index: var(--tp-z-base);
+  inline-size: var(--tp-mark-size);
+  block-size: var(--tp-mark-size);
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% var(--tp-border-w) no-repeat,
+    linear-gradient(currentColor, currentColor) center / var(--tp-border-w) 100% no-repeat;
+}
+
+.tp-frame::before {
+  inset-block-start: calc(var(--tp-mark-offset) - var(--tp-frame-inset));
+  inset-inline-start: calc(var(--tp-mark-offset) - var(--tp-frame-inset));
+}
+
+.tp-frame::after {
+  inset-block-end: calc(var(--tp-mark-offset) - var(--tp-frame-inset));
+  inset-inline-end: calc(var(--tp-mark-offset) - var(--tp-frame-inset));
+}
+
+.tp-frame__clip {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--tp-radius-sm);
+  box-shadow: var(--tp-shadow-md);
+}
+
+/* Absolutely filled: a % height against an aspect-ratio parent does not resolve reliably. */
+.tp-frame__img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* ---- 5. Hero ---- */
+
+.tp-hero {
+  padding-block-start: var(--tp-space-5);
+  padding-block-end: var(--tp-section-pad-tight);
+}
+
+.tp-hero__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.tp-hero__panel {
+  flex: 7 1 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-6);
+  padding: var(--tp-space-8) var(--tp-gutter) var(--tp-space-8);
+  margin-inline: calc(-1 * var(--tp-gutter));
+  background: var(--tp-color-sand);
+}
+
+.tp-hero__title {
+  font-weight: var(--tp-fw-light);
+  text-wrap: balance;
+}
+
+/* Superscript bronze "+" after the headline — the logo mark, decorative only. */
+.tp-hero__plus {
+  display: inline-block;
+  margin-inline-start: 0.04em;
+  font-size: 0.5em;
+  font-weight: var(--tp-fw-light);
+  vertical-align: 0.95em;
+  line-height: 0;
+  color: var(--tp-color-accent);
+}
+
+.tp-hero__lead {
+  font-size: var(--tp-fs-lg);
+  max-inline-size: var(--tp-hero-lead-w);
+  color: var(--tp-color-text-muted);
+}
+
+.tp-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-space-3);
+}
+
+.tp-hero__media {
+  flex: 5 1 20rem;
+  max-inline-size: var(--tp-hero-media-w); /* 576px source: never stretch it across a tablet */
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-4);
+  padding-block-start: var(--tp-space-7);
+}
+
+.tp-hero__media .tp-frame__clip { aspect-ratio: 576 / 541; }
+
+@media (min-width: 64em) {
+  .tp-hero {
+    padding-block-start: var(--tp-space-6);
+  }
+
+  .tp-hero__panel {
+    margin-inline: 0;
+    padding-block: var(--tp-space-8);
+    padding-inline: var(--tp-space-8) var(--tp-space-10);
+    border-radius: var(--tp-radius-sm);
+    justify-content: center;
+  }
+
+  /* Image overlaps the sand panel's end edge: the asymmetric move of the page. */
+  .tp-hero__media {
+    margin-inline-start: calc(-1 * var(--tp-space-9));
+    padding-block-start: var(--tp-space-9);
+  }
+}
+
+.tp-compare__media { align-items: center; }
+
+/* ---- 6. Partners (the logo marquee itself, class tp-marquee, lives in animations.css) ---- */
+
+.tp-partners__title { margin-block-end: var(--tp-space-6); }
+
+/* ---- 7. About + stats ---- */
+
+.tp-about__text h2 { max-inline-size: 20ch; }
+
+.tp-stats { gap: 0; }
+
+.tp-stats__item {
+  display: flex;
+  flex-direction: column-reverse; /* value above label visually, dt first in source for screen readers */
+  gap: var(--tp-space-1);
+  padding-block: var(--tp-space-5);
+  border-block-start: var(--tp-hairline);
+}
+
+.tp-stats__item:last-child { border-block-end: var(--tp-hairline); }
+
+.tp-stats__value {
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-display);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-none);
+  color: var(--tp-color-text);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.tp-stats__label {
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-meta-color);
+}
+
+/* ---- 8. Chairman quote ---- */
+
+.tp-chairman__media { max-inline-size: var(--tp-portrait-w); }
+.tp-chairman__media .tp-frame__clip { aspect-ratio: 706 / 831; }
+
+.tp-quote { gap: var(--tp-space-6); }
+
+.tp-quote__text {
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-quote);
+  font-style: var(--tp-style-quote);
+  font-weight: var(--tp-fw-light);
+  line-height: var(--tp-lh-heading);
+  max-inline-size: 30ch;
+  text-wrap: pretty;
+}
+
+.tp-quote__text em {
+  font-style: normal;
+  color: var(--tp-color-accent-text);
+}
+
+.tp-quote__by {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-1);
+  padding-inline-start: var(--tp-space-5);
+  border-inline-start: var(--tp-hairline-accent);
+}
+
+.tp-quote__name { font-weight: var(--tp-fw-semibold); }
+.tp-quote__role { font-size: var(--tp-fs-sm); color: var(--tp-color-text-muted); }
+
+/* ---- 9. Section head ---- */
+
+.tp-section-head { margin-block-end: var(--tp-space-8); }
+.tp-section-head .tp-col--4 { max-inline-size: var(--tp-measure); }
+
+/* ---- 10. Services list (static rows, PRD v1.6 R3) ----
+   Each row is a Flexbox: link (title, text, "+") and one image of its own service. No hover swap, no sibling
+   state, no sticky image. Mobile: stacked rows with the image below the text. */
+
+.tp-service-list { border-block-start: var(--tp-hairline); }
+
+.tp-service { border-block-end: var(--tp-hairline); }
+
+.tp-service__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--tp-space-2) var(--tp-space-5);
+  padding-block: var(--tp-space-6);
+  color: inherit;
+  text-decoration: none;
+}
+
+.tp-service__title {
+  grid-column: 1;
+  font-size: var(--tp-fs-h3);
+  font-weight: var(--tp-fw-light);
+  transition: color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-service__text {
+  grid-column: 1;
+  max-inline-size: var(--tp-measure);
+  color: var(--tp-color-text-muted);
+}
+
+.tp-service__plus {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  color: var(--tp-color-accent);
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-service__link:hover .tp-service__title,
+.tp-service__link:focus-visible .tp-service__title { color: var(--tp-color-accent-text); }
+
+.tp-service__link:hover .tp-service__plus,
+.tp-service__link:focus-visible .tp-service__plus { transform: rotate(90deg); }
+
+.tp-service__img {
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  margin-block-end: var(--tp-space-6);
+  border-radius: var(--tp-radius-sm);
+}
+
+@media (min-width: 64em) {
+  .tp-service {
+    display: flex;
+    align-items: center;
+    gap: var(--tp-space-9);
+    padding-block: var(--tp-space-6);
+  }
+
+  .tp-service__link {
+    flex: 7 1 0;
+    min-inline-size: 0;
+    padding-block: 0;
+  }
+
+  .tp-service__img {
+    flex: 5 1 0;
+    min-inline-size: 0;
+    margin: 0;
+    box-shadow: var(--tp-shadow-md);
+  }
+}
+
+/* ---- 11. Why choose us ---- */
+
+.tp-why__list {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: var(--tp-space-4);
+}
+
+.tp-why__item {
+  position: relative;
+  padding-block: var(--tp-space-5);
+  padding-inline-start: var(--tp-space-6);
+  border-block-start: var(--tp-hairline);
+}
+
+/* "+" bullet */
+.tp-why__item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: calc(var(--tp-space-5) + 0.5em);
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-color-accent), var(--tp-color-accent)) center / 100% var(--tp-border-w) no-repeat,
+    linear-gradient(var(--tp-color-accent), var(--tp-color-accent)) center / var(--tp-border-w) 100% no-repeat;
+}
+
+.tp-why__title {
+  font-size: var(--tp-fs-h4);
+  font-weight: var(--tp-fw-medium);
+  margin-block-end: var(--tp-space-2);
+}
+
+.tp-why__item p { color: var(--tp-color-text-muted); max-inline-size: var(--tp-measure); }
+.tp-why__media .tp-frame__clip { aspect-ratio: 4 / 5; }
+
+/* ---- 12. Projects grid + cards (custom widget "tp-projects-grid") ---- */
+
+.tp-projects-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tp-gap);
+}
+
+@media (min-width: 40em) {
+  .tp-projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Asymmetric rhythm on desktop: 7+5, 5+7, 6+6 of 12 columns. */
+@media (min-width: 64em) {
+  .tp-projects-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .tp-projects-grid > * { grid-column: span 6; }
+  .tp-projects-grid > :nth-child(6n + 1),
+  .tp-projects-grid > :nth-child(6n + 4) { grid-column: span 7; }
+  .tp-projects-grid > :nth-child(6n + 2),
+  .tp-projects-grid > :nth-child(6n + 3) { grid-column: span 5; }
+}
+
+.tp-projects-grid__fallback { grid-column: 1 / -1; }
+
+.tp-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-4);
+  color: inherit;
+  text-decoration: none;
+}
+
+.tp-card__media {
+  position: relative;
+  overflow: hidden;
+  block-size: clamp(15rem, 10rem + 16vw, 30rem);
+  border-radius: var(--tp-card-radius);
+  background: var(--tp-color-sand);
+}
+
+.tp-card__img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: transform var(--tp-dur-slow) var(--tp-ease-out);
+}
+
+.tp-card:hover .tp-card__img,
+.tp-card:focus-visible .tp-card__img { transform: scale(var(--tp-hover-zoom)); }
+
+.tp-card__badges {
+  position: absolute;
+  inset-block-start: var(--tp-space-4);
+  inset-inline-start: var(--tp-space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-space-2);
+}
+
+.tp-badge {
+  padding: var(--tp-space-1) var(--tp-space-3);
+  background: var(--tp-color-surface);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-color-text);
+  box-shadow: var(--tp-shadow-sm);
+}
+
+.tp-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-meta-color);
+}
+
+.tp-card__title {
+  font-size: var(--tp-fs-h4);
+  font-weight: var(--tp-fw-regular);
+  transition: color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-card:hover .tp-card__title { color: var(--tp-color-accent-text); }
+
+.tp-card__location { font-size: var(--tp-fs-sm); color: var(--tp-color-text-muted); }
+
+/* Detail line slides in on hover; always visible on touch devices. */
+.tp-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-color-accent-text);
+}
+
+.tp-card__more svg { color: var(--tp-color-accent); }
+
+@media (hover: hover) {
+  .tp-card__more {
+    opacity: 0;
+    transform: translateY(var(--tp-space-2));
+    transition: opacity var(--tp-dur-base) var(--tp-ease-out), transform var(--tp-dur-base) var(--tp-ease-out);
+  }
+
+  .tp-card:hover .tp-card__more,
+  .tp-card:focus-visible .tp-card__more {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- 13. Spec (drawing title block: label / value) ---- */
+
+.tp-spec {
+  display: flex;
+  flex-wrap: wrap;
+  border-block-start: var(--tp-hairline);
+}
+
+.tp-spec__row {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-1);
+  padding: var(--tp-space-4) 0;
+  border-block-end: var(--tp-hairline);
+}
+
+.tp-spec__row dt {
+  font-size: var(--tp-fs-xs);
+  font-weight: var(--tp-fw-semibold);
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: var(--tp-transform-label);
+  color: var(--tp-meta-color);
+}
+
+.tp-spec__row dd { font-family: var(--tp-font-display); font-size: var(--tp-fs-h4); line-height: var(--tp-lh-heading); }
+
+/* ---- 15. Letters of appreciation ---- */
+
+.tp-letters { align-items: stretch; }
+
+.tp-letter__fig {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--tp-space-6);
+  block-size: 100%;
+  padding: var(--tp-space-6);
+  background: var(--tp-card-bg);
+  border-radius: var(--tp-card-radius);
+  box-shadow: var(--tp-card-shadow);
+  transition: box-shadow var(--tp-dur-base) var(--tp-ease-out), transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-letter__fig:hover { box-shadow: var(--tp-card-shadow-hover); transform: translateY(calc(-1 * var(--tp-space-1))); }
+
+.tp-letter__quote {
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-h4);
+  font-weight: var(--tp-fw-regular);
+  line-height: var(--tp-lh-snug);
+}
+
+.tp-letter__quote p::before { content: var(--tp-quote-open); color: var(--tp-color-accent); }
+.tp-letter__quote p::after { content: var(--tp-quote-close); color: var(--tp-color-accent); }
+
+.tp-letter__by {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-4);
+  padding-block-start: var(--tp-space-5);
+  border-block-start: var(--tp-hairline);
+}
+
+/* The original letter, tiny, as proof: a paper sheet with a hairline. */
+.tp-letter__thumb {
+  flex: none;
+  inline-size: var(--tp-letter-thumb);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: top;
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+}
+
+.tp-letter__company { display: block; font-weight: var(--tp-fw-semibold); font-size: var(--tp-fs-sm); }
+.tp-letter__author { display: block; font-size: var(--tp-fs-xs); color: var(--tp-color-text-muted); }
+
+/* ---- 16. CTA band ---- */
+
+.tp-cta { padding-block-start: 0; }
+
+.tp-cta__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tp-space-5);
+  padding: var(--tp-cta-pad);
+  border: var(--tp-hairline-accent);
+  border-radius: var(--tp-radius-sm);
+}
+
+.tp-cta__title { max-inline-size: 18ch; }
+.tp-cta__text { max-inline-size: var(--tp-measure); color: var(--tp-color-text-muted); font-size: var(--tp-fs-lg); }
+
+.tp-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tp-space-3) var(--tp-space-6);
+}
+
+.tp-cta__contact {
+  color: var(--tp-color-text);
+  text-decoration: none;
+  font-weight: var(--tp-fw-medium);
+  padding-block: var(--tp-space-2);
+  border-block-end: var(--tp-hairline);
+}
+
+.tp-cta__contact:hover { border-block-end-color: var(--tp-color-accent); }
+
+/* ==========================================================================
+   19. Direction-specific rules — the only physical values (transforms, gradients, keyframe distance).
+   Prototype: selected by [dir="rtl"]. Elementor build (PRD 8.2.2): each global class above stays direction-neutral and
+   the matching "-rtl" class below is added by hand to the same element on Arabic pages only:
+     tp-link-rtl · tp-card__more-rtl (the tp-marquee reversal is in animations.css)
+   (header, before/after, lightbox and nav underline are theme parts: they follow <html dir> in theme.css.)
+   ========================================================================== */
+
+[dir="rtl"] {
+  --tp-origin-start: right;
+}
+
+[dir="rtl"] .tp-link:hover svg,
+.tp-link-rtl:hover svg { transform: translateX(calc(-1 * var(--tp-space-1))) scaleX(-1); }
+[dir="rtl"] .tp-link svg,
+[dir="rtl"] .tp-card__more svg,
+.tp-link-rtl svg,
+.tp-card__more-rtl svg { transform: scaleX(-1); }

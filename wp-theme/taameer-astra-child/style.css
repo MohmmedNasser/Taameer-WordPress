@@ -1,0 +1,13 @@
+/*
+Theme Name:   Taameer Plus (Astra child)
+Theme URI:    https://www.taameer.ae/
+Description:  Minimal Astra child theme for Taameer Plus Contracting LLC. Layout and content live in Elementor
+              (Containers + native widgets) and the Astra Customizer; this theme only adds the small CSS/JS that
+              neither can express (see assets/css/taameer.css and assets/js/taameer.js).
+Author:       Taameer Plus
+Template:     astra
+Version:      1.0.0
+Text Domain:  taameer-astra-child
+*/
+
+/* Intentionally empty: styles live in assets/css/taameer.css (enqueued by functions.php). */

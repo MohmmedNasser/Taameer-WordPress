@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Arabic font test (final) — Taameer Plus (not part of the site)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<style>
+  /* TEST PAGE ONLY. Uses the real tokens; no letter-spacing on Arabic. */
+  body { font-family: var(--tp-font-body-ar); background: var(--tp-color-bg); color: var(--tp-color-text); }
+  .ft { padding: var(--tp-space-6) var(--tp-gutter); }
+  .ft__intro { max-inline-size: 70ch; margin-block-end: var(--tp-space-6); font-family: var(--tp-font-body); color: var(--tp-color-text-muted); }
+  .ft__intro h1 { font-family: var(--tp-font-display); font-size: var(--tp-fs-h3); margin-block-end: var(--tp-space-2); color: var(--tp-color-text); }
+  .ft__cols { direction: ltr; display: grid; grid-template-columns: minmax(0, 40rem); gap: var(--tp-space-6); }
+  @media (max-width: 900px) { .ft__cols { grid-template-columns: 1fr; } }
+  .ft__col { direction: rtl; border: 1px solid var(--tp-color-stone); border-radius: var(--tp-radius-md); padding: var(--tp-space-5); background: var(--tp-color-surface); min-inline-size: 0; }
+  .ft__name { font-family: var(--tp-font-body); font-size: var(--tp-fs-xs); text-transform: uppercase; color: var(--tp-color-text-muted); border-block-end: 1px solid var(--tp-color-stone); padding-block-end: var(--tp-space-2); margin-block-end: var(--tp-space-4); direction: ltr; text-align: start; }
+  .ft__col > * + * { margin-block-start: var(--tp-space-4); }
+  .ft__h { font-family: var(--ft-font); font-weight: var(--ft-w); letter-spacing: 0; color: var(--tp-color-text); line-height: var(--tp-lh-snug); }
+  .ft__h1 { font-size: var(--tp-fs-h1); }
+  .ft__h2 { font-size: var(--tp-fs-h2); }
+  .ft__h3 { font-size: var(--tp-fs-h3); }
+  .ft__h4 { font-size: var(--tp-fs-h4); }
+  .ft__stat { font-family: var(--ft-font); font-weight: var(--ft-w); font-size: var(--tp-fs-display); line-height: var(--tp-lh-snug); letter-spacing: 0; }
+  .ft__quote { font-family: var(--ft-font); font-weight: var(--ft-w); font-size: var(--tp-fs-quote); line-height: var(--tp-lh-snug); letter-spacing: 0; border-inline-start: 2px solid var(--tp-color-accent); padding-inline-start: var(--tp-space-4); }
+  .ft__body { font-family: var(--tp-font-body-ar); font-size: var(--tp-fs-base); line-height: var(--tp-lh-body); letter-spacing: 0; }
+  .ft__mixed { font-family: var(--ft-font); font-weight: var(--ft-w); font-size: var(--tp-fs-h3); line-height: var(--tp-lh-snug); letter-spacing: 0; }
+  .ft__lbl { font-family: var(--tp-font-body); font-size: var(--tp-fs-xs); color: var(--tp-color-text-muted); direction: ltr; text-align: start; margin-block-end: var(--tp-space-1); display: block; }
+  .ft__col--a { --ft-font: var(--tp-font-display-ar); --ft-w: var(--tp-fw-display-ar); }
+</style>
+</head>
+<body>
+<main class="ft">
+  <div class="ft__intro">
+    <h1>Arabic heading font test</h1>
+    <p>Final combination (D-034): El Messiri 500 for H1–H4, pull-quote and stat numbers; IBM Plex Sans Arabic for everything else. Real tokens (sizes, colours, spacing); heading line-height is --tp-lh-snug (1.35) because the English 1.05 clips Arabic marks; letter-spacing 0. Test page, not part of the site.</p>
+  </div>
+  <div class="ft__cols">
+    <section class="ft__col ft__col--a" aria-label="El Messiri">
+      <p class="ft__name">El Messiri 500 + IBM Plex Sans Arabic</p>
+      <div><span class="ft__lbl">H1</span><h1 class="ft__h ft__h1">نبني غداً أفضل</h1></div>
+      <div><span class="ft__lbl">H2</span><h2 class="ft__h ft__h2">رسالة رئيس مجلس الإدارة</h2></div>
+      <div><span class="ft__lbl">H3</span><h3 class="ft__h ft__h3">التصميم والتنفيذ</h3></div>
+      <div><span class="ft__lbl">H4</span><h4 class="ft__h ft__h4">الهندسة القيمية</h4></div>
+      <div><span class="ft__lbl">Stat</span><p class="ft__stat">+100 مشروع منجز</p></div>
+      <div><span class="ft__lbl">Chairman pull-quote (draft translation)</span><p class="ft__quote">«بعد أن تتعرّف على عائلة تعمير بلس، ستكون تجربتك معنا نقطة تحوّل في فهمك للبناء — بداية مثمرة لعلاقة عمل مستمرة، فنحن نبني الثقة قبل الخرسانة.»</p></div>
+      <div><span class="ft__lbl">Body (IBM Plex Sans Arabic)</span><p class="ft__body">تأسست تعمير بلس للمقاولات ذ.م.م في دبي عام 2015 كشركة صغيرة للخدمات الفنية، ونمت بثبات عبر سنوات من اكتساب الخبرة الاستثنائية في السوق، لتقدّم اليوم حلول البناء المتكاملة بجودة لا تقبل المساومة.</p></div>
+      <div><span class="ft__lbl">Mixed Arabic / Latin / digits</span><p class="ft__mixed">مقاول معتمد G+4 في دبي منذ 2015</p></div>
+    </section>
+  </div>
+</main>
+</body>
+</html>

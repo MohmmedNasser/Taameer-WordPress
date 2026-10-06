@@ -1,0 +1,40 @@
+{
+  "_note": "Mirrors the WP 'team' CPT. Bios are the website wording (no years); yearsExperience comes from PDF p7 and is not displayed (PRD 6.2 keeps the field).",
+  "intro": {
+    "en": "Taameer Plus is a very selective company when it comes to staff — we consider our employees the real treasure of our company.",
+    "ar": "تنتقي تعمير بلس موظفيها بعناية فائقة، فنحن نعدّ العاملين لدينا الثروة الحقيقية للشركة."
+  },
+  "philosophy": {
+    "en": "Over the years, Taameer Plus has built an experienced team of professional, creative and hard-working engineers, motivated to deliver projects with uncompromising quality, the best economical solution and the shortest time. Trustworthy relations are key to building good relationships with local private and government agencies.",
+    "ar": "على مر السنين، كوّنت تعمير بلس فريقاً من المهندسين المحترفين المبدعين والمجتهدين، يحدوهم الدافع إلى تنفيذ المشاريع بجودة لا تقبل المساومة وبأفضل حل اقتصادي وأقصر مدة زمنية. وتُعدّ العلاقات الموثوقة أساساً لبناء علاقات جيدة مع الجهات المحلية الخاصة والحكومية."
+  },
+  "members": [
+    {
+      "id": "mohannad-al-musleh",
+      "order": 1,
+      "name": { "en": "Eng. Mohannad Al Musleh", "ar": "م. مهند المصلح" },
+      "title": { "en": "General Manager", "ar": "المدير العام" },
+      "photo": "assets/img/team-mohannad-al-musleh.webp",
+      "bio": { "en": "With extensive experience in the UAE’s construction and development sector, he has built strong expertise through senior roles with leading contracting companies in Dubai, contributing to the successful delivery of a diverse portfolio of prestigious projects.", "ar": "يتمتع بخبرة واسعة في قطاع الإنشاء والتطوير في دولة الإمارات، وقد بنى خبرة قوية من خلال مناصب عليا في شركات مقاولات رائدة في دبي، أسهم خلالها في تنفيذ مجموعة متنوعة من المشاريع المرموقة." },
+      "yearsExperience": 15
+    },
+    {
+      "id": "rauof-al-otaibi",
+      "order": 2,
+      "name": { "en": "Eng. Rauof Al-Otaibi", "ar": "م. رؤوف العتيبي" },
+      "title": { "en": "Business Development Manager", "ar": "مدير تطوير الأعمال" },
+      "photo": "assets/img/team-rauof-al-otaibi.webp",
+      "bio": { "en": "With extensive experience in the UAE’s construction and development sector, he has built a strong background in business development and real estate, including five years in a Vice President role with a leading Dubai developer.", "ar": "يتمتع بخبرة واسعة في قطاع الإنشاء والتطوير في دولة الإمارات، وقد بنى خلفية قوية في تطوير الأعمال والعقارات، بما في ذلك خمس سنوات في منصب نائب الرئيس لدى مطوّر عقاري رائد في دبي." },
+      "yearsExperience": 14
+    },
+    {
+      "id": "mohammad-amer",
+      "order": 3,
+      "name": { "en": "Eng. Mohammad Amer", "ar": "م. محمد عامر" },
+      "title": { "en": "Projects Manager", "ar": "مدير المشاريع" },
+      "photo": "assets/img/team-mohammad-amer.webp",
+      "bio": { "en": "With extensive experience in the UAE construction sector, he has successfully managed a wide range of major projects, building a strong track record in project delivery, coordination, and execution.", "ar": "يتمتع بخبرة واسعة في قطاع الإنشاء في دولة الإمارات، وقد أدار بنجاح مجموعة واسعة من المشاريع الكبرى، وبنى سجلاً حافلاً في تسليم المشاريع وتنسيقها وتنفيذها." },
+      "yearsExperience": 12
+    }
+  ]
+}

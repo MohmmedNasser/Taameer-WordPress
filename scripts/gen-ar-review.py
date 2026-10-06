@@ -1,0 +1,159 @@
+"""gen-ar-review.py — writes docs/ar-copy-review.md, the document the client reviews (re-runnable).
+
+    python scripts/gen-ar-review.py
+
+Page by page, English | Arabic for every piece of copy (text, image alt text, SEO title/description), then the data
+files (projects, team, testimonials, services), then the glossary. Rows that need the client's confirmation are marked ⚠
+(names, the Chairman's message, translated third-party letters).
+The Arabic is read from the same sources the pages are built from (scripts/ar_text.py, scripts/ar_data.py), so the
+document cannot drift from the site; regenerate after any copy change.
+"""
+import html
+import json
+import os
+import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_ar  # noqa: E402
+
+ROOT = build_ar.ROOT
+PAGES = [('index', 'Home'), ('about', 'About'), ('services', 'Services'), ('projects', 'Projects'),
+         ('project', 'Project template (text on the page; project data is in the data tables)'),
+         ('testimonials', 'Testimonials'), ('contact', 'Contact'), ('404', '404')]
+
+NAMES = ['Fahim', 'Mohannad', 'Rauof', 'Mohammad Amer', 'Nicole Rowe', 'Maitha Ahli', 'Abdulla Al Zaabi']
+GENDER = []  # job-title gender was confirmed by the owner (both authors are women)
+CHAIRMAN = ['Welcome to our company', 'I am confident that after meeting', 'we build trust before concrete.', '“After meeting the Taameer Plus family']
+
+TESTI = set()
+for t in json.load(open(os.path.join(ROOT, 'data', 'testimonials.json'), encoding='utf-8'))['testimonials']:
+    if t.get('excerpt'):
+        TESTI.add(build_ar.norm(t['excerpt']['en']))
+HTML_EXCERPTS = ['They made very good recommendations', 'accomplished designing and constructing', 'completed the entire works', 'M/s Taameer']
+
+
+def flag(en):
+    if any(n in en for n in NAMES):
+        return '⚠ name / company name'
+    if any(c in en for c in CHAIRMAN):
+        return '⚠ Chairman’s message'
+    if build_ar.norm(en) in TESTI or any(e in en for e in HTML_EXCERPTS):
+        return '⚠ translated third-party letter'
+    if any(g == en.strip() or en.strip().startswith(g) for g in GENDER):
+        return '⚠ gender of job title'
+    return ''
+
+
+def cell(s):
+    return s.replace('|', '\\|').replace('\n', ' ')
+
+
+def strings_of(src):
+    """Ordered, de-duplicated (kind, english) pairs from an English page."""
+    seen, out = set(), []
+
+    def add(kind, text):
+        key = ' '.join(text.split())
+        if not key or not re.search(r'[A-Za-z]', key) or key in build_ar.IDENT or key == 'EN' or key in seen:
+            return
+        seen.add(key)
+        out.append((kind, key))
+
+    head = src.split('</head>')[0]
+    for m in re.finditer(r'<title>(.*?)</title>', head, re.S):
+        add('SEO title', html.unescape(m.group(1)))
+    for m in re.finditer(r'<meta (?:name|property)="(description|og:title|og:description)" content="([^"]*)"', head):
+        add('SEO ' + m.group(1), html.unescape(m.group(2)))
+    body = re.sub(r'<!--.*?-->', '', src.split('</head>')[1], flags=re.S)
+    body = re.sub(r'<script\b.*?</script>|<style\b.*?</style>', '', body, flags=re.S)
+    for tok in build_ar.TOKEN.split(body):
+        if not tok:
+            continue
+        if tok.startswith('<'):
+            for m in build_ar.ATTR.finditer(tok):
+                if m.group(2) in build_ar.TEXT_ATTRS:
+                    add('image alt / label' if m.group(2) == 'alt' else 'label', html.unescape(m.group(4)))
+        else:
+            add('text', html.unescape(tok))
+    return out
+
+
+def partials(src):
+    return re.findall(r'<!-- PARTIAL:(\w+) START -->(.*?)<!-- PARTIAL:\1 END -->', src, re.S)
+
+
+def table(rows):
+    lines = ['| English | Arabic | |', '|---|---|---|']
+    for kind, en in rows:
+        ar = build_ar.tr(en, 'review')
+        f = flag(en)
+        lines.append(f'| {cell(en)} | {cell(ar)} | {f} |')
+    return '\n'.join(lines)
+
+
+def main():
+    out = ['# Arabic copy review (for the client)', '',
+           'Written for the client\'s review of the Arabic website. Each page lists every piece of copy: English on the left, the proposed Arabic on the right. '
+           'Rows marked **⚠** need your confirmation: personal names (Arabic spellings are our best transliteration, not taken from official documents), the Chairman\'s message (his personal voice), translations of third-party letters, and translations of third-party letters.',
+           '', '- Numerals are Western digits (0–9) throughout; building notations (G+4, G+4P+H+22+R, 2B+G+6+HC) and brand names stay in Latin script.',
+           '- Testimonial excerpts are labelled on the site "ترجمة عن الأصل الإنجليزي" (translation from the English original); the original signed letters stay available.',
+           '- The glossary at the end fixes one Arabic term per concept; please check it first, since changes there apply everywhere.', '',
+           '> Generated by `scripts/gen-ar-review.py` from the same sources as the site. Do not edit by hand.', '']
+    # shared partials from index.html
+    idx = open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()
+    shared = []
+    for name, block in partials(idx):
+        shared += strings_of('<head></head>' + block)
+    shared_keys = {k for _, k in shared}
+    out += ['## Shared on every page: header, footer, WhatsApp button, call-to-action', '', table(shared), '']
+    for slug, label in PAGES:
+        src = open(os.path.join(ROOT, slug + '.html'), encoding='utf-8').read()
+        rows = [(k, e) for k, e in strings_of(src) if e not in shared_keys]
+        out += [f'## {label} (`{slug}.html`)', '', table(rows), '']
+
+    # data tables
+    out += ['## Data: services (site.json)', '']
+    site = json.load(open(os.path.join(ROOT, 'data', 'site.json'), encoding='utf-8'))
+    rows = []
+
+    def walk(o):
+        if isinstance(o, dict):
+            if 'en' in o and 'ar' in o and isinstance(o['en'], str):
+                rows.append(('data', o['en'], o['ar']))
+            else:
+                for v in o.values():
+                    walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    def data_table(d):
+        rows.clear()
+        walk(d)
+        seen, lines = set(), ['| English | Arabic | |', '|---|---|---|']
+        for _, en, ar in rows:
+            if not en or en in seen:
+                continue
+            seen.add(en)
+            lines.append(f'| {cell(en)} | {cell(ar)} | {flag(en)} |')
+        return '\n'.join(lines)
+
+    out += [data_table({k: site[k] for k in ('company', 'stats', 'whyUs', 'services', 'licenses', 'contact')}), '']
+    out += ['## Data: leadership team (team.json)', '', data_table(json.load(open(os.path.join(ROOT, 'data', 'team.json'), encoding='utf-8'))), '']
+    out += ['## Data: testimonials (testimonials.json)', '', data_table(json.load(open(os.path.join(ROOT, 'data', 'testimonials.json'), encoding='utf-8'))), '']
+    proj = json.load(open(os.path.join(ROOT, 'data', 'projects.json'), encoding='utf-8'))
+    out += ['## Data: projects (projects.json)', '', 'Project titles, locations, durations and types; the 22 portfolio projects plus the team’s earlier experience.', '',
+            data_table({'types': proj['types'], 'projects': [{k: v for k, v in p.items() if k in ('title', 'location', 'period', 'description')} for p in proj['projects']],
+                        'teamExperience': [{k: v for k, v in p.items() if k in ('title', 'location', 'note')} for p in proj['teamExperience']]}), '']
+    gl = open(os.path.join(ROOT, 'docs', 'glossary-ar.md'), encoding='utf-8').read()
+    gl = re.sub(r'^# .*\n', '', gl, count=1)
+    out += ['## Glossary', '', re.sub(r'^## ', '### ', gl, flags=re.M), '']
+    open(os.path.join(ROOT, 'docs', 'ar-copy-review.md'), 'w', encoding='utf-8', newline='').write('\n'.join(out))
+    text = chr(10).join(out)
+    n = sum(1 for line in text.split(chr(10)) if line.startswith('|') and line.rstrip().endswith('|') and '⚠' in line.split('|')[-2])
+    print('docs/ar-copy-review.md written;', n, 'rows marked ⚠;', len(text.split(chr(10))), 'lines')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,892 @@
+/* ==========================================================================
+   taameer.css — the only stylesheet of the Astra child theme (owner decision D-038)
+   Only what Elementor Free controls and the Astra Customizer cannot express. Colours, fonts, sizes, spacing,
+   borders and shadows of page content are set in Elementor (Global Kit + widget controls), not here.
+   Source of truth for the look: the static prototype (index.html, assets/css/*.css), not shipped.
+
+   Classes applied in Elementor (Advanced → CSS Classes):
+     tp-eyebrow            Heading: "+" marker before the label
+     tp-caption            Heading: "+" marker before a figure caption
+     tp-link               Button: text link with hairline and arrow
+     tp-frame              Container around an Image: ink "+" setting-out marks at two corners
+     tp-frame--portrait    …crop the image to 4:5
+     tp-parallax           Image: scroll parallax (taameer.js)
+     tp-img-reveal         Image: clip-path wipe on enter (taameer.js); tp-delay-1…5 delays it by 100–500 ms
+     tp-split              Heading: line-by-line reveal (taameer.js)
+     tp-service            Container (link) in the services list: "+" that turns on hover
+     tp-service__img       Image: 3:2 crop
+     tp-plus-item          Container: "+" bullet (why-us list)
+     tp-card               Container (link): project card hover (image zoom, title colour, "View project")
+     tp-lift               Container: card lift on hover (letters)
+     tp-letter__thumb      Image: letter thumbnail as a paper sheet
+     tp-marquee / tp-marquee__track / tp-marquee__logo / tp-blend   partner logo strip
+     tp-before-after / tp-before-after__after / tp-before-after__before   comparison slider (taameer.js)
+     tp-measure, tp-measure-quote, tp-measure-title   max line length
+   Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
+   Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
+   Logical properties only.
+   ========================================================================== */
+
+/* ---- 1. Tokens (read the Elementor Global Kit; fallbacks = same values) ---- */
+
+body {
+  --tp-ink: var(--e-global-color-primary, #0D0D0D);
+  --tp-slate: var(--e-global-color-secondary, #595959);
+  --tp-charcoal: var(--e-global-color-accent, #262626);
+  --tp-paper: var(--e-global-color-paper, #FFFFFF);
+  --tp-fog: var(--e-global-color-fog, #F4F4F4);
+  --tp-line: var(--e-global-color-line, #D9D9D9);
+
+  --tp-font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --tp-font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --tp-fs-xs: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --tp-fs-sm: clamp(0.875rem, 0.86rem + 0.06vw, 0.9375rem);
+  --tp-fs-h2: clamp(1.875rem, 1.5rem + 1.6vw, 3.125rem);
+  --tp-tracking-eyebrow: 0.22em;
+  --tp-tracking-button: 0.03em;
+
+  --tp-space-1: 0.25rem;
+  --tp-space-2: 0.5rem;
+  --tp-space-3: 0.75rem;
+  --tp-space-4: 1rem;
+  --tp-space-5: 1.5rem;
+  --tp-space-6: 2rem;
+  --tp-space-7: 3rem;
+  --tp-gutter: 3rem;
+  --tp-header-h: 5rem;
+  --tp-measure: 38rem;
+
+  --tp-hairline: 1px solid var(--tp-line);
+  --tp-hairline-ink: 1px solid var(--tp-ink);
+  --tp-radius-sm: 2px;
+  --tp-shadow-md: 0 2px 6px rgb(13 13 13 / 0.06), 0 12px 32px rgb(13 13 13 / 0.09);
+  --tp-shadow-lg: 0 6px 16px rgb(13 13 13 / 0.07), 0 28px 64px rgb(13 13 13 / 0.13);
+
+  --tp-dur-fast: 200ms;
+  --tp-dur-base: 400ms;
+  --tp-dur-slow: 800ms;
+  --tp-dur-reveal: 1000ms;
+  --tp-dur-marquee: 45s;
+  --tp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --tp-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --tp-reveal-distance: 2.5rem;
+  --tp-stagger-step: 110ms;
+
+  --tp-plus: 0.75rem;
+  --tp-mark-size: 1.125rem;
+  --tp-frame-inset: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+  --tp-marquee-gap: clamp(2.5rem, 1.5rem + 4vw, 5.5rem);
+  --tp-partner-h: 3rem;
+  --tp-partner-max-w: 10rem;
+  --tp-fab-size: 3.5rem;
+  --tp-touch: 2.75rem;
+
+  /* Line icons (the prototype's SVG sprite), drawn with mask-image so they take currentColor. */
+  --tp-i-plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v14M1 8h14' fill='none' stroke='%23000' stroke-width='1.25'/%3E%3C/svg%3E");
+  --tp-i-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12h15m-5-5 5 5-5 5' fill='none' stroke='%23000' stroke-width='1.25'/%3E%3C/svg%3E");
+  --tp-i-download: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4v11m-5-5 5 5 5-5M5 20h14' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
+  --tp-i-whatsapp: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24s8.24 3.7 8.24 8.24-3.7 8.24-8.24 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07s.88 2.4 1 2.57c.13.16 1.74 2.65 4.2 3.72.59.25 1.05.4 1.4.52.59.19 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z'/%3E%3C/svg%3E");
+  --tp-i-instagram: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='18' height='18' rx='5'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='17.5' cy='6.5' r='.6' fill='%23000'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+@media (max-width: 1023px) {
+  body { --tp-gutter: 2rem; --tp-header-h: 4.25rem; }
+}
+
+@media (max-width: 767px) {
+  body { --tp-gutter: 1.25rem; }
+}
+
+/* ---- 2. Base ---- */
+
+/* Astra sets html { font-size: 93.75% }; the prototype's rem scale (and the Kit's clamp() sizes) assume 16px. */
+html { font-size: 100%; }
+
+html { scroll-padding-block-start: calc(var(--tp-header-h, 5rem) + 1rem); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  overflow-x: clip; /* off-canvas reveal transforms and the marquee never cause a horizontal scrollbar */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tp-charcoal);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--tp-line); color: var(--tp-ink); }
+
+/* Text Editor paragraphs: spacing comes from the container gap, not from paragraph margins. */
+.elementor-widget-text-editor p:last-child,
+.elementor-widget-text-editor blockquote { margin-block-end: 0; }
+.elementor-widget-text-editor blockquote { margin: 0; padding: 0; border: 0; font-style: inherit; }
+
+.elementor-heading-title { text-wrap: balance; }
+.elementor-widget-text-editor p { text-wrap: pretty; }
+
+/* Elementor Full Width template: Astra still wraps the content in a padded .ast-container; Elementor sections
+   carry their own gutters, so the wrapper must not add any. */
+/* Frame marks sit just outside their image; on a 320–390px screen they can touch the viewport edge. */
+.site-content { overflow-x: clip; }
+
+.elementor-template-full-width .site-content > .ast-container {
+  display: block;
+  max-inline-size: none;
+  padding-inline: 0;
+}
+
+/* Astra prints "body .elementor-button { font-size: 1rem }" from its own button settings, which beats the Elementor
+   Global Kit. Hand the button typography back to the Kit's Button style; per-widget typography still wins. */
+body .elementor-widget-button .elementor-button {
+  font-size: var(--e-global-typography-accent-font-size);
+  font-weight: var(--e-global-typography-accent-font-weight);
+  line-height: var(--e-global-typography-accent-line-height);
+}
+
+/* Max line lengths (prototype: --tp-measure, 30ch quote, 18–20ch titles). Specific enough to beat Elementor's
+   ".e-con > .elementor-widget { max-width: 100% }". */
+.elementor .elementor-element.tp-measure { max-inline-size: var(--tp-measure); }
+.elementor .elementor-element.tp-measure-lead { max-inline-size: 34rem; }
+.elementor .elementor-element.tp-measure-quote { max-inline-size: 30ch; }
+.elementor .elementor-element.tp-measure-title { max-inline-size: 20ch; }
+.elementor .elementor-element.tp-measure-cta { max-inline-size: 18ch; }
+
+/* ---- 3. Header (Astra Header Builder) ----
+   Solid and sticky on every page; never transparent, no overlay. Astra Free has no sticky header option. */
+
+#masthead {
+  position: sticky;
+  inset-block-start: var(--wp-admin--admin-bar--height, 0px);
+  z-index: 100;
+  background: var(--tp-paper);
+  border-block-end: var(--tp-hairline);
+}
+
+@media (max-width: 600px) {
+  .admin-bar #masthead { inset-block-start: 0; } /* the admin bar scrolls away on small screens */
+}
+
+#masthead .ast-primary-header-bar { border-block-end: 0; background: var(--tp-paper); }
+
+/* Content width = the prototype container: 1320px plus the gutters. */
+#masthead .site-primary-header-wrap.ast-container,
+#colophon .ast-builder-grid-row-container-inner {
+  margin-inline: auto;
+  max-inline-size: calc(82.5rem + 2 * var(--tp-gutter));
+  padding-inline: var(--tp-gutter);
+}
+
+#masthead .ast-builder-grid-row { gap: var(--tp-space-5); }
+#masthead .site-header-primary-section-right { gap: var(--tp-space-4); }
+
+#masthead .custom-logo-link img { block-size: 2.75rem; inline-size: auto; max-inline-size: none; }
+
+/* Navigation links: Inter 500, ink, hairline that draws in from the start edge (hover / current page). */
+#masthead .main-header-menu { gap: clamp(1rem, 0.2rem + 1.5vw, 2.25rem); }
+#masthead .main-header-menu > .menu-item { line-height: 1.7; }
+
+#masthead .main-header-menu > .menu-item > .menu-link {
+  position: relative;
+  padding: var(--tp-space-2) 0;
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-sm);
+  font-weight: 500;
+  color: var(--tp-ink);
+}
+
+#masthead .main-header-menu > .menu-item > .menu-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 1px;
+  background: var(--tp-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+#masthead .main-header-menu > .menu-item > .menu-link:hover::after,
+#masthead .main-header-menu > .current-menu-item > .menu-link::after { transform: scaleX(1); }
+
+/* Language switcher (HTML element; visual only until the Arabic site exists). */
+.tp-lang {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  margin: 0;
+  font-size: var(--tp-fs-sm);
+  line-height: 1.7;
+  color: var(--tp-ink);
+}
+
+.tp-lang abbr { text-decoration: none; border: 0; font-weight: 600; cursor: default; }
+.tp-lang__sep { color: var(--tp-line); }
+.tp-lang__link { padding: var(--tp-space-2) var(--tp-space-1); color: var(--tp-ink); text-decoration: none; }
+a.tp-lang__link:hover { color: var(--tp-charcoal); }
+
+/* "Get a Quote" (Astra header button). */
+#masthead .ast-custom-button,
+.ast-mobile-popup-content .ast-custom-button {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tp-touch);
+  padding: 0.95rem 1.75rem;
+  background: var(--tp-ink);
+  border: 1px solid transparent;
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-paper);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+#masthead .ast-custom-button:hover,
+.ast-mobile-popup-content .ast-custom-button:hover { background: var(--tp-charcoal); color: var(--tp-paper); }
+
+/* Mobile toggle: hairline box, "MENU" label, the logo "+" as icon. */
+#masthead .menu-toggle.main-header-menu-toggle {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: var(--tp-space-3);
+  min-block-size: var(--tp-touch);
+  padding: var(--tp-space-2) var(--tp-space-3);
+  background: none;
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-ink);
+}
+
+#masthead .menu-toggle .mobile-menu {
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: uppercase;
+}
+
+#masthead .menu-toggle .mobile-menu-toggle-icon .ast-mobile-svg { display: none; }
+
+#masthead .menu-toggle .mobile-menu-toggle-icon {
+  display: block;
+  inline-size: 1rem;
+  block-size: 1rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-i-plus) center / contain no-repeat;
+  mask: var(--tp-i-plus) center / contain no-repeat;
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+#masthead .menu-toggle.toggled .mobile-menu-toggle-icon { transform: rotate(45deg); }
+
+/* Full-screen mobile menu (Astra off-canvas, full-width layout): light panel below the header. */
+.ast-mobile-popup-drawer .ast-mobile-popup-inner {
+  inset: 0;
+  inline-size: 100%;
+  max-inline-size: none;
+  background: var(--tp-paper);
+  transform: none !important; /* Astra slides it in from the side; the prototype fades */
+  opacity: 0;
+  transition: opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.ast-mobile-popup-drawer.active .ast-mobile-popup-inner { opacity: 1; }
+.ast-mobile-popup-drawer .ast-mobile-popup-header { padding-inline: var(--tp-gutter); }
+.ast-mobile-popup-drawer .ast-mobile-popup-content { padding: var(--tp-space-6) var(--tp-gutter) var(--tp-space-7); }
+
+.ast-mobile-popup-drawer .menu-toggle-close {
+  color: var(--tp-ink);
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  min-inline-size: var(--tp-touch);
+  min-block-size: var(--tp-touch);
+}
+
+.ast-mobile-popup-content .main-header-menu { border: 0; background: none; }
+.ast-mobile-popup-content .main-header-menu .menu-item { border: 0; }
+
+.ast-mobile-popup-content .main-header-menu .menu-item > .menu-link {
+  padding: var(--tp-space-2) 0;
+  border: 0;
+  font-family: var(--tp-font-display);
+  font-size: var(--tp-fs-h2);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--tp-ink);
+}
+
+.ast-mobile-popup-content .main-header-menu .current-menu-item > .menu-link { color: var(--tp-charcoal); }
+
+.ast-mobile-popup-content .ast-builder-layout-element.ast-header-button-1 {
+  margin-block-start: var(--tp-space-6);
+  padding-block-start: var(--tp-space-6);
+  border-block-start: var(--tp-hairline);
+}
+
+.ast-mobile-popup-content .ast-header-html-2 { margin-block-start: var(--tp-space-4); }
+.tp-menu-foot { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tp-space-4); }
+.tp-menu-foot a { color: var(--tp-ink); text-decoration: none; }
+.tp-menu-foot p { margin: 0; }
+
+/* ---- 4. Footer (Astra Footer Builder: 4 widget columns + bottom row) ---- */
+
+#colophon {
+  background: var(--tp-fog);
+  border-block-start: var(--tp-hairline);
+  font-size: var(--tp-fs-sm);
+  color: var(--tp-ink);
+}
+
+#colophon .site-primary-footer-wrap,
+#colophon .site-below-footer-wrap { background: var(--tp-fog); }
+
+#colophon .site-primary-footer-wrap { padding-block: 6rem 0; }
+
+#colophon .site-primary-footer-wrap .ast-builder-grid-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tp-space-7);
+}
+
+@media (min-width: 640px) {
+  #colophon .site-primary-footer-wrap .ast-builder-grid-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  #colophon .site-primary-footer-wrap .ast-builder-grid-row {
+    grid-template-columns: minmax(0, 4fr) repeat(2, minmax(0, 2fr)) minmax(0, 3fr);
+  }
+}
+
+#colophon .site-footer-section { align-items: flex-start; }
+#colophon .footer-widget-area { inline-size: 100%; }
+#colophon .footer-widget-area .widget { margin: 0; }
+
+#colophon a { color: var(--tp-ink); text-decoration: none; }
+#colophon a:hover { color: var(--tp-charcoal); }
+
+#colophon .widget-title,
+#colophon .tp-footer-heading {
+  margin: 0 0 var(--tp-space-5);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--tp-charcoal);
+}
+
+#colophon .widget_nav_menu ul,
+#colophon .tp-footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#colophon .widget_nav_menu li { margin: 0; padding: 0; line-height: 1.7; }
+#colophon .widget_nav_menu a { display: inline-block; padding-block: var(--tp-space-1); }
+#colophon .widget_nav_menu .current-menu-item > a {
+  font-weight: 600;
+  color: var(--tp-charcoal);
+  border-block-end: var(--tp-hairline-ink);
+}
+
+#colophon .tp-footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tp-space-5); }
+#colophon .tp-footer-brand p { margin: 0; }
+#colophon .tp-footer-logo img { block-size: 3.25rem; inline-size: auto; }
+#colophon .tp-footer-blurb { max-inline-size: 30rem; color: var(--tp-slate); }
+
+#colophon .tp-footer-download {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  padding-block: var(--tp-space-2);
+  font-weight: 600;
+  border-block-end: var(--tp-hairline-ink);
+}
+
+#colophon .tp-footer-download::before,
+#colophon .tp-social a::before {
+  content: "";
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-icon) center / contain no-repeat;
+  mask: var(--tp-icon) center / contain no-repeat;
+}
+
+#colophon .tp-footer-download { --tp-icon: var(--tp-i-download); }
+#colophon .tp-footer-meta { font-weight: 400; color: var(--tp-slate); }
+
+#colophon address { font-style: normal; }
+#colophon .tp-footer-list p { margin: 0; }
+#colophon .tp-footer-label { display: inline-block; min-inline-size: 3.75rem; color: var(--tp-slate); }
+
+#colophon .tp-social { display: flex; flex-wrap: wrap; gap: var(--tp-space-5); }
+#colophon .tp-social a { display: inline-flex; align-items: center; gap: var(--tp-space-2); }
+#colophon .tp-social a[href*="wa.me"] { --tp-icon: var(--tp-i-whatsapp); }
+#colophon .tp-social a[href*="instagram"] { --tp-icon: var(--tp-i-instagram); }
+
+/* Bottom row: copyright | language switcher, hairline above. */
+#colophon .site-below-footer-wrap { padding-block: 0 calc(var(--tp-fab-size) + var(--tp-space-7)); }
+
+@media (min-width: 1024px) {
+  #colophon .site-below-footer-wrap { padding-block-end: var(--tp-space-6); }
+}
+
+#colophon .site-below-footer-wrap .ast-builder-grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--tp-space-4);
+  margin-block-start: 4rem;
+  padding-block-start: var(--tp-space-5);
+  border-block-start: var(--tp-hairline);
+  color: var(--tp-slate);
+}
+
+#colophon .site-below-footer-wrap .ast-builder-grid-row-container-inner,
+#colophon .site-below-footer-wrap .ast-builder-grid-row { inline-size: 100%; }
+#colophon .site-below-footer-wrap .site-footer-section { justify-content: flex-start; }
+#colophon .site-below-footer-wrap .ast-builder-html-element p { margin: 0; }
+#colophon .ast-footer-copyright,
+#colophon .ast-footer-copyright p { margin: 0; font-size: var(--tp-fs-sm); color: var(--tp-slate); }
+#colophon .site-below-footer-wrap .site-footer-section-2 { justify-content: flex-end; }
+#colophon .ast-footer-html-2 { display: contents; } /* the WhatsApp button is fixed; its holder takes no space */
+
+/* Floating WhatsApp button (footer HTML element). */
+.tp-fab {
+  position: fixed;
+  inset-block-end: var(--tp-space-5);
+  inset-inline-end: var(--tp-space-5);
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  inline-size: var(--tp-fab-size);
+  block-size: var(--tp-fab-size);
+  background: var(--tp-ink);
+  color: var(--tp-paper) !important; /* beats #colophon a */
+  border-radius: 50%;
+  box-shadow: var(--tp-shadow-lg);
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-fab:hover { background: var(--tp-charcoal); }
+
+.tp-fab::before {
+  content: "";
+  inline-size: 1.625rem;
+  block-size: 1.625rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-i-whatsapp) center / contain no-repeat;
+  mask: var(--tp-i-whatsapp) center / contain no-repeat;
+}
+
+.tp-visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- 5. Page components (Elementor) ---- */
+
+/* The logo "+" as section marker before eyebrow labels and captions. */
+.tp-eyebrow .elementor-heading-title,
+.tp-caption .elementor-heading-title {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-3);
+}
+
+.tp-caption .elementor-heading-title { gap: var(--tp-space-2); }
+
+.tp-eyebrow .elementor-heading-title::before,
+.tp-caption .elementor-heading-title::before {
+  content: "";
+  flex: none;
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+/* Superscript "+" after the hero headline (inline span in the Heading text, aria-hidden). */
+.tp-hero-plus {
+  display: inline-block;
+  margin-inline-start: 0.04em;
+  font-size: 0.5em;
+  vertical-align: 0.95em;
+  line-height: 0;
+  color: var(--tp-ink);
+}
+
+/* Text link with hairline and arrow (Button widget). */
+.tp-link .elementor-button { border-block-end: var(--tp-hairline-ink) !important; }
+.tp-link .elementor-button-content-wrapper { align-items: center; gap: var(--tp-space-2); }
+
+.tp-link .elementor-button-content-wrapper::after {
+  content: "";
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-i-arrow) center / contain no-repeat;
+  mask: var(--tp-i-arrow) center / contain no-repeat;
+  transition: transform var(--tp-dur-fast) var(--tp-ease-out);
+}
+
+.tp-link .elementor-button:hover .elementor-button-content-wrapper::after { transform: translateX(var(--tp-space-1)); }
+
+/* Signature: ink "+" setting-out marks at two opposite corners of a framed image. */
+.tp-frame { position: relative; overflow: visible; }
+
+.e-con.tp-frame::before,
+.e-con.tp-frame::after { /* .e-con: Elementor uses ::before for container background overlays */
+  content: "";
+  inset: auto;
+  inline-size: var(--tp-mark-size);
+  block-size: var(--tp-mark-size);
+  opacity: 1;
+  border-radius: 0;
+  position: absolute;
+  z-index: 2;
+  inline-size: var(--tp-mark-size);
+  block-size: var(--tp-mark-size);
+  pointer-events: none;
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+.e-con.tp-frame::before {
+  inset-block-start: calc(var(--tp-mark-size) / -2 - var(--tp-frame-inset));
+  inset-inline-start: calc(var(--tp-mark-size) / -2 - var(--tp-frame-inset));
+}
+
+.e-con.tp-frame::after {
+  inset-block-end: calc(var(--tp-mark-size) / -2 - var(--tp-frame-inset));
+  inset-inline-end: calc(var(--tp-mark-size) / -2 - var(--tp-frame-inset));
+}
+
+/* The figure caption sits below the image: the bottom mark belongs to the image, not the caption. */
+.tp-frame > .elementor-widget-image { inline-size: 100%; }
+.elementor .tp-frame img { display: block; inline-size: 100%; }
+.elementor .tp-frame--portrait img { aspect-ratio: 4 / 5; block-size: auto; object-fit: cover; }
+
+/* Image clip box for parallax / wipe: radius and shadow live on the widget (Elementor Advanced tab). */
+.tp-parallax,
+.tp-img-reveal { overflow: hidden; }
+
+/* Services list rows. */
+.tp-service { position: relative; color: inherit; text-decoration: none; }
+.tp-service .elementor-heading-title { transition: color var(--tp-dur-fast) var(--tp-ease-out); }
+.tp-service:hover .elementor-heading-title,
+.tp-service:focus-visible .elementor-heading-title { color: var(--tp-charcoal); }
+
+.tp-service::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.6rem;
+  inset-inline-end: 0;
+  inline-size: 1rem;
+  block-size: 1rem;
+  background: var(--tp-ink);
+  -webkit-mask: var(--tp-i-plus) center / contain no-repeat;
+  mask: var(--tp-i-plus) center / contain no-repeat;
+  transition: transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-service:hover::after,
+.tp-service:focus-visible::after { transform: rotate(90deg); }
+
+.elementor .tp-service__img img { inline-size: 100%; aspect-ratio: 3 / 2; block-size: auto; object-fit: cover; }
+
+/* "+" bullet (why-us list). */
+.tp-plus-item { position: relative; }
+
+.e-con.tp-plus-item::before { /* .e-con: see .tp-frame */
+  content: "";
+  position: absolute;
+  inset: auto;
+  opacity: 1;
+  border-radius: 0;
+  inset-inline-start: 0;
+  inset-block-start: calc(var(--tp-space-5) + 0.5em);
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+/* Project cards (Container rendered as a link). */
+.tp-card { color: inherit; text-decoration: none; }
+.tp-card .elementor-widget-image { overflow: hidden; }
+.tp-card img { transition: transform var(--tp-dur-slow) var(--tp-ease-out); }
+.tp-card:hover img,
+.tp-card:focus-visible img { transform: scale(1.05); }
+.tp-card h3 { transition: color var(--tp-dur-fast) var(--tp-ease-out); }
+.tp-card:hover h3 { color: var(--tp-charcoal); }
+
+.tp-card__more .elementor-heading-title { display: inline-flex; align-items: center; gap: var(--tp-space-2); }
+
+.tp-card__more .elementor-heading-title::after {
+  content: "";
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  background: var(--tp-ink);
+  -webkit-mask: var(--tp-i-arrow) center / contain no-repeat;
+  mask: var(--tp-i-arrow) center / contain no-repeat;
+}
+
+/* "View project" slides in on hover; always visible on touch screens. */
+@media (hover: hover) {
+  .tp-card__more {
+    opacity: 0;
+    transform: translateY(var(--tp-space-2));
+    transition: opacity var(--tp-dur-base) var(--tp-ease-out), transform var(--tp-dur-base) var(--tp-ease-out);
+  }
+
+  .tp-card:hover .tp-card__more,
+  .tp-card:focus-visible .tp-card__more { opacity: 1; transform: none; }
+}
+
+/* Letters: lift on hover. */
+.tp-lift { transition: box-shadow var(--tp-dur-base) var(--tp-ease-out), transform var(--tp-dur-base) var(--tp-ease-out); }
+.tp-lift:hover { box-shadow: var(--tp-shadow-md) !important; transform: translateY(calc(-1 * var(--tp-space-1))); }
+
+.elementor .tp-letter__thumb img { aspect-ratio: 3 / 4; object-fit: cover; object-position: top; }
+
+/* Stat numbers: lining, tabular figures (Playfair defaults to old-style figures that dip below the line). */
+.elementor-counter-number-wrapper,
+.tp-stat .elementor-heading-title { font-variant-numeric: lining-nums tabular-nums; }
+
+/* Chairman quote: emphasis is upright charcoal inside the italic quote. */
+.tp-quote em { font-style: normal; color: var(--tp-charcoal); }
+
+/* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
+
+.tp-before-after { inline-size: 100%; max-inline-size: 36rem; }
+
+.tp-ba {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: var(--tp-shadow-lg);
+  touch-action: pan-y; /* vertical page scroll still works; horizontal drag moves the divider */
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.tp-ba > .elementor-element { display: none; } /* the source Image widgets: their images moved into the slider */
+
+.tp-ba__img,
+.tp-ba__before {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.tp-ba__img { object-fit: cover; pointer-events: none; max-inline-size: none; }
+.tp-ba__before { clip-path: inset(0 calc(100% - var(--tp-ba-pos, 50%)) 0 0); }
+
+.tp-ba__label {
+  position: absolute;
+  inset-block-end: var(--tp-space-4);
+  padding: var(--tp-space-1) var(--tp-space-3);
+  background: var(--tp-paper);
+  border-radius: var(--tp-radius-sm);
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: uppercase;
+  color: var(--tp-ink);
+}
+
+.tp-ba__label--before { inset-inline-start: var(--tp-space-4); }
+.tp-ba__label--after { inset-inline-end: var(--tp-space-4); }
+
+.tp-ba__handle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--tp-ba-pos, 50%);
+  display: grid;
+  place-items: center;
+  inline-size: var(--tp-touch);
+  transform: translateX(-50%);
+  cursor: ew-resize;
+}
+
+.tp-ba__handle::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: 1px;
+  background: var(--tp-paper);
+}
+
+.tp-ba__handle::after {
+  content: "";
+  position: relative;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: var(--tp-paper) var(--tp-i-plus) center / 1rem no-repeat;
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-ba__handle:focus-visible { outline: none; }
+.tp-ba__handle:focus-visible::after { outline: 2px solid var(--tp-charcoal); outline-offset: 3px; }
+
+/* ---- 7. Partner marquee (taameer.js clones the track once for a seamless loop) ---- */
+
+.tp-marquee {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.tp-marquee__track {
+  display: flex !important;
+  flex: none !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: var(--tp-marquee-gap) !important;
+  inline-size: max-content !important;
+  padding-inline-end: var(--tp-marquee-gap) !important; /* equals the gap: the loop seam is invisible */
+}
+
+.tp-marquee__track > .elementor-element { flex: none; inline-size: auto !important; }
+
+.tp-marquee .tp-marquee__logo img {
+  block-size: var(--tp-partner-h);
+  inline-size: auto;
+  max-inline-size: var(--tp-partner-max-w);
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.6;
+  transition: filter var(--tp-dur-base) var(--tp-ease-out), opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.tp-marquee .tp-marquee__logo img:hover { filter: none; opacity: 1; }
+.tp-marquee .tp-blend img { mix-blend-mode: multiply; } /* white-box JPG logos: the white box disappears on the light section */
+
+@media (prefers-reduced-motion: no-preference) {
+  .tp-marquee.is-ready .tp-marquee__track { animation: tp-marquee var(--tp-dur-marquee) linear infinite; }
+  .tp-marquee:hover .tp-marquee__track,
+  .tp-marquee:focus-within .tp-marquee__track { animation-play-state: paused; }
+}
+
+@keyframes tp-marquee {
+  to { transform: translateX(-100%); }
+}
+
+/* ---- 8. Motion ----
+   Entrance: Elementor's native "Fade In Up" (Motion Effects → Entrance Animation, delays for stagger), retimed here to the
+   prototype's distance (2.5rem) and easing. Line split, image wipe and parallax are taameer.js (classes above).
+   Hidden states apply only under html.tp-js; prefers-reduced-motion shows everything at once. */
+
+/* Entrance delay steps for the JS-driven effects (prototype tp-delay-1…5, 100 ms each). Elementor's own entrance
+   animations use their native "Animation Delay" control instead. */
+.tp-delay-1 { --tp-delay: 100ms; }
+.tp-delay-2 { --tp-delay: 200ms; }
+.tp-delay-3 { --tp-delay: 300ms; }
+.tp-delay-4 { --tp-delay: 400ms; }
+.tp-delay-5 { --tp-delay: 500ms; }
+
+@keyframes tp-fade-up {
+  from { opacity: 0; transform: translate3d(0, var(--tp-reveal-distance), 0); }
+  to { opacity: 1; transform: none; }
+}
+
+.elementor-element.animated.fadeInUp {
+  animation-name: tp-fade-up;
+  animation-duration: var(--tp-dur-reveal);
+  animation-timing-function: var(--tp-ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tp-split__line {
+    display: block;
+    overflow: hidden;
+    padding-block-end: 0.08em; /* keeps descenders inside the mask */
+  }
+
+  .tp-split__inner {
+    display: inline-block;
+    transform: translate3d(0, 105%, 0);
+    transition: transform var(--tp-dur-reveal) var(--tp-ease-out);
+    transition-delay: calc(var(--tp-i, 0) * var(--tp-stagger-step));
+  }
+
+  .tp-split.is-visible .tp-split__inner { transform: none; }
+
+  /* .elementor-element: Elementor's widget rule ".elementor-element:where(…):not(:has(…))" sets its own transition
+     (background, border, box-shadow, transform) with the same specificity and loads later; without the extra class
+     the clip-path has no transition and the wipe jumps from hidden to shown in one frame. */
+  .tp-js .elementor-element.tp-img-reveal {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path calc(var(--tp-dur-reveal) * 1.3) var(--tp-ease-in-out);
+    transition-delay: var(--tp-delay, 0ms);
+  }
+
+  .tp-js .elementor-element.tp-img-reveal.is-visible { clip-path: inset(0); }
+
+  .tp-js .tp-parallax img {
+    transform: translate3d(0, var(--tp-py, 0px), 0) scale(1.12);
+    will-change: transform;
+  }
+}
+
+/* Inside the Elementor editor everything stays visible and static. */
+.elementor-editor-active .tp-img-reveal { clip-path: none !important; }
+.elementor-editor-active .tp-parallax img { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .elementor-invisible { visibility: visible !important; }
+  .elementor-element.animated { animation: none !important; }
+
+  /* Marquee becomes a static, centred, wrapped row of logos. */
+  .tp-marquee { -webkit-mask-image: none; mask-image: none; }
+  .tp-marquee__track {
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    justify-content: center;
+    inline-size: auto !important;
+    row-gap: var(--tp-space-6) !important;
+    padding-inline: var(--tp-gutter) !important;
+  }
+}

@@ -1,0 +1,224 @@
+/* ELEMENTOR SOURCE — recreated as global variables/classes, not shipped */
+/* ==========================================================================
+   tokens.css — Taameer Plus design tokens (single brand: the taameer.ae identity on a light layout).
+   Layers: primitive/semantic brand values (colors, fonts, display sizes, radii, shadows, button hover)
+   first, then shared scales (spacing, layout, motion, z-index) and the component layer.
+   Extracted brand values: docs/brand.md. Adaptations (dark -> light, contrast): docs/decisions.md D-019..D-023.
+   The earlier warm-bronze design is recoverable via git tag v1-bronze.
+   WP: not shipped. Recreated as Elementor v4 global variables / global classes (docs/wp-mapping.md).
+   ========================================================================== */
+
+:root {
+  /* ---- Color: brand palette (official --paper/--fog/--line/--ink/--charcoal/--slate) ---- */
+  --tp-color-bg: #FFFFFF;          /* official --paper: page background */
+  --tp-color-surface: #FFFFFF;     /* cards */
+  --tp-color-sand: #F4F4F4;        /* official --fog: alternating sections, footer */
+  --tp-color-stone: #D9D9D9;       /* official --line: borders, dividers */
+  --tp-color-accent: #0D0D0D;      /* official --ink: "+" marks, hairlines, icons, button fills */
+  --tp-color-accent-text: #262626; /* official --charcoal: small accent text/links (ink stays reserved for headings) */
+  --tp-color-secondary: #595959;   /* official --slate: tags, meta (7.0:1 on white) */
+  --tp-color-text: #0D0D0D;        /* official --ink: body text and headings */
+  --tp-color-text-muted: #595959;  /* official --slate: secondary text */
+
+  /* ---- Color: derived roles ---- */
+  --tp-color-on-accent: #FFFFFF;                         /* label on ink fill */
+  --tp-color-focus: var(--tp-color-accent-text);
+  --tp-color-header-scrolled: rgb(255 255 255 / 0.94);   /* bg at 94% for the sticky header */
+  --tp-color-overlay-warm: rgb(255 255 255 / 0.55);      /* light veil (never dark overlays) */
+  --tp-color-shadow: 13 13 13;                           /* official ink as RGB triplet for shadows */
+  --tp-color-lightbox: rgb(255 255 255 / 0.97);          /* lightbox veil: light, never a dark overlay */
+
+  /* ---- Typography (official: Playfair Display headings 600, Inter body) ---- */
+  --tp-font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --tp-font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --tp-fw-light: 500;              /* display weight: official uses 600, eased to 500 for a lighter premium feel */
+  /* Playfair sets much larger than Cormorant at the same size: display sizes are scaled down ~20% */
+  --tp-fs-h4: clamp(1.25rem, 1.18rem + 0.35vw, 1.5rem);
+  --tp-fs-h3: clamp(1.5rem, 1.35rem + 0.7vw, 2.125rem);
+  --tp-fs-h2: clamp(1.875rem, 1.5rem + 1.6vw, 3.125rem);
+  --tp-fs-h1: clamp(2.375rem, 1.85rem + 2.9vw, 4.75rem);
+  --tp-fs-display: clamp(2.75rem, 2.1rem + 3.2vw, 5.5rem);   /* stats, pull-quote marks */
+  --tp-fs-quote: clamp(1.5rem, 1.25rem + 1.1vw, 2.5rem);
+  --tp-tracking-button: 0.03em;    /* official .btn letter-spacing */
+
+  /* ---- Radii (2px buttons, 6px cards, 10px panels) ---- */
+  --tp-radius-sm: 2px;
+  --tp-radius-md: 6px;
+  --tp-radius-lg: 10px;
+
+  /* ---- Shadows (neutral, soft) ---- */
+  --tp-shadow-sm: 0 1px 2px rgb(var(--tp-color-shadow) / 0.06), 0 4px 12px rgb(var(--tp-color-shadow) / 0.05);
+  --tp-shadow-md: 0 2px 6px rgb(var(--tp-color-shadow) / 0.06), 0 12px 32px rgb(var(--tp-color-shadow) / 0.09);
+  --tp-shadow-lg: 0 6px 16px rgb(var(--tp-color-shadow) / 0.07), 0 28px 64px rgb(var(--tp-color-shadow) / 0.13);
+
+  /* ---- Component: button hover (ink -> charcoal; the official outline-invert hover loses the fill on light pages) ---- */
+  --tp-btn-bg-hover: #262626;      /* official --charcoal */
+  --tp-btn-fg-hover: #FFFFFF;
+
+  /* ---- Typography: families ---- */
+  --tp-font-display-ar: "El Messiri", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;  /* Phase 3, D-034: H1-H4, pull-quote, stat numbers */
+  --tp-font-body-ar: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;    /* Phase 3 */
+
+  /* ---- Typography: weights ---- */
+  --tp-fw-regular: 400;
+  --tp-fw-medium: 500;
+  --tp-fw-semibold: 600;
+  --tp-fw-display-ar: 500;         /* El Messiri; the only weight loaded */
+
+  /* ---- Typography: fluid scale (360px → 1920px viewport) ---- */
+  --tp-fs-xs: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --tp-fs-sm: clamp(0.875rem, 0.86rem + 0.06vw, 0.9375rem);
+  --tp-fs-base: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --tp-fs-lg: clamp(1.125rem, 1.07rem + 0.24vw, 1.3125rem);
+
+  --tp-lh-tight: 1.05;
+  --tp-lh-heading: 1.15;
+  --tp-lh-body: 1.7;
+  --tp-lh-snug: 1.35;
+  --tp-lh-none: 1;
+  --tp-tracking-eyebrow: 0.22em;
+  --tp-tracking-display: -0.01em;
+  --tp-transform-label: uppercase;   /* eyebrows, buttons, labels (Latin only; Arabic = none) */
+  --tp-quote-open: "“";           /* quotation marks around letter excerpts (Arabic: guillemets) */
+  --tp-quote-close: "”";
+  --tp-style-quote: italic;          /* pull-quotes (Latin only; Arabic = normal) */
+
+  /* ---- Spacing ---- */
+  --tp-space-1: 0.25rem;
+  --tp-space-2: 0.5rem;
+  --tp-space-3: 0.75rem;
+  --tp-space-4: 1rem;
+  --tp-space-5: 1.5rem;
+  --tp-space-6: 2rem;
+  --tp-space-7: 3rem;
+  --tp-space-8: 4rem;
+  --tp-space-9: 6rem;
+  --tp-space-10: 8rem;
+  --tp-section-pad: clamp(4.5rem, 3.2rem + 5.5vw, 9.5rem);
+  --tp-section-pad-tight: clamp(2.5rem, 2rem + 2vw, 4rem);
+  --tp-gutter: clamp(1.25rem, 0.6rem + 3vw, 3rem);
+  --tp-gap: clamp(1.5rem, 1rem + 2vw, 3.5rem);
+
+  /* ---- Layout ---- */
+  --tp-container: 82.5rem;           /* 1320px */
+  --tp-container-narrow: 52rem;
+  --tp-header-h: 5rem;
+  --tp-header-h-mobile: 4.25rem;
+  --tp-measure: 38rem;               /* max line length for body copy */
+  --tp-hero-lead-w: 34rem;
+  --tp-hero-media-w: 36rem;          /* hero photo is 576px native: keep it near 1x on desktop */
+  --tp-portrait-w: 26rem;
+  --tp-ba-max-w: 36rem;              /* before/after sources are ~460px */
+  --tp-partner-max-w: 10rem;
+  --tp-footer-blurb-w: 30rem;
+  --tp-footer-label-w: 3.75rem;
+  --tp-bp-nav: 64rem;                /* documentation only: nav collapses below 1024px (media queries can't use vars) */
+
+  /* ---- Borders & radii ---- */
+  --tp-border-w: 1px;
+  --tp-hairline: var(--tp-border-w) solid var(--tp-color-stone);
+  --tp-hairline-accent: var(--tp-border-w) solid var(--tp-color-accent);
+  --tp-radius-round: 50%;            /* the WhatsApp button only */
+  --tp-focus-ring: 2px solid var(--tp-color-focus);
+  --tp-focus-offset: 3px;
+
+  /* ---- Motion ---- */
+  --tp-dur-fast: 200ms;
+  --tp-dur-base: 400ms;
+  --tp-dur-slow: 800ms;
+  --tp-dur-reveal: 1000ms;
+  --tp-dur-marquee: 45s;
+  --tp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --tp-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --tp-reveal-distance: 2.5rem;
+  --tp-stagger-step: 110ms;
+  --tp-delay-step: 100ms; /* tp-delay-1…5 */
+  --tp-parallax-speed-base: 0.1; /* unitless factors, read by animations.js */
+  --tp-parallax-speed-slow: 0.05;
+  --tp-parallax-speed-fast: 0.2;
+  --tp-hover-zoom: 1.05;
+
+  /* ---- Layers ---- */
+  --tp-z-base: 1;
+  --tp-z-fab: 80;
+  --tp-z-subnav: 90;                 /* sticky service navigation, below the header */
+  --tp-z-header: 100;
+  --tp-z-menu: 200;
+  --tp-z-skip: 300;
+
+  /* ==== Component layer (primitive → semantic → component; components read only these or semantic) ==== */
+  --tp-btn-bg: var(--tp-color-accent);
+  --tp-btn-fg: var(--tp-color-on-accent);
+  --tp-btn-pad-block: 0.95rem;
+  --tp-btn-pad-inline: 1.75rem;
+  --tp-card-bg: var(--tp-color-surface);
+  --tp-card-radius: var(--tp-radius-md);
+  --tp-card-shadow: var(--tp-shadow-sm);
+  --tp-card-shadow-hover: var(--tp-shadow-md);
+  --tp-mark-color: var(--tp-color-accent);     /* setting-out "+" marks on framed images */
+  --tp-mark-size: 1.125rem;
+  --tp-mark-offset: -0.5625rem;                /* half the mark: centres the cross on the frame corner */
+  --tp-frame-inset: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+  --tp-eyebrow-color: var(--tp-color-accent-text);
+  --tp-meta-color: var(--tp-color-secondary);
+
+  /* ---- Component sizes ---- */
+  --tp-touch: 2.75rem;               /* 44px minimum touch target */
+  --tp-nav-gap: clamp(1rem, 0.2rem + 1.5vw, 2.25rem);
+  --tp-marquee-gap: clamp(2.5rem, 1.5rem + 4vw, 5.5rem);
+  --tp-cta-pad: clamp(2rem, 1rem + 5vw, 6rem);
+  --tp-letter-thumb: 3.25rem;
+  --tp-blur-header: 10px;
+  --tp-mask-solid: #000;             /* mask-image opacity stop (not a visible colour) */
+  --tp-logo-h: 2.75rem;
+  --tp-logo-h-footer: 3.25rem;
+  --tp-partner-h: 3rem;
+  --tp-fab-size: 3.5rem;
+  --tp-icon: 1.25rem;
+  --tp-plus: 0.75rem;                /* the "+" motif */
+  --tp-ba-handle: 2.75rem;
+
+  /* ---- Inner pages ---- */
+  --tp-chipbar-h: 3.5rem;            /* sticky service navigation bar */
+  --tp-sticky-offset: calc(var(--tp-header-h-mobile) + var(--tp-chipbar-h));   /* header + chip bar (desktop: see inner-pages.css) */
+  --tp-letter-sheet-w: 26rem;        /* original letter on the testimonials page (sources are 675–1800px wide) */
+  --tp-project-cover-h: 80vh;        /* tallest a project cover may grow (portrait covers stay on screen) */
+  --tp-masonry-col: 17rem;           /* gallery masonry column width */
+  --tp-lbox-btn: 3rem;
+  --tp-lbox-chrome: 7rem;        /* caption bar + gaps reserved below the lightbox image */
+  --tp-lbox-chrome-mobile: 11rem;
+  --tp-lbox-pad: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --tp-team-photo-ratio: 700 / 736;  /* native aspect of the leadership portraits */
+  --tp-license-preview-w: 8rem;
+  --tp-spec-col-min: 9rem;           /* compact spec (licenses, team experience): min column width */
+}
+
+/* ==========================================================================
+   Arabic typography (Phase 3, D-034/D-035): token overrides scoped to :lang(ar).
+   Pages set <html lang="ar" dir="rtl">; every component reads these tokens, so no Arabic-specific component CSS exists.
+   Rules: letter-spacing 0 (tracking breaks Arabic joining), no text-transform, no italics.
+   Display = El Messiri 500 (H1-H4, pull-quote, stat numbers); everything else IBM Plex Sans Arabic.
+   Taller line-heights than English; body a touch larger (decided by screenshot, D-035).
+   WP: Elementor mapping is an open owner decision, REPORT R10 in docs/wp-mapping.md.
+   ========================================================================== */
+:lang(ar) {
+  --tp-font-display: var(--tp-font-display-ar);
+  --tp-font-body: var(--tp-font-body-ar);
+  --tp-fw-light: var(--tp-fw-display-ar);
+  --tp-tracking-eyebrow: 0;
+  --tp-tracking-button: 0;
+  --tp-tracking-display: 0;
+  --tp-transform-label: none;
+  --tp-style-quote: normal;
+  --tp-quote-open: "«";
+  --tp-quote-close: "»";
+  --tp-lh-tight: 1.35;
+  --tp-lh-heading: 1.4;
+  --tp-lh-snug: 1.4;
+  --tp-lh-body: 1.85;
+  /* Arabic reads small beside the English scale at the same size: small text steps up ~8% (checked by screenshot) */
+  --tp-fs-xs: clamp(0.8125rem, 0.79rem + 0.1vw, 0.9rem);
+  --tp-fs-sm: clamp(0.9375rem, 0.91rem + 0.1vw, 1.0125rem);
+  --tp-fs-base: clamp(1.0625rem, 1.03rem + 0.14vw, 1.1875rem);
+  --tp-fs-lg: clamp(1.1875rem, 1.12rem + 0.26vw, 1.4rem);
+}

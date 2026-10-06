@@ -1,0 +1,100 @@
+{
+  "_note": "Global settings. services[].relatedTypes maps each service to the project types shown as its related projects on services.html (max 3, newest first; empty = no related block); projectsLink = a link to a filtered projects page for services that are a contract model rather than a project type; more = extra paragraph from the PDF. Contact block maps to the WP Customizer (PRD 5.1); nav maps to Appearance → Menus. Strings are {en, ar}.",
+  "company": {
+    "name": { "en": "Taameer Plus Contracting LLC", "ar": "تعمير بلس للمقاولات ش.ذ.م.م" },
+    "tagline": { "en": "Construct A Better Tomorrow", "ar": "نبني غداً أفضل" },
+    "footerBlurb": { "en": "A leading contracting, design, fit-out and technical services provider based in Dubai, UAE — building trust before concrete since 2015.", "ar": "شركة رائدة في المقاولات والتصميم والتشطيبات الداخلية والخدمات الفنية، مقرها دبي، الإمارات — نبني الثقة قبل الخرسانة منذ عام 2015." },
+    "logo": "assets/img/logo-taameer-plus.webp",
+    "profilePdf": "assets/docs/taameer-plus-company-profile.pdf",
+    "copyright": { "en": "© 2026 Taameer Plus Contracting LLC. All rights reserved.", "ar": "© 2026 تعمير بلس للمقاولات ش.ذ.م.م. جميع الحقوق محفوظة." }
+  },
+  "contact": {
+    "address": { "en": "Sky Business Building, Office M30, Festival City, Dubai, UAE", "ar": "مبنى سكاي بزنس، مكتب M30، دبي فستيفال سيتي، دبي، الإمارات العربية المتحدة" },
+    "officePhone": { "display": "+971 4 329 0500", "tel": "+97143290500" },
+    "mobile": { "display": "+971 50 302 9281", "tel": "+971503029281" },
+    "whatsapp": { "display": "+971 50 302 9281", "url": "https://wa.me/971503029281" },
+    "email": "info@taameer.ae",
+    "instagram": { "handle": "@taameer_contracting", "url": "https://instagram.com/taameer_contracting" },
+    "website": "https://www.taameer.ae"
+  },
+  "nav": [
+    { "label": { "en": "Home", "ar": "الرئيسية" }, "href": "index.html" },
+    { "label": { "en": "About", "ar": "من نحن" }, "href": "about.html" },
+    { "label": { "en": "Services", "ar": "خدماتنا" }, "href": "services.html" },
+    { "label": { "en": "Projects", "ar": "مشاريعنا" }, "href": "projects.html" },
+    { "label": { "en": "Testimonials", "ar": "آراء العملاء" }, "href": "testimonials.html" },
+    { "label": { "en": "Contact", "ar": "اتصل بنا" }, "href": "contact.html" }
+  ],
+  "stats": [
+    { "value": 2015, "display": "2015", "counter": true, "suffix": "", "label": { "en": "Established in Dubai", "ar": "تأسست في دبي" } },
+    { "value": null, "display": "G+4", "counter": false, "suffix": "", "label": { "en": "Approved Contractor", "ar": "مقاول معتمد" } },
+    { "value": 100, "display": "100+", "counter": true, "suffix": "+", "label": { "en": "Delivered Projects", "ar": "مشاريع منجزة" } }
+  ],
+  "whyUs": [
+    { "title": { "en": "Approved G+4 Contractor", "ar": "مقاول معتمد G+4" }, "text": { "en": "Licensed by the Government of Dubai for multi-story residential and commercial structural developments.", "ar": "مرخّصة من حكومة دبي لتنفيذ المشاريع الإنشائية السكنية والتجارية متعددة الطوابق." } },
+    { "title": { "en": "Turnkey & Value Engineering", "ar": "تسليم المفتاح والهندسة القيمية" }, "text": { "en": "Design-Build contracts covering structural, architectural, and electromechanical works under one roof, saving cost and time.", "ar": "عقود تصميم وتنفيذ تشمل الأعمال الإنشائية والمعمارية والكهروميكانيكية تحت مظلة واحدة، لتوفير التكلفة والوقت." } },
+    { "title": { "en": "Uncompromising Quality", "ar": "جودة لا تقبل المساومة" }, "text": { "en": "Rigorous quality control, trustworthy relations with private and government agencies, and reliable delivery timelines.", "ar": "رقابة صارمة على الجودة، وعلاقات موثوقة مع الجهات الخاصة والحكومية، والتزام بمواعيد التسليم." } }
+  ],
+  "services": [
+    { "id": "construction", "title": { "en": "Construction", "ar": "الإنشاءات" }, "text": { "en": "Full-scale construction ranging from G+1 luxury villas to G+4 residential and commercial buildings, with complete structural integrity.", "ar": "أعمال إنشائية متكاملة، من الفلل الفاخرة G+1 إلى المباني السكنية والتجارية G+4، بسلامة إنشائية كاملة." }, "relatedTypes": ["construction"], "more": { "en": "As an approved G+4 contractor, Taameer Plus has successfully completed many turnkey projects, including the structure and full fit-out of villas and service blocks, with remarkable quality.", "ar": "بصفتها مقاولاً معتمداً من فئة G+4، أنجزت تعمير بلس بنجاح العديد من مشاريع تسليم المفتاح، بما في ذلك الهيكل الإنشائي والتشطيبات الداخلية الكاملة للفلل والملاحق الخدمية، بجودة متميزة." }, "image": "assets/img/project-dubai-g-residential-villa-02.webp", "icon": "source/site/images/services/icons/1.jpg" },
+    { "id": "design-build", "title": { "en": "Design & Build", "ar": "التصميم والتنفيذ" }, "text": { "en": "Direct single-contract solutions covering structural, architectural, and electromechanical works, evaluated for cost and buildability by one team.", "ar": "حلول بعقد واحد مباشر تغطي الأعمال الإنشائية والمعمارية والكهروميكانيكية، يقيّم فريق واحد تكلفتها وقابليتها للتنفيذ." }, "relatedTypes": [], "more": { "en": "Taameer Plus handles Design-Build projects by entering into a direct contract with the client to provide all design aspects related to structural, architectural and electromechanical works. The team evaluates alternative materials and methods efficiently and accurately, and value engineering and constructability are applied continuously and more effectively when designers and Taameer Plus work together as one team throughout the design process. These steps ultimately save the owner significant amounts of money and time.", "ar": "تتولى تعمير بلس مشاريع التصميم والتنفيذ بإبرام عقد مباشر مع العميل لتقديم جميع جوانب التصميم المتعلقة بالأعمال الإنشائية والمعمارية والكهروميكانيكية. ويقيّم الفريق المواد والأساليب البديلة بكفاءة ودقة، وتُطبَّق الهندسة القيمية وقابلية التنفيذ باستمرار وبفاعلية أكبر عندما يعمل المصممون وتعمير بلس كفريق واحد طوال مرحلة التصميم. وتوفّر هذه الخطوات للمالك في النهاية مبالغ كبيرة من المال والوقت." }, "image": "assets/img/project-al-awir-villas-02.webp", "icon": "source/site/images/services/icons/2.jpg" },
+    { "id": "decoration-fitout", "title": { "en": "Decoration & Fit-out", "ar": "الديكور والتشطيبات الداخلية" }, "text": { "en": "Premium corporate, retail, hospitality, and residential fit-out and decoration, including custom wall cladding and joinery through our carpentry division.", "ar": "تشطيبات داخلية وديكورات راقية للمكاتب والمتاجر وقطاع الضيافة والمساكن، بما في ذلك تكسية الجدران والأعمال الخشبية المخصصة عبر قسم النجارة لدينا." }, "relatedTypes": ["fit-out", "landscaping"], "showcaseLink": "#wall-cladding", "image": "assets/img/project-kf-inc-headquarters-05.webp", "icon": "source/site/images/services/icons/3.jpg" },
+    { "id": "renovation", "title": { "en": "Renovation", "ar": "التجديد" }, "text": { "en": "Complete building and villa refurbishments, interior modernisations, and structural updates executed on schedule.", "ar": "تجديد كامل للمباني والفلل، وتحديث للأعمال الداخلية، وتعديلات إنشائية تُنفَّذ في موعدها." }, "relatedTypes": ["renovation-decoration"], "image": "assets/img/project-dubai-marina-triplex-villa-04.webp", "icon": "source/site/images/services/icons/4.jpg" },
+    { "id": "maintenance", "title": { "en": "Maintenance", "ar": "الصيانة" }, "text": { "en": "Ongoing technical services, active maintenance, and facility support that keep structures in prime condition long after handover.", "ar": "خدمات فنية مستمرة وصيانة دورية ودعم للمرافق يُبقي المنشآت في أفضل حالاتها بعد التسليم بوقت طويل." }, "relatedTypes": [], "image": "assets/img/project-atlas-copco-headquarters-03.webp", "icon": "source/site/images/services/icons/5.jpg" },
+    { "id": "turnkey", "title": { "en": "Turnkey Projects", "ar": "مشاريع تسليم المفتاح" }, "text": { "en": "Experienced professionals handling all phases of construction — new build to renovation — coordinated with qualified subcontractors to meet deadlines.", "ar": "متخصصون ذوو خبرة يتولون جميع مراحل الإنشاء، من البناء الجديد إلى التجديد، بالتنسيق مع مقاولين من الباطن مؤهلين لالتزام المواعيد." }, "relatedTypes": [], "projectsLink": "projects.html?type=construction", "more": { "en": "Taameer Plus provides experienced and knowledgeable professionals to handle all phases of project construction. As a general contractor, we handle all types and volumes of projects, from new construction to renovations. Our project management team maintains full coordination throughout every phase with our field staff and qualified subcontractors, delivering projects on schedule with the highest standards of safety and quality to ensure deadlines are met.", "ar": "توفّر تعمير بلس متخصصين ذوي خبرة ومعرفة لإدارة جميع مراحل إنشاء المشروع. وبصفتنا مقاولاً عاماً، نتولى مختلف أنواع المشاريع وأحجامها، من الإنشاءات الجديدة إلى أعمال التجديد. ويحافظ فريق إدارة المشاريع لدينا على التنسيق الكامل في كل مرحلة مع فرقنا الميدانية ومقاولينا من الباطن المؤهلين، لتسليم المشاريع في موعدها وفق أعلى معايير السلامة والجودة، بما يضمن الالتزام بالمواعيد النهائية." }, "image": "assets/img/project-al-warqa-1st-g2-villa-06.webp", "icon": "source/site/images/services/icons/6.jpg" }
+  ],
+  "licenses": [
+    {
+      "id": "contracting",
+      "company": { "en": "Taameer Plus Contracting LLC", "ar": "تعمير بلس للمقاولات ش.ذ.م.م" },
+      "licenseNo": "741846",
+      "legalType": { "en": "Limited Liability Company (LLC)", "ar": "شركة ذات مسؤولية محدودة (ش.ذ.م.م)" },
+      "registerNo": "1857822",
+      "dcciNo": "257369",
+      "issueDate": "2015-09-07",
+      "expiryDate": "2027-09-06",
+      "activities": [
+        { "en": "Building Contracting", "ar": "مقاولات المباني" },
+        { "en": "Decoration Design & Implementation", "ar": "تصميم وتنفيذ الديكور" },
+        { "en": "Building Maintenance", "ar": "صيانة المباني" }
+      ],
+      "status": { "en": "Active", "ar": "سارية" },
+      "image": "assets/img/license-contracting.webp",
+      "pdf": "assets/docs/license-taameer-plus-contracting.pdf",
+      "note": "Read from the renewed licence (printed 31/08/2026) on taameer.ae"
+    },
+    {
+      "id": "carpentry",
+      "company": { "en": "Taameer Plus Carpentry LLC", "ar": "نجارة تعمير بلس ش.ذ.م.م" },
+      "licenseNo": "1314264",
+      "legalType": { "en": "Limited Liability Company (LLC)", "ar": "شركة ذات مسؤولية محدودة (ش.ذ.م.م)" },
+      "registerNo": "2230336",
+      "dcciNo": "520139",
+      "issueDate": "2024-02-19",
+      "expiryDate": "2027-02-18",
+      "activities": [
+        { "en": "Carpentry", "ar": "النجارة" }
+      ],
+      "status": { "en": "Active", "ar": "سارية" },
+      "image": "assets/img/license-carpentry.webp",
+      "pdf": "assets/docs/license-taameer-plus-carpentry.pdf",
+      "note": "Read from the licence (printed 27/02/2026) on taameer.ae"
+    }
+  ],
+  "partners": [
+    { "name": "Al Gurm Real Estate", "logo": "assets/img/partner-al-gurm.webp", "blend": false },
+    { "name": "Al Bastaki Business Services", "logo": "assets/img/partner-al-bastaki.webp", "blend": true },
+    { "name": "A.M.E.C.", "logo": "assets/img/partner-amec.webp", "blend": false },
+    { "name": "Al Sondos Holding", "logo": "assets/img/partner-al-sondos.webp", "blend": true },
+    { "name": "Atlas Copco", "logo": "assets/img/partner-atlas-copco.webp", "blend": true },
+    { "name": "Cooltech, a Tabreed company", "logo": "assets/img/partner-cooltech.webp", "blend": true },
+    { "name": "CIFA, a Zoomlion company", "logo": "assets/img/partner-cifa.webp", "blend": false },
+    { "name": "Innovative Consultants", "logo": "assets/img/partner-innovative-consultants.webp", "blend": true },
+    { "name": "KF INC Investment Group", "logo": "assets/img/partner-kf-inc.webp", "blend": true },
+    { "name": "Nahas Interiors", "logo": "assets/img/partner-nahas-interiors.webp", "blend": false },
+    { "name": "Oceanworld Group of Companies", "logo": "assets/img/partner-oceanworld.webp", "blend": false },
+    { "name": "RD2 Design", "logo": "assets/img/partner-rd2-design.webp", "blend": false },
+    { "name": "Partner (R monogram)", "logo": "assets/img/partner-r-monogram.webp", "blend": false },
+    { "name": "OWA", "logo": "assets/img/partner-owa.webp", "blend": true }
+  ]
+}

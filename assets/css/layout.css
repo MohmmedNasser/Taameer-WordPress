@@ -1,0 +1,62 @@
+/* ELEMENTOR SOURCE — recreated as global variables/classes, not shipped */
+/* ==========================================================================
+   layout.css — section / container / flex row primitives
+   Used by: every section. Mirrors Elementor Flexbox Containers 1:1:
+     <section class="tp-section">  = outer Container (full width, background, padding)
+     <div class="tp-container">    = inner Container (boxed, content width)
+     .tp-row / .tp-col             = nested Containers (direction row/column, gap, wrap)
+   Grid is NOT used here (only inside custom-widget blocks in components.css).
+   WP: not shipped. Recreated as Elementor v4 global variables / global classes (docs/wp-mapping.md).
+   ========================================================================== */
+
+.tp-section {
+  position: relative;
+  padding-block: var(--tp-section-pad);
+  background: var(--tp-color-bg);
+}
+
+.tp-section--sand { background: var(--tp-color-sand); }
+.tp-section--surface { background: var(--tp-color-surface); }
+.tp-section--tight { padding-block: var(--tp-section-pad-tight); }
+.tp-section--ruled { border-block: var(--tp-hairline); }
+
+.tp-container {
+  inline-size: 100%;
+  max-inline-size: calc(var(--tp-container) + 2 * var(--tp-gutter));
+  margin-inline: auto;
+  padding-inline: var(--tp-gutter);
+}
+
+.tp-container--narrow {
+  max-inline-size: calc(var(--tp-container-narrow) + 2 * var(--tp-gutter));
+}
+
+/* Flex row: wraps to a column on small screens because children carry a flex-basis. */
+.tp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-gap);
+}
+
+.tp-row--center { align-items: center; }
+.tp-row--start { align-items: flex-start; }
+.tp-row--end { align-items: flex-end; }
+.tp-row--between { justify-content: space-between; }
+
+.tp-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-5);
+  min-inline-size: 0;
+}
+
+/* Column widths as flex-basis (Elementor: Container width %). 1 fr ≈ 1/12 of the row. */
+.tp-col--4 { flex: 1 1 18rem; }
+.tp-col--5 { flex: 5 1 20rem; }
+.tp-col--6 { flex: 1 1 24rem; }
+.tp-col--7 { flex: 7 1 24rem; }
+.tp-col--8 { flex: 8 1 26rem; }
+
+/* Stack spacing inside a column. */
+.tp-stack > * + * { margin-block-start: var(--tp-space-5); }
+.tp-stack--lg > * + * { margin-block-start: var(--tp-space-7); }
