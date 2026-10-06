@@ -71,11 +71,32 @@ Astra's global palette carries the same colours for the header and footer.
 
 `scripts/wp/wp-check.mjs` 20/20 · `wp-reveal-check.mjs` and `wp-shots.mjs` at 320/375/390/768/1024/1280/1440 + reduced motion: no console errors, no horizontal overflow, wipes match the prototype · `wp-editor-check.mjs`: editor opens, saves, front end re-renders identically.
 
-## Planned — not started (WP Phase 2 onward)
+## Implemented — WP Phase 2 (About)
+
+Page "About" (id 297, `https://taameer.local/about/`, option `tp_about_page_id`), built by `scripts/wp/07-about.php` (helpers copied from `05-home.php`; re-running replaces the content, same ID). Elementor Full Width template, title hidden; Astra header and footer unchanged ("About" is the current menu item). 10 sections, 116 Containers, native widgets only (Heading, Text Editor, Image, Button, Counter, Shortcode). Line lengths: Elementor Custom Width, not `tp-measure*` (D-041).
+
+| # | Section | Native building blocks | Child-theme class / script |
+|---|---|---|---|
+| 1 | Page hero + breadcrumbs (fog, bottom hairline) | Section > Text Editor (breadcrumbs `nav > ol`) + Container [Heading p eyebrow, Heading H1, Text Editor lead] (Fade In Up 100/200/300 ms) | `tp-breadcrumb` markup, `tp-eyebrow` |
+| 2 | Chairman's message | Row Container > Container.tp-sticky > Container.tp-frame > Image ; Container [Heading H2 (eyebrow style), Text Editor blockquote, Text Editor, Container (ink top hairline) > 2 Heading p] | `tp-sticky` (≥ 1024 px), `tp-frame`, `tp-img-reveal`, `tp-chair-lead` (opening mark), `tp-chair-body` |
+| 3 | About + 2015 fact (fog) | Row 7/12 + 5/12 > [eyebrow, H2, 2 Text Editor] + Container.tp-frame (Zoom In) > Container (hairline box) > Heading label + Counter 1990→2015 + Text Editor | `tp-frame`; Zoom In retimed in `taameer.css` |
+| 4 | Our aim | Section head row ; wrapping row > 4 × Container.tp-aim (top hairline) > Heading H3 + Text Editor — 4 / 2 / 1 per row | `tp-aim` ("+" on the hairline) |
+| 5 | Why choose us (fog) | Same structure as Home §6, photo `project-dubai-g-residential-villa-03` | `tp-frame--portrait`, `tp-img-reveal`, `tp-parallax`, `tp-plus-item` |
+| 6 | Leadership + philosophy | Section head ; wrapping row > 3 × Container [Image, Container > Heading H3 + Heading p role, Text Editor] — 3 / 2 / 1 ; Container (top hairline) > eyebrow + Text Editor | — (team members are Elementor content) |
+| 7 | Team experience (fog) | Section head (note: small, slate) ; wrapping row > 4 × Container [Container > Image + Heading "Team experience" (Position: Absolute badge), Heading H3, spec Container > 2 rows] — 4 / 2 / 1; cards are not links | `tp-exp__img` (1:1) |
+| 8 | Partners grid | Section head ; wrapping row (centred) > 14 × Container.tp-partner (hairline cell) > Image — 7 / 4 / 2 | `tp-partner`, `tp-partner__logo`, `tp-blend` |
+| 9 | Licences (fog, CSS ID `licenses`) | Section head ; row > 2 × card Container [Image (link: media file, lightbox) ; Container > row (H3 + "Active" badge) + spec Container (6 rows 2 / 3 / 1 per line + activities) + Button "View license" → licence image] | `tp-license__preview` (3:4 crop, lift) |
+| 10 | CTA band | Container (top padding: follows a fog section) > Shortcode `[tp_template id="228"]` — the same saved template as Home | — |
+
+- **Assets:** 25 images already in the Media Library (chairman, villa-03, 3 team portraits, 4 team-experience buildings, 14 partner logos, 2 licence images); alt text from the library (= prototype). Nothing uploaded.
+- **Licences (D-041):** preview + "View license" open `license-contracting.webp` / `license-carpentry.webp` (full size) in Elementor's lightbox. No PDF linked; the two licence "PDFs" stay pending (PRD 14 #12).
+- **Motion:** Fade In Up with 110 ms stagger delays (aims, team, experience, partners, licences), two image wipes, one parallax, the 2015 Counter, Zoom In on the fact box. Reduced motion: everything visible, counter at 2015.
+- **Verification:** `scripts/wp/wp-about-check.mjs` 26/26 (one h1, heading order, alts, images, breadcrumbs, current menu item, entrance animations, counter, wipes, sticky portrait, licence lightbox ×2, shared CTA, links, 7 widths without overflow, reduced motion, console); `wp-editor-check.mjs … 297 https://taameer.local/about/`: editor opens, saves, front end re-renders identically; homepage regression `wp-check.mjs` 20/20; see the progress log for the wipe and screenshot runs.
+
+## Planned — not started (WP Phase 3 onward)
 
 | Page / item | Planned approach | Notes |
 |---|---|---|
-| About | Elementor page (Containers + native widgets); licences in the native lightbox | Licence PDFs pending (D-040); team members as Elementor content |
 | Services | Elementor page; 6 service blocks with anchors (`#construction` …) used by the footer and homepage links; scroll navigation through child-theme JS if needed | Wall Cladding showcase |
 | Projects | Elementor page with static cards for the 22 projects; filtering by type decided in that phase (no Loop Grid) | Data: `data/projects.json` (27 entries = 22 projects + Wall Cladding showcase + 4 team-experience buildings, the latter on About) |
 | Project pages | One Elementor page per project at `/projects/<slug>/` (links already used by the homepage) with gallery + native lightbox, before/after where a before image exists | No CPT or PHP templates unless approved later |
@@ -88,7 +109,10 @@ Astra's global palette carries the same colours for the header and footer.
 
 ## Known limitations
 
-- Homepage links to the not-yet-built pages (`/about/`, `/services/#…`, `/projects/…`, `/testimonials/`, `/contact/`) return 404 until those pages exist (18 URLs).
+- Links to the not-yet-built pages (`/services/#…`, `/projects/…`, `/testimonials/`, `/contact/`) return 404 until those pages exist (17 URLs on Home, 10 on About; `/about/` exists since WP Phase 2).
+- The `tp-measure*` classes on the homepage have no effect (Elementor's `max-width: 100%` on Container widgets outranks them); About uses native Custom Width instead (D-041). Homepage left unchanged pending an owner decision.
+- Floating controls: Astra's scroll-to-top sits 12 px above the WhatsApp button (`taameer.css` §4; fixed after WP Phase 2, they used to overlap). At ≥ 1024 px, scrolled to the very bottom, the WhatsApp button covers the footer's "عربي" link, as in the prototype.
+- About: the licence buttons open the licence image, not a PDF (pending client PDFs, D-041). Compact spec rows are a few px shorter than the prototype (Kit eyebrow line-height 1.15 vs the prototype's 1.7 on `dt`; same as the homepage spec). Aims show 4 per row from 1024 px (the prototype wraps 3 + 1 between 1024 and ~1100 px); team experience is 1 per row below 768 px (prototype: 2 from 640 px).
 - Featured projects on the homepage are static cards; they are updated by hand (no Loop Grid).
 - Contact details are repeated in the Astra header/footer elements, footer widgets and Elementor content (no single shared source in Astra Free + Elementor Free).
 - Animations are front-end only (not in the Elementor editor); image wipes play once, like the prototype.

@@ -22,6 +22,14 @@
      tp-marquee / tp-marquee__track / tp-marquee__logo / tp-blend   partner logo strip
      tp-before-after / tp-before-after__after / tp-before-after__before   comparison slider (taameer.js)
      tp-measure, tp-measure-quote, tp-measure-title   max line length
+   About page (section 5b):
+     tp-breadcrumb         Text Editor markup (nav > ol.tp-breadcrumb__list): uppercase links, "+" separator
+     tp-sticky             Container: sticks below the header from 1024px (chairman portrait)
+     tp-chair-lead         Text Editor: large opening quotation mark; tp-chair-body: display-font emphasis
+     tp-aim                Container: "+" on its top hairline
+     tp-exp__img           Image: 1:1 crop
+     tp-partner / tp-partner__logo   partner grid cell (hover) and grayscale logo; tp-blend as in the marquee
+     tp-license__preview   Image (lightbox link): 3:4 top crop, lift on hover
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -59,6 +67,7 @@ body {
   --tp-hairline: 1px solid var(--tp-line);
   --tp-hairline-ink: 1px solid var(--tp-ink);
   --tp-radius-sm: 2px;
+  --tp-shadow-sm: 0 1px 2px rgb(13 13 13 / 0.06), 0 4px 12px rgb(13 13 13 / 0.05);
   --tp-shadow-md: 0 2px 6px rgb(13 13 13 / 0.06), 0 12px 32px rgb(13 13 13 / 0.09);
   --tp-shadow-lg: 0 6px 16px rgb(13 13 13 / 0.07), 0 28px 64px rgb(13 13 13 / 0.13);
 
@@ -490,6 +499,13 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 
 .tp-fab:hover { background: var(--tp-charcoal); }
 
+/* Astra's scroll-to-top (32px, z-index 99) sat on the WhatsApp button's spot. Stack it just above the button,
+   centred on the same column; Astra keeps its look and behaviour. */
+#ast-scroll-top.ast-scroll-top-icon {
+  inset-block-end: calc(var(--tp-space-5) + var(--tp-fab-size) + var(--tp-space-3));
+  inset-inline-end: calc(var(--tp-space-5) + (var(--tp-fab-size) - 2rem) / 2); /* 2rem = Astra's button size */
+}
+
 .tp-fab::before {
   content: "";
   inline-size: 1.625rem;
@@ -684,6 +700,122 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 /* Chairman quote: emphasis is upright charcoal inside the italic quote. */
 .tp-quote em { font-style: normal; color: var(--tp-charcoal); }
 
+/* ---- 5b. About page ---- */
+
+/* Breadcrumbs (Text Editor markup; Elementor Free has no breadcrumbs widget). The logo "+" is the separator. */
+.tp-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--tp-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: uppercase;
+}
+
+.tp-breadcrumb__list li { margin: 0; }
+.elementor .tp-breadcrumb__list a { display: inline-block; padding-block: var(--tp-space-2); color: var(--tp-slate); text-decoration: none; }
+.elementor .tp-breadcrumb__list a:hover,
+.tp-breadcrumb__list [aria-current="page"] { color: var(--tp-ink); }
+.tp-breadcrumb__list li + li { display: flex; align-items: center; gap: var(--tp-space-3); }
+
+.tp-breadcrumb__list li + li::before {
+  content: "";
+  flex: none;
+  inline-size: var(--tp-space-2);
+  block-size: var(--tp-space-2);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+/* Chairman portrait stays in view beside the long message (Elementor Free has no sticky option). */
+@media (min-width: 1024px) {
+  .e-con.tp-sticky {
+    position: sticky;
+    inset-block-start: calc(var(--wp-admin--admin-bar--height, 0px) + var(--tp-header-h) + var(--tp-space-6));
+  }
+}
+
+/* Chairman's opening words: large decorative quotation mark above the text (the widget's top padding makes room). */
+.elementor-element.tp-chair-lead::before {
+  content: "\201C";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  font-family: var(--tp-font-display);
+  font-size: clamp(2.75rem, 2.1rem + 3.2vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--tp-ink);
+}
+
+.tp-chair-lead blockquote { font-size: inherit; } /* Astra sizes blockquote at 1.1em */
+
+.tp-chair-body em { font-family: var(--tp-font-display); font-weight: 500; }
+
+/* Aims: the "+" sits on the top hairline. */
+.tp-aim { position: relative; }
+
+.e-con.tp-aim::before { /* .e-con: see .tp-frame */
+  content: "";
+  position: absolute;
+  inset: auto;
+  opacity: 1;
+  border-radius: 0;
+  inset-block-start: calc(var(--tp-plus) / -2);
+  inset-inline-start: 0;
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+/* Team experience: square crop. */
+.elementor .tp-exp__img img { inline-size: 100%; aspect-ratio: 1; block-size: auto; object-fit: cover; }
+
+/* Partner grid: hairline cells, grayscale logos that turn to colour on hover. */
+.tp-partner { transition: box-shadow var(--tp-dur-base) var(--tp-ease-out), border-color var(--tp-dur-base) var(--tp-ease-out); }
+.elementor .e-con.tp-partner:hover { border-color: var(--tp-ink); box-shadow: var(--tp-shadow-sm); }
+
+.elementor .tp-partner .tp-partner__logo img {
+  display: block;
+  margin-inline: auto;
+  block-size: var(--tp-partner-h);
+  inline-size: auto;
+  max-inline-size: 100%;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: filter var(--tp-dur-base) var(--tp-ease-out), opacity var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.elementor .tp-partner:hover .tp-partner__logo img { filter: none; opacity: 1; }
+.tp-partner .tp-blend img { mix-blend-mode: multiply; }
+
+/* Licence preview (opens the full licence image in Elementor's lightbox). */
+.elementor .elementor-element.tp-license__preview img {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 3 / 4;
+  block-size: auto;
+  object-fit: cover;
+  object-position: top;
+  transition: box-shadow var(--tp-dur-base) var(--tp-ease-out), transform var(--tp-dur-base) var(--tp-ease-out);
+}
+
+.elementor .elementor-element.tp-license__preview a:hover img,
+.elementor .elementor-element.tp-license__preview a:focus-visible img {
+  box-shadow: var(--tp-shadow-md);
+  transform: translateY(calc(-1 * var(--tp-space-1)));
+}
+
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 
 .tp-before-after { inline-size: 100%; max-inline-size: 36rem; }
@@ -825,6 +957,18 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 
 .elementor-element.animated.fadeInUp {
   animation-name: tp-fade-up;
+  animation-duration: var(--tp-dur-reveal);
+  animation-timing-function: var(--tp-ease-out);
+}
+
+/* Elementor "Zoom In" retimed to the prototype's tp-reveal--scale (fade + 0.94 → 1). */
+@keyframes tp-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+
+.elementor-element.animated.zoomIn {
+  animation-name: tp-scale-in;
   animation-duration: var(--tp-dur-reveal);
   animation-timing-function: var(--tp-ease-out);
 }

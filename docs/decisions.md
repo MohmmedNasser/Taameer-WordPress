@@ -2,6 +2,18 @@
 
 Non-obvious decisions. Format: **Context / Decision / Reason / Alternatives rejected.** Newest on top.
 
+### D-041 — WP Phase 2 (About): line lengths, licences, sticky portrait, scale-in entrance
+- **Context:** owner prompt "Phase 2 — About Page Migration" (2026-10-06). Building About in Elementor Free surfaced four points the Phase 1 setup did not settle.
+- **Decisions:**
+  1. **Line lengths on About use Elementor's native Custom Width** (Advanced → Width → Custom, `min(100%, …)`), not the child theme's `tp-measure*` classes. Those classes never apply to a widget that sits directly in a Container: Elementor's `.elementor.elementor .e-con > .elementor-widget { max-width: 100% }` outranks them, and the `ch` values would resolve against the 16 px widget wrapper, not the heading font. Prototype caps converted to widths: body `38rem`; H2 `12.3 ×` the H2 clamp (20ch); H1 `9.84 ×` the H1 clamp (16ch); team philosophy `40 ×` the h4 clamp (40em); chairman sign-off block `34rem`. Measured equal to the prototype at 375/1280/1440 (H1 657 px, lead 608 px, H2 547 px at 1280).
+  2. **The homepage keeps its Phase 1 state.** Its `tp-measure` / `tp-measure-lead` / `tp-measure-title` / `tp-measure-quote` classes are therefore no-ops there (paragraphs run to the column width). Fixing that changes the approved homepage, so it is left for an owner decision (see progress log, WP Phase 2 findings), not changed in this phase.
+  3. **Licences:** the static page links to two "PDFs" that are JPEG files (not uploaded, D-040). On WordPress the preview and the "View license" button open the full licence image already in the Media Library (`license-contracting.webp`, `license-carpentry.webp`, served as `-scaled.webp`, 1810 × 2560) in Elementor's native lightbox. No PDF is linked or fabricated. The section note drops "(PDF)": "Open a license to view the full document." When the client supplies real PDFs, point the two buttons at them and restore "(PDF)".
+  4. **Sticky chairman portrait** (prototype ≥ 1024 px): Elementor Free has no sticky option, so the Container carries `tp-sticky` (`position: sticky`, top = admin bar + header + 2 rem) in `taameer.css`.
+  5. **Fact box entrance** (prototype `tp-reveal--scale`): Elementor's native **Zoom In** entrance, retimed in `taameer.css` to fade + scale 0.94 → 1 over 1 s (Elementor's default zooms from 0.3). Only About uses Zoom In.
+  6. **Chairman quote size:** Astra sets `blockquote { font-size: 1.1em }`, which made the About quote 10 % too large; reset only under the About class `tp-chair-lead` (the homepage chairman quote keeps its Phase 1 rendering).
+  7. **Breadcrumbs** are static markup in a Text Editor (`nav > ol`, `aria-current="page"`), styled by `taameer.css`; Elementor Free has no breadcrumbs widget and a Heading cannot carry `aria-current`.
+- **Alternatives rejected:** fixing `tp-measure*` globally (changes the homepage); new working `tp-measure-*` classes (two mechanisms for one job, CSS the client cannot see in the panel); renaming the licence JPEGs to `.pdf` (forbidden, D-040); Elementor Pro sticky (not available).
+
 ### D-040 — Phase 1.5: architecture made official; eyebrow kept; deferred items (documentation only)
 - **Context:** owner prompt "Phase 1.5 — Documentation Alignment Only" (2026-10-06) approved the WP Phase 1 architecture as the official project architecture and asked to record open items. No WordPress, Elementor, theme, CSS or JS changes.
 - **Decisions:**

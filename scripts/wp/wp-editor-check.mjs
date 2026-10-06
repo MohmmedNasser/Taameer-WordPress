@@ -1,7 +1,8 @@
 /**
- * wp-editor-check.mjs — opens the Home page in the Elementor editor, checks it loads without errors, saves it from the
+ * wp-editor-check.mjs — opens a page (default: Home) in the Elementor editor, checks it loads without errors, saves it from the
  * editor (Update), then reloads the front end and checks it still renders the same elements.
- *   PW_MODULE=<playwright> node scripts/wp/wp-editor-check.mjs <access.json> [postId=208]
+ *   PW_MODULE=<playwright> node scripts/wp/wp-editor-check.mjs <access.json> [postId=208] [frontUrl=https://taameer.local/]
+ *   About (WP phase 2): … <access.json> 297 https://taameer.local/about/
  * <access.json> = output of Novamira's novamira/create-admin-access-link (one-time; never printed or committed).
  */
 import { readFileSync } from 'node:fs';
@@ -12,6 +13,7 @@ const { chromium } = await import(process.env.PW_MODULE ? pathToFileURL(path.joi
 const raw = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 const access = raw.data || raw;
 const postId = process.argv[3] || '208';
+const frontUrl = process.argv[4] || 'https://taameer.local/';
 
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, ignoreHTTPSErrors: true });
@@ -31,7 +33,7 @@ await page.goto(loginUrl, { waitUntil: 'load' });
 
 const front = async () => {
   const p = await ctx.newPage();
-  await p.goto('https://taameer.local/?nocache=' + Date.now(), { waitUntil: 'load' });
+  await p.goto(frontUrl + '?nocache=' + Date.now(), { waitUntil: 'load' });
   const n = await p.$$eval('[data-elementor-id="' + postId + '"] .elementor-element', (e) => e.length);
   await p.close();
   return n;
