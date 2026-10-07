@@ -2,6 +2,12 @@
 
 Non-obvious decisions. Format: **Context / Decision / Reason / Alternatives rejected.** Newest on top.
 
+### D-043 — WP Phase 4B (first Project Detail): pages as children of Projects, static related / previous-next, masonry on the Basic Gallery
+- **Context:** owner prompt "WP Phase 4B — First Project Detail" (2026-10-07). One reference page; no CPT, Theme Builder or Loop Grid.
+- **Decisions:** (1) each project is a normal Page whose parent is the Projects page, so `/projects/<slug>/` needs no CPT or rewrite rules and matches the card links; (2) related projects and previous/next are static, computed in the build script with the prototype's rules (same type, listing order, wrap), so Phase 4C reruns the same script per slug; (3) the prototype's CSS-columns masonry is kept on the native Basic Gallery (`tp-masonry`) so the native lightbox stays; (4) the spec block is a `<dl>` in a Text Editor (semantic, editable); (5) "Projects" stays current in the menus on a project page through the existing `wp_nav_menu_objects` filter (menu links are custom URLs); (6) no entrance animations, because the prototype page has none.
+- **Reason:** smallest change that stays editable in Elementor Free and reproduces the prototype.
+- **Alternatives rejected:** CPT + single template (not approved), HTML widget for the spec, flex-grid gallery (loses the prototype's image ratios).
+
 ### D-042 — WP Phase 3 (Services): chip navigation, anchors, service rows, gallery
 - **Context:** owner prompt "WP Phase 3 — Services Page Migration" (2026-10-07). Services has three behaviours Home and About did not need: a sticky chip navigation with scrollspy, in-page anchors (`/services/#construction` from the footer and the homepage), and a lightbox gallery.
 - **Decisions:**

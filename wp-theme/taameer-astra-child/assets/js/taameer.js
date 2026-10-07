@@ -12,6 +12,7 @@
      tp-filter__bar    Projects page: the filter Buttons (.tp-filter-<type>) show/hide the static cards of
                        .tp-filter__items (.tp-type-<type>), FLIP move animation, aria-pressed, live status, ?type= in the URL
      Counter widget    Under prefers-reduced-motion the native Counter shows its final number at once
+     tp-project-nav    Project detail page: names the previous / next <nav> landmark (Container tag nav has no label field)
    Entrance fades are Elementor's native entrance animations (retimed in taameer.css).
    Nothing runs inside the Elementor editor, so the editor always shows the plain, editable widgets.
    ========================================================================== */
@@ -432,6 +433,12 @@
     select(fromUrl(), false, false);
   }
 
+  /* ---- tp-project-nav: accessible name for the previous / next landmark ---- */
+  function projectNav() {
+    var nav = document.querySelector('nav.tp-project-nav');
+    if (nav && !nav.hasAttribute('aria-label')) nav.setAttribute('aria-label', 'More projects');
+  }
+
   function init() {
     if (inEditor()) return;
     counters();
@@ -442,6 +449,7 @@
     parallax();
     scrollspy();
     projectFilter();
+    projectNav();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

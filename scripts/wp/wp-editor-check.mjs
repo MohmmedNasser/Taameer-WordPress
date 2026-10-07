@@ -2,6 +2,7 @@
  * wp-editor-check.mjs — opens a page (default: Home) in the Elementor editor, checks it loads without errors, saves it from the
  * editor (Update), then reloads the front end and checks it still renders the same elements.
  *   PW_MODULE=<playwright> node scripts/wp/wp-editor-check.mjs <access.json> [postId=208] [frontUrl=https://taameer.local/]
+ *   Project page (WP phase 4B): … <access.json> 326 https://taameer.local/projects/wadi-alshabak-villas/ 50
  *   About (WP phase 2): … <access.json> 297 https://taameer.local/about/
  * <access.json> = output of Novamira's novamira/create-admin-access-link (one-time; never printed or committed).
  */
@@ -14,6 +15,7 @@ const raw = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 const access = raw.data || raw;
 const postId = process.argv[3] || '208';
 const frontUrl = process.argv[4] || 'https://taameer.local/';
+const minEl = +process.argv[5] || 100;   // smaller pages (a project page has ~64 elements): pass the minimum as 5th argument
 
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, ignoreHTTPSErrors: true });
@@ -53,7 +55,7 @@ const info = await page.evaluate(() => {
     widgets: pdoc ? [...new Set([...pdoc.querySelectorAll('.elementor-widget')].map((w) => w.dataset.widget_type))] : [],
   };
 });
-console.log(`${info.elements > 100 ? 'PASS' : 'FAIL'}  editor opens and renders the page (${info.elements} elements; widgets: ${info.widgets.join(', ')})`);
+console.log(`${info.elements > minEl ? 'PASS' : 'FAIL'}  editor opens and renders the page (${info.elements} elements; widgets: ${info.widgets.join(', ')})`);
 
 // Save from the editor (same as clicking "Update"/"Publish").
 const saved = await page.evaluate(async () => {
@@ -63,7 +65,7 @@ await page.waitForTimeout(3000);
 console.log(`${saved === 'ok' ? 'PASS' : 'FAIL'}  save from the editor (${saved})`);
 
 const after = await front();
-console.log(`${after === before && after > 100 ? 'PASS' : 'FAIL'}  front end renders the same after save (${before} → ${after} elements)`);
+console.log(`${after === before && after > minEl ? 'PASS' : 'FAIL'}  front end renders the same after save (${before} → ${after} elements)`);
 const relevant = errors.filter((e) => !/favicon|ResizeObserver/.test(e));
 console.log(`${relevant.length === 0 ? 'PASS' : 'WARN'}  editor console errors: ${relevant.length}${relevant.length ? '\n   ' + relevant.slice(0, 8).join('\n   ') : ''}`);
 await browser.close();

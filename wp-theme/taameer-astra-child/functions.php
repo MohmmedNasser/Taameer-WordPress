@@ -78,6 +78,18 @@ add_filter(
 				$item->classes = array_diff( (array) $item->classes, array( 'current-menu-item', 'current_page_item' ) );
 			}
 		}
+		// A project page (child of /projects/) keeps "Projects" current, as on the prototype's project page. The menu links
+		// are custom URLs, so WordPress does not mark the parent page itself.
+		$parent = is_page() ? wp_get_post_parent_id( get_queried_object_id() ) : 0;
+		if ( $parent && (int) get_option( 'tp_projects_page_id' ) === $parent ) {
+			$path = wp_parse_url( get_permalink( $parent ), PHP_URL_PATH );
+			foreach ( $items as $item ) {
+				if ( rtrim( (string) wp_parse_url( $item->url, PHP_URL_PATH ), '/' ) === rtrim( (string) $path, '/' ) && false === strpos( (string) $item->url, '#' ) ) {
+					$item->current = true;
+					$item->classes = array_merge( (array) $item->classes, array( 'current-menu-item', 'current_page_item' ) );
+				}
+			}
+		}
 		return $items;
 	}
 );

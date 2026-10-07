@@ -40,6 +40,11 @@
      tp-filter__bar        Container: row of filter Buttons (taameer.js: role=button, aria-pressed, live status)
      tp-filter__btn / tp-filter-<type>   Button: filter chip, ink fill when pressed; the class names the project type
      tp-filter__items      Container: the 22 project cards; tp-type-<type> on each card (Advanced → CSS Classes) is what the filter reads
+   Project detail page (section 5e):
+     tp-spec / tp-spec--stack   Text Editor with a definition list: drawing title block, one label / value pair per row
+     tp-render-note        Text Editor: 3D Visualization notice (hairline box, "+" mark)
+     tp-masonry            Basic Gallery: CSS-columns masonry (17rem columns), images keep their own ratio, hover zoom
+     tp-project-nav__link / __prev / __next / __label / __title   previous / next project links (Container link + two Headings)
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -952,6 +957,111 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 
 /* Filtered-out cards (class, not [hidden]: the Container's display rule outranks the attribute). */
 .tp-filter__items > .tp-card.tp-is-filtered { display: none !important; }
+
+/* ---- 5e. Project detail page (one Elementor page per project, /projects/<slug>/) ---- */
+
+/* Spec block: <dl> in a Text Editor. Label (dt) over value (dd), hairline between rows. */
+.tp-spec dl { margin: 0; border-block-start: var(--tp-hairline); }
+.tp-spec dt {
+  margin: 0;
+  padding-block-start: var(--tp-space-4);
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--tp-slate);
+}
+.tp-spec dd {
+  margin: 0;
+  padding-block: var(--tp-space-1) var(--tp-space-4);
+  border-block-end: var(--tp-hairline);
+  font-family: var(--tp-font-display);
+  font-size: clamp(1.25rem, 1.18rem + 0.35vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--tp-ink);
+}
+
+/* 3D Visualization notice. */
+.tp-render-note {
+  position: relative;
+  padding: var(--tp-space-4) var(--tp-space-5);
+  padding-inline-start: calc(var(--tp-space-5) + var(--tp-space-3) + var(--tp-plus));
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+}
+.tp-render-note p { margin: 0; font-size: var(--tp-fs-sm); line-height: 1.7; color: var(--tp-slate); }
+.tp-render-note strong { color: var(--tp-ink); }
+.tp-render-note::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: var(--tp-space-5);
+  inset-block-start: calc(var(--tp-space-4) + 0.4em);
+  inline-size: var(--tp-plus);
+  block-size: var(--tp-plus);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 100% no-repeat;
+}
+
+/* Gallery masonry: Basic Gallery items flow in CSS columns, each image keeps its own aspect ratio (never cropped). */
+.tp-masonry .gallery { display: block; column-width: 17rem; column-gap: var(--tp-space-4); margin: 0; }
+/* Five selector parts: Astra's ".gallery-columns-3 .gallery-item { max-width: 33.33% }" and Elementor's
+   ".elementor .elementor-widget:not(…):not(…) figure { margin: 0 }" must both lose. */
+.elementor .elementor-widget.tp-masonry .gallery .gallery-item {
+  display: block;
+  inline-size: 100%;
+  max-width: none;
+  margin: 0 0 var(--tp-space-4);
+  padding: 0;
+  break-inside: avoid;
+}
+.tp-masonry .gallery-icon { display: block; }
+.tp-masonry .gallery-icon a {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-line);
+}
+.elementor .tp-masonry .gallery-icon img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 0;
+  transition: transform var(--tp-dur-slow) var(--tp-ease-out);
+}
+.tp-masonry .gallery-icon a:hover img,
+.tp-masonry .gallery-icon a:focus-visible img { transform: scale(1.05); }
+
+/* Previous / next project. The label's arrow points inline-end; the previous link flips it. */
+.tp-project-nav__link { color: inherit; text-decoration: none; }
+.tp-project-nav__next, .tp-project-nav__next .elementor-widget { text-align: end; }
+.tp-project-nav__next .elementor-heading-title { justify-content: flex-end; }
+.tp-project-nav__label .elementor-heading-title { display: inline-flex; align-items: center; gap: var(--tp-space-2); }
+.tp-project-nav__label .elementor-heading-title::before,
+.tp-project-nav__label .elementor-heading-title::after {
+  content: "";
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-i-arrow) center / contain no-repeat;
+  mask: var(--tp-i-arrow) center / contain no-repeat;
+}
+.tp-project-nav__prev .elementor-heading-title::after,
+.tp-project-nav__next .elementor-heading-title::before { content: none; }
+.tp-project-nav__prev .elementor-heading-title::before { transform: scaleX(-1); }
+.tp-project-nav__title .elementor-heading-title { transition: color var(--tp-dur-fast) var(--tp-ease-out); }
+.tp-project-nav__link:hover .tp-project-nav__title .elementor-heading-title,
+.tp-project-nav__link:focus-visible .tp-project-nav__title .elementor-heading-title {
+  color: var(--tp-charcoal);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.tp-project-nav__link:hover .tp-project-nav__label .elementor-heading-title { color: var(--tp-ink); }
 
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 
