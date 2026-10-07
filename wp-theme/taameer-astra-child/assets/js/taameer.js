@@ -7,6 +7,10 @@
      tp-marquee        Partner strip: the track is cloned once (aria-hidden) for a seamless CSS loop
      tp-before-after   Comparison slider built from two Image widgets
                        (.tp-before-after__after, .tp-before-after__before), keyboard operable (role="slider")
+     tp-scrollspy      Services chip bar: marks the chip of the section in view (aria-current="true") and keeps it
+                       visible in the scrolling row; exposes the header's real height (--tp-masthead-h) for the sticky offset
+     tp-filter__bar    Projects page: the filter Buttons (.tp-filter-<type>) show/hide the static cards of
+                       .tp-filter__items (.tp-type-<type>), FLIP move animation, aria-pressed, live status, ?type= in the URL
      Counter widget    Under prefers-reduced-motion the native Counter shows its final number at once
    Entrance fades are Elementor's native entrance animations (retimed in taameer.css).
    Nothing runs inside the Elementor editor, so the editor always shows the plain, editable widgets.
@@ -247,6 +251,187 @@
     set(pos);
   }
 
+  /* ---- tp-scrollspy: chip of the section crossing the reading line (just below the sticky bars) is current ---- */
+  function scrollspy() {
+    var nav = document.querySelector('.tp-scrollspy');
+    if (!nav) return;
+    var list = nav.querySelector('.tp-chips') || nav;
+    var landmark = nav.querySelector('nav');
+    if (landmark && !landmark.hasAttribute('aria-label')) landmark.setAttribute('aria-label', 'Services on this page');
+
+    // The bar sticks right below the header: its real height (the logo row is taller than the --tp-header-h token on
+    // small screens) is exposed as --tp-masthead-h for the sticky offset and the section scroll-margin (taameer.css).
+    var header = document.querySelector('#masthead');
+    function headerHeight() {
+      if (header) document.documentElement.style.setProperty('--tp-masthead-h', header.offsetHeight + 'px');
+    }
+    headerHeight();
+    if (header && 'ResizeObserver' in window) new ResizeObserver(headerHeight).observe(header);
+    else window.addEventListener('resize', headerHeight);
+
+    if (!('IntersectionObserver' in window)) return;
+    var chips = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+    var byId = {};
+    var sections = chips.map(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      byId[id] = a;
+      return document.getElementById(id);
+    }).filter(Boolean);
+    if (!sections.length) return;
+    var visible = {};
+    var currentId = null;
+    var observer = null;
+
+    function reveal(chip) {
+      var box = list.getBoundingClientRect();
+      var rect = chip.getBoundingClientRect();
+      if (rect.left >= box.left && rect.right <= box.right) return;
+      list.scrollBy({ left: rect.left < box.left ? rect.left - box.left : rect.right - box.right, behavior: reduced ? 'auto' : 'smooth' });
+    }
+    function setCurrent(id) {
+      if (id === currentId) return;
+      currentId = id;
+      chips.forEach(function (a) {
+        if (a === byId[id]) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+      if (byId[id]) reveal(byId[id]);
+    }
+    // Sections overlapping the band: the one furthest down has crossed the reading line, so it is current.
+    function pick() {
+      for (var i = sections.length - 1; i >= 0; i--) {
+        if (visible[sections[i].id]) { setCurrent(sections[i].id); return; }
+      }
+    }
+    function observe() {
+      if (observer) observer.disconnect();
+      visible = {};
+      var top = (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight;
+      observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+        pick();
+      }, { rootMargin: '-' + Math.round(top) + 'px 0px -' + Math.round(window.innerHeight * 0.55) + 'px 0px', threshold: 0 });
+      sections.forEach(function (sec) { observer.observe(sec); });
+    }
+
+    nav.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (a) setCurrent(a.getAttribute('href').slice(1)); // marks the chip at once; the browser scrolls (CSS smooth)
+    });
+    var timer;
+    window.addEventListener('resize', function () {
+      clearTimeout(timer);
+      timer = setTimeout(observe, 150);
+    });
+    observe();
+  }
+
+  /* ---- Projects filter: .tp-filter__bar buttons (.tp-filter-all | .tp-filter-<type>) toggle .tp-type-<type> cards ---- */
+  function projectFilter() {
+    var bar = document.querySelector('.tp-filter__bar');
+    var holder = document.querySelector('.tp-filter__items');
+    if (!bar || !holder) return;
+    var DURATION = 380;
+    var EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+    var buttons = [];
+    bar.querySelectorAll('.tp-filter__btn').forEach(function (wrap) {
+      var m = /(?:^|\s)tp-filter-([a-z-]+)(?:\s|$)/.exec(wrap.className);
+      var a = wrap.querySelector('a.elementor-button');
+      if (!m || !a) return;
+      a.setAttribute('role', 'button');
+      a.setAttribute('aria-pressed', 'false');
+      var label = a.querySelector('.elementor-button-text');
+      if (label) label.innerHTML = label.innerHTML.replace(/\s*(\d+)\s*$/, ' <span class="tp-filter__count">$1</span>');
+      buttons.push({ key: m[1], link: a });
+    });
+    if (!buttons.length) return;
+    var cards = Array.prototype.slice.call(holder.querySelectorAll(':scope > .tp-card'));
+    var status = document.createElement('p');
+    status.className = 'tp-visually-hidden';
+    status.setAttribute('aria-live', 'polite');
+    bar.insertAdjacentElement('afterend', status);
+    var current = null;
+    var running = [];
+
+    function typeOf(card) {
+      var m = /(?:^|\s)tp-type-([a-z-]+)(?:\s|$)/.exec(card.className);
+      return m ? m[1] : '';
+    }
+    function valid(v) { return buttons.some(function (b) { return b.key === v; }); }
+    function fromUrl() {
+      var v = new URLSearchParams(window.location.search).get('type');
+      return v && valid(v) ? v : 'all';
+    }
+    function writeUrl(v) {
+      var params = new URLSearchParams(window.location.search);
+      if (v === 'all') params.delete('type'); else params.set('type', v);
+      var qs = params.toString();
+      history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
+    }
+    function isShown(c) { return !c.classList.contains('tp-is-filtered'); }
+
+    function apply(value, animate) {
+      var motion = animate && !reduced && typeof Element.prototype.animate === 'function';
+      running.forEach(function (a) { a.cancel(); });
+      running = [];
+      var first = new Map();
+      if (motion) cards.forEach(function (c) { if (isShown(c)) first.set(c, c.getBoundingClientRect()); });
+      if (motion) holder.style.minBlockSize = holder.offsetHeight + 'px';
+      var shown = 0;
+      cards.forEach(function (c) {
+        var show = value === 'all' || typeOf(c) === value;
+        c.classList.toggle('tp-is-filtered', !show);
+        if (show) {
+          shown++;
+          // A card that never scrolled into view still waits for Elementor's entrance: show it now.
+          c.classList.remove('elementor-invisible');
+        }
+      });
+      if (motion) {
+        cards.forEach(function (c) {
+          if (!isShown(c)) return;
+          var before = first.get(c);
+          var after = c.getBoundingClientRect();
+          var anim;
+          if (before) {
+            var dx = before.left - after.left;
+            var dy = before.top - after.top;
+            if (!dx && !dy) return;
+            anim = c.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }], { duration: DURATION, easing: EASE });
+          } else {
+            anim = c.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'none' }], { duration: DURATION, easing: EASE });
+          }
+          running.push(anim);
+        });
+        var done = function () { holder.style.minBlockSize = ''; };
+        if (running.length) Promise.all(running.map(function (a) { return a.finished; })).then(done, done);
+        else done();
+      }
+      buttons.forEach(function (b) { b.link.setAttribute('aria-pressed', b.key === value ? 'true' : 'false'); });
+      holder.setAttribute('data-tp-active', value);
+      status.textContent = shown === 1 ? 'Showing 1 project' : 'Showing ' + shown + ' projects';
+    }
+    function select(v, animate, url) {
+      if (!valid(v)) v = 'all';
+      current = v;
+      apply(v, animate);
+      if (url) writeUrl(v);
+    }
+
+    buttons.forEach(function (b) {
+      b.link.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (b.key !== current) select(b.key, true, true);
+      });
+      // Role=button: Space activates as well (Enter already follows the link).
+      b.link.addEventListener('keydown', function (e) {
+        if (e.key === ' ') { e.preventDefault(); b.link.click(); }
+      });
+    });
+    window.addEventListener('popstate', function () { select(fromUrl(), true, false); });
+    select(fromUrl(), false, false);
+  }
+
   function init() {
     if (inEditor()) return;
     counters();
@@ -255,6 +440,8 @@
     splits();
     entrances();
     parallax();
+    scrollspy();
+    projectFilter();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

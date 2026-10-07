@@ -30,6 +30,16 @@
      tp-exp__img           Image: 1:1 crop
      tp-partner / tp-partner__logo   partner grid cell (hover) and grayscale logo; tp-blend as in the marquee
      tp-license__preview   Image (lightbox link): 3:4 top crop, lift on hover
+   Services page (section 5c):
+     tp-service-nav        Container: chip bar sticky below the header; tp-scrollspy marks the chip of the section in view (taameer.js)
+     tp-chips / tp-chip    Container (nav): horizontally scrollable row / Button: chip, ink fill when current
+     tp-service-block      Section Container: anchor lands below the header + chip bar (--flip = photo first, row-reverse in Elementor)
+     tp-ratio-4x3          Image: 4:3 crop
+     tp-gallery            Basic Gallery: 3 / 3 / 2 per row, 4:3 cells, hover zoom, "+" cue, staggered entrance
+   Projects page (section 5d):
+     tp-filter__bar        Container: row of filter Buttons (taameer.js: role=button, aria-pressed, live status)
+     tp-filter__btn / tp-filter-<type>   Button: filter chip, ink fill when pressed; the class names the project type
+     tp-filter__items      Container: the 22 project cards; tp-type-<type> on each card (Advanced → CSS Classes) is what the filter reads
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -816,6 +826,133 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
   transform: translateY(calc(-1 * var(--tp-space-1)));
 }
 
+/* ---- 5c. Services page ---- */
+
+/* Service navigation: chip bar that sticks below the header (Elementor Free has no sticky option). */
+.e-con.tp-service-nav {
+  position: sticky;
+  inset-block-start: calc(var(--wp-admin--admin-bar--height, 0px) + var(--tp-masthead-h, var(--tp-header-h))); /* real header height: taameer.js */
+  z-index: 90; /* below the header (100), above the page */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 600px) {
+  .admin-bar .e-con.tp-service-nav { inset-block-start: var(--tp-masthead-h, var(--tp-header-h)); } /* the admin bar scrolls away */
+}
+
+/* Horizontally scrollable row of chips, scrollbar hidden. */
+.e-con.tp-chips {
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.tp-chips::-webkit-scrollbar { display: none; }
+
+.tp-chips > .elementor-widget-button { flex: none; }
+.tp-chip .elementor-button { white-space: nowrap; }
+.tp-chip .elementor-button:focus-visible { outline-offset: calc(-1 * var(--tp-space-1)); } /* the scrolling row clips outside rings */
+
+/* Current section (aria-current set by taameer.js): ink fill. Six selector parts: the page's own Elementor CSS
+   (post-<id>.css, loaded after this file) styles each chip with four classes, five on :hover / :focus. */
+.elementor .e-con.tp-chips .tp-chip .elementor-button[aria-current="true"] {
+  background-color: var(--tp-ink);
+  border-color: var(--tp-ink);
+  color: var(--tp-paper);
+}
+
+/* Section anchors land below the header and the chip bar. */
+.tp-service-block {
+  scroll-margin-block-start: calc(var(--wp-admin--admin-bar--height, 0px) + var(--tp-masthead-h, var(--tp-header-h)) + 3.5rem);
+}
+
+/* 4:3 crop (service photos, related project cards). */
+.elementor .tp-ratio-4x3 img { inline-size: 100%; aspect-ratio: 4 / 3; block-size: auto; object-fit: cover; }
+
+/* Wall cladding gallery (Basic Gallery widget): 3 / 3 / 2 per row, 4:3 cells, zoom on hover, "+" cue (opens larger). */
+.tp-gallery .gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tp-space-4);
+  margin: 0;
+}
+
+.elementor .tp-gallery .gallery-item {
+  flex: 0 0 calc((100% - 2 * var(--tp-space-4)) / 3);
+  max-inline-size: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 767px) {
+  .tp-gallery .gallery { gap: var(--tp-space-3); }
+  .elementor .tp-gallery .gallery-item { flex-basis: calc((100% - var(--tp-space-3)) / 2); }
+}
+
+.tp-gallery .gallery-icon a {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  background: var(--tp-paper);
+  box-shadow: var(--tp-shadow-sm);
+}
+
+.elementor .tp-gallery .gallery-icon img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border: 0;
+  transition: transform var(--tp-dur-slow) var(--tp-ease-out);
+}
+
+.tp-gallery .gallery-icon a:hover img,
+.tp-gallery .gallery-icon a:focus-visible img { transform: scale(1.05); }
+
+.tp-gallery .gallery-icon a::after {
+  content: "";
+  position: absolute;
+  inset-block-end: var(--tp-space-3);
+  inset-inline-end: var(--tp-space-3);
+  inline-size: var(--tp-space-6);
+  block-size: var(--tp-space-6);
+  background:
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 40% 1px no-repeat,
+    linear-gradient(var(--tp-ink), var(--tp-ink)) center / 1px 40% no-repeat,
+    var(--tp-paper);
+  border-radius: 50%;
+  box-shadow: var(--tp-shadow-sm);
+}
+
+/* Entrance: the widget's Fade In Up is moved to the six images, one after another (prototype tp-stagger). */
+.elementor-element.tp-gallery.animated.fadeInUp { animation-name: none; }
+.tp-gallery.animated .gallery-item { animation: tp-fade-up var(--tp-dur-reveal) var(--tp-ease-out) both; }
+.tp-gallery.animated .gallery-item:nth-child(2) { animation-delay: calc(1 * var(--tp-stagger-step)); }
+.tp-gallery.animated .gallery-item:nth-child(3) { animation-delay: calc(2 * var(--tp-stagger-step)); }
+.tp-gallery.animated .gallery-item:nth-child(4) { animation-delay: calc(3 * var(--tp-stagger-step)); }
+.tp-gallery.animated .gallery-item:nth-child(5) { animation-delay: calc(4 * var(--tp-stagger-step)); }
+.tp-gallery.animated .gallery-item:nth-child(6) { animation-delay: calc(5 * var(--tp-stagger-step)); }
+
+/* ---- 5d. Projects page: filter chips (behaviour: tp-filter in taameer.js) ---- */
+
+.tp-filter__btn .elementor-button { white-space: nowrap; }
+.tp-filter__count { font-variant-numeric: tabular-nums; font-weight: 400; opacity: 0.7; margin-inline-start: var(--tp-space-1); }
+
+/* Pressed = ink fill. Six selector parts so it outranks the page's own Elementor CSS, also on :hover / :focus. */
+.elementor .e-con.tp-filter__bar .tp-filter__btn .elementor-button[aria-pressed="true"],
+.elementor .e-con.tp-filter__bar .tp-filter__btn .elementor-button[aria-pressed="true"]:hover,
+.elementor .e-con.tp-filter__bar .tp-filter__btn .elementor-button[aria-pressed="true"]:focus {
+  background-color: var(--tp-ink);
+  border-color: var(--tp-ink);
+  color: var(--tp-paper);
+}
+
+/* Filtered-out cards (class, not [hidden]: the Container's display rule outranks the attribute). */
+.tp-filter__items > .tp-card.tp-is-filtered { display: none !important; }
+
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 
 .tp-before-after { inline-size: 100%; max-inline-size: 36rem; }
@@ -1021,7 +1158,8 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
   }
 
   .elementor-invisible { visibility: visible !important; }
-  .elementor-element.animated { animation: none !important; }
+  .elementor-element.animated,
+  .tp-gallery .gallery-item { animation: none !important; }
 
   /* Marquee becomes a static, centred, wrapped row of logos. */
   .tp-marquee { -webkit-mask-image: none; mask-image: none; }

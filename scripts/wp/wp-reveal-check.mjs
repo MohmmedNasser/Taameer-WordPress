@@ -63,14 +63,15 @@ for (const w of widths) {
   const hidden = await page.$$eval('.elementor-invisible', (e) => e.length).catch(() => 0);
   if (hidden) fail(`${w}px ${hidden} Elementor elements still hidden`);
 
-  // Reload half-way down: the wipes in view must open again.
+  // Reload half-way down: the wipes in view must open again. "In view" = frame top above 75 % of the viewport: wipes
+  // trigger when the frame reaches ~76–86 % (as in the prototype), so a frame only peeking in at the bottom stays closed.
   const mid = end[1] ? end[1].docTop - 200 : 2000;
   await page.evaluate((y) => window.scrollTo(0, y), mid);
   await page.reload({ waitUntil: 'load' });
   await page.waitForTimeout(2500);
   const afterReload = await page.evaluate(() => [...document.querySelectorAll('.tp-img-reveal')].map((e) => {
     const r = e.parentElement.getBoundingClientRect();
-    return { inView: r.top < innerHeight && r.bottom > 0, clip: getComputedStyle(e).clipPath };
+    return { inView: r.top < innerHeight * 0.75 && r.bottom > 0, clip: getComputedStyle(e).clipPath };
   }));
   afterReload.forEach((e, i) => { if (e.inView && e.clip !== 'inset(0px)' && e.clip !== 'none') fail(`${w}px wipe ${i} in view after reload is not open (${e.clip})`); });
   if (errors.length) fail(`${w}px console errors: ${errors.join(' | ')}`);

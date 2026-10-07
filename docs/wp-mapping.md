@@ -53,9 +53,9 @@ Astra's global palette carries the same colours for the header and footer.
 
 | File | Does |
 |---|---|
-| `functions.php` | Enqueues `taameer.css` / `taameer.js` (after Astra/Elementor); sets `html.tp-js` before first paint; Astra breakpoints 1023/767; registers `[tp_template id]` (renders a published Elementor saved template) |
-| `assets/css/taameer.css` | Sticky header and Astra header/footer polish (nav hairline, "+" menu toggle, full-screen menu fade, footer grid, icons, WhatsApp button); component classes (`tp-eyebrow`, `tp-caption`, `tp-link`, `tp-frame`, `tp-frame--portrait`, `tp-service`, `tp-plus-item`, `tp-card`, `tp-lift`, `tp-letter__thumb`, `tp-stat`, `tp-measure*`); marquee and partner grayscale; before/after slider; motion (Fade In Up retimed, `tp-split`, `tp-img-reveal` + `tp-delay-1…5`, `tp-parallax`); reduced motion; five documented overrides of Astra/Elementor defaults (root font size, Astra button font size, Full Width wrapper padding, `.e-con::before`, widget `max-width`) |
-| `assets/js/taameer.js` | Split headline, image wipe and parallax (IntersectionObserver), marquee clone, before/after slider (keyboard operable), counters at final value under reduced motion. Nothing runs inside the Elementor editor |
+| `functions.php` | Enqueues `taameer.css` / `taameer.js` (after Astra/Elementor); sets `html.tp-js` before first paint; Astra breakpoints 1023/767; registers `[tp_template id]` (renders a published Elementor saved template); menu links with a `#` are never marked current; Astra's scroll-to-ID off on Services (D-042) |
+| `assets/css/taameer.css` | Sticky header and Astra header/footer polish (nav hairline, "+" menu toggle, full-screen menu fade, footer grid, icons, WhatsApp button); component classes (`tp-eyebrow`, `tp-caption`, `tp-link`, `tp-frame`, `tp-frame--portrait`, `tp-service`, `tp-plus-item`, `tp-card`, `tp-lift`, `tp-letter__thumb`, `tp-stat`, `tp-measure*`); marquee and partner grayscale; About (§5b) and Services (§5c: chip bar, anchor offset, `tp-ratio-4x3`, gallery) components; before/after slider; motion (Fade In Up retimed, `tp-split`, `tp-img-reveal` + `tp-delay-1…5`, `tp-parallax`); reduced motion; five documented overrides of Astra/Elementor defaults (root font size, Astra button font size, Full Width wrapper padding, `.e-con::before`, widget `max-width`) |
+| `assets/js/taameer.js` | Split headline, image wipe and parallax (IntersectionObserver), marquee clone, before/after slider (keyboard operable), counters at final value under reduced motion, Services scrollspy (`tp-scrollspy`; header height → `--tp-masthead-h`). Nothing runs inside the Elementor editor |
 
 **Image wipes (D-039):** `tp-img-reveal` on the Image widget (hero also `tp-delay-2`); the selector carries `.elementor-element` so Elementor's widget transition rule cannot override the 1.3 s clip-path transition. Same scroll trigger as the prototype; plays once.
 
@@ -93,13 +93,45 @@ Page "About" (id 297, `https://taameer.local/about/`, option `tp_about_page_id`)
 - **Motion:** Fade In Up with 110 ms stagger delays (aims, team, experience, partners, licences), two image wipes, one parallax, the 2015 Counter, Zoom In on the fact box. Reduced motion: everything visible, counter at 2015.
 - **Verification:** `scripts/wp/wp-about-check.mjs` 26/26 (one h1, heading order, alts, images, breadcrumbs, current menu item, entrance animations, counter, wipes, sticky portrait, licence lightbox ×2, shared CTA, links, 7 widths without overflow, reduced motion, console); `wp-editor-check.mjs … 297 https://taameer.local/about/`: editor opens, saves, front end re-renders identically; homepage regression `wp-check.mjs` 20/20; see the progress log for the wipe and screenshot runs.
 
-## Planned — not started (WP Phase 3 onward)
+## Implemented — WP Phase 3 (Services)
+
+Page "Services" (id 306, `https://taameer.local/services/`, option `tp_services_page_id`), built by `scripts/wp/08-services.php` (helpers copied from `07-about.php`; re-running replaces the content, same ID). Elementor Full Width template, title hidden; Astra header and footer unchanged ("Services" is the current menu item). 10 top-level parts, 73 Containers, native widgets only (Heading 66, Text Editor 12, Image 15, Button 8, Basic Gallery 1, Shortcode 1), no HTML widget. Decisions: D-042.
+
+| # | Section | Native building blocks | Child-theme class / script |
+|---|---|---|---|
+| 1 | Page hero + breadcrumbs (fog, bottom hairline) | as About: Text Editor (breadcrumbs) + Container [Heading p eyebrow "Our expertise", Heading H1, Text Editor lead] (Fade In Up 100/200/300 ms) | `tp-breadcrumb` markup, `tp-eyebrow` |
+| 2 | Service navigation (sticky chip bar) | Full-width Container > Container as `<nav>` > 6 Button widgets (`#construction` … `#turnkey`) | `tp-service-nav`, `tp-scrollspy`, `tp-chips`, `tp-chip` (sticky below the header, horizontal scroll, ink current state; scrollspy in `taameer.js`) |
+| 3–8 | 6 service blocks (CSS IDs `construction`, `design-build`, `decoration-fitout`, `renovation`, `maintenance`, `turnkey`; 02/04/06 fog + `--flip`) | Section > wrapping row (row / row-reverse, gap 96 / 48) > Container 24 rem grow [Heading p "Service 0n", H2, Text Editor lead, Text Editor body, Button.tp-link] + Container 24 rem grow > Container.tp-frame > Image | `tp-service-block(--flip)` (anchor offset), `tp-frame`, `tp-img-reveal`, `tp-ratio-4x3`, `tp-link` |
+| 3, 5, 6 | Related projects (Construction, Decoration & Fit-out, Renovation) | Container (top hairline) > Heading H3 (eyebrow style) + wrapping row > 3 × Container as `<a>` (/projects/<slug>/) [Container > Image (+ absolute badge row on the ongoing render), meta row, H3, location, "View project"] — 3 / 3 / 1 | `tp-card`, `tp-card__more`, `tp-ratio-4x3` |
+| 9 | Wall cladding (CSS ID `wall-cladding`) | Section head row ; Basic Gallery (6 images, link: media file, one lightbox slideshow, captions = alt) | `tp-gallery` (3 / 3 / 2 per row, 4:3, hover zoom, "+" cue, staggered entrance) |
+| 10 | CTA band | Container > Shortcode `[tp_template id="228"]` (follows a white section, as on Home) | — |
+
+- **Assets:** 21 images already in the Media Library (6 service photos, 9 related-project covers, 6 wall-cladding images); alt text from the library (= prototype). Nothing uploaded. The 6 wall-cladding attachment titles were set to their alt text (lightbox captions, D-042).
+- **Links:** related cards → `/projects/<slug>/`; Turnkey → `/projects/?type=construction`; Decoration & Fit-out → `#wall-cladding`. 13 later-phase URLs on the page return 404 until Projects / Testimonials / Contact exist.
+- **Motion:** Fade In Up (110 ms stagger on related cards, gallery items staggered in CSS), 6 image wipes (`tp-img-reveal`, 1.3 s, prototype trigger point). Reduced motion: everything visible at once, no wipes.
+- **Verification:** `scripts/wp/wp-services-check.mjs` 35/35; `wp-editor-check.mjs … 306 https://taameer.local/services/` open / save / re-render identical, stored structure unchanged after the save; see the progress log for wipes, widths, regression and screenshots (`source/screenshots/wp-phase-3/`).
+
+## Implemented — WP Phase 4A (Projects listing)
+
+Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_page_id`), built by `scripts/wp/09-projects.php` (helpers copied from `08-services.php`; the 22 projects are embedded from `data/projects.json` in the listing order of `projects.js`; re-running replaces the content, same ID). Elementor Full Width template, title hidden; Astra header and footer unchanged ("Projects" is the current menu item). Static architecture (D-040): no CPT, no Loop Grid, no HTML widget.
+
+| # | Section | Native building blocks | Child-theme class / script |
+|---|---|---|---|
+| 1 | Page hero + breadcrumbs (fog, bottom hairline) | as Services: Text Editor (breadcrumbs) + Container [Heading p eyebrow "Track record", Heading H1 "Our Projects", Text Editor lead] (Fade In Up 100/200/300 ms) | `tp-breadcrumb` markup, `tp-eyebrow` |
+| 2 | Filter bar + project grid (`tp-archive`) | Heading H2 "All projects" (visually hidden) · Container (row, wrap, gap 8) > 5 Button widgets "All 22 / Construction 6 / Renovation & Decoration 10 / Fit-out 5 / Landscaping 1" (link `#`) · Container (row, wrap; 3 / 2 / 1 cards per row, gap 44 / 32 / 24) > 22 × Container as `<a>` (/projects/<slug>/) [Container > Image (4:3, + absolute badge row on the ongoing render), meta row (type, year / Ongoing), H3 title, location, "View project"] (Fade In Up, 110 ms stagger per row) | `tp-filter__bar`, `tp-filter__btn tp-filter-<type>`, `tp-filter__items`, `tp-card tp-type-<type>`, `tp-ratio-4x3`, `tp-card__more` (filter in `taameer.js`) |
+| 3 | CTA band | Container > Shortcode `[tp_template id="228"]` | — |
+
+- **Filter (class-driven, no data attributes):** a Button's class `tp-filter-<type>` selects the cards with class `tp-type-<type>`; `all` shows everything. `taameer.js` adds `role="button"` / `aria-pressed`, a polite live status ("Showing 6 projects"), Space activation, the FLIP move animation of the prototype (instant under reduced motion), `?type=<type>` in the URL (deep link, `popstate`), and removes a pending `elementor-invisible` from cards it reveals. Filtered-out cards get `tp-is-filtered` (`display: none`). Counts are the Button text (editable).
+- **Content:** 22 cards = 6 Construction, 10 Renovation & Decoration, 5 Fit-out, 1 Landscaping. Order: ongoing first, then newest completion (Service Blocks & Extensions has no date: last, no year label). Wall Cladding (a showcase on Services) is not a card. The four team-experience buildings (a section on the prototype's `projects.html`) are not on this page: they stay on About (owner instruction); see Known limitations.
+- **Assets:** the 22 covers were already in the Media Library (`tp_media_map`); alt text from the library. Nothing uploaded.
+- **Links:** every card → `/projects/<slug>/` (404 until WP Phase 4B builds the project pages); Services "View construction projects" → `/projects/?type=construction` now works.
+- **Verification:** `scripts/wp/wp-projects-check.mjs` 40/40; `wp-editor-check.mjs … 312 https://taameer.local/projects/` open / save / re-render identical, stored structure unchanged; no wipes on this page; regression Home 20/20, About 26/26, Services 35/35, FAB 4 pages, wipes Home / About / Services.
+
+## Planned — not started (WP Phase 4B onward)
 
 | Page / item | Planned approach | Notes |
 |---|---|---|
-| Services | Elementor page; 6 service blocks with anchors (`#construction` …) used by the footer and homepage links; scroll navigation through child-theme JS if needed | Wall Cladding showcase |
-| Projects | Elementor page with static cards for the 22 projects; filtering by type decided in that phase (no Loop Grid) | Data: `data/projects.json` (27 entries = 22 projects + Wall Cladding showcase + 4 team-experience buildings, the latter on About) |
-| Project pages | One Elementor page per project at `/projects/<slug>/` (links already used by the homepage) with gallery + native lightbox, before/after where a before image exists | No CPT or PHP templates unless approved later |
+| Project pages (WP Phase 4B) | One Elementor page per project at `/projects/<slug>/` (links already used by the homepage) with gallery + native lightbox, before/after where a before image exists | No CPT or PHP templates unless approved later |
 | Testimonials | Elementor page; letters in the native lightbox | |
 | Contact | Elementor page; form with WPForms Lite; "Open in Google Maps" link | |
 | 404 | Astra 404 or an Elementor-built approach, decided in that phase | |
@@ -109,7 +141,9 @@ Page "About" (id 297, `https://taameer.local/about/`, option `tp_about_page_id`)
 
 ## Known limitations
 
-- Links to the not-yet-built pages (`/services/#…`, `/projects/…`, `/testimonials/`, `/contact/`) return 404 until those pages exist (17 URLs on Home, 10 on About; `/about/` exists since WP Phase 2).
+- Links to the not-yet-built pages (`/projects/…`, `/testimonials/`, `/contact/`) return 404 until those pages exist (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
+- Services: related project cards are static (updated by hand); the chip bar's `aria-label` ("Services on this page") is set by `taameer.js` (Elementor Free has no custom attributes) and will need its Arabic string in the Arabic phase; anchor scrolling on Services is native (Astra's scroll-to-ID is off on that page only, D-042).
+- The shared CTA band renders the same on every page but differs from the prototype's (heading on one line, shorter box at ≥ 768 px); identical to the approved homepage, so not changed in the Services phase.
 - The `tp-measure*` classes on the homepage have no effect (Elementor's `max-width: 100%` on Container widgets outranks them); About uses native Custom Width instead (D-041). Homepage left unchanged pending an owner decision.
 - Floating controls: Astra's scroll-to-top sits 12 px above the WhatsApp button (`taameer.css` §4; fixed after WP Phase 2, they used to overlap). At ≥ 1024 px, scrolled to the very bottom, the WhatsApp button covers the footer's "عربي" link, as in the prototype.
 - About: the licence buttons open the licence image, not a PDF (pending client PDFs, D-041). Compact spec rows are a few px shorter than the prototype (Kit eyebrow line-height 1.15 vs the prototype's 1.7 on `dt`; same as the homepage spec). Aims show 4 per row from 1024 px (the prototype wraps 3 + 1 between 1024 and ~1100 px); team experience is 1 per row below 768 px (prototype: 2 from 640 px).
