@@ -10,7 +10,8 @@
  *   4. registers [tp_template id="…"] so one Elementor saved template (the CTA band) can be reused on many pages
  *      (Elementor Free has no Template widget / global widgets),
  *   5. keeps in-page menu links (/services/#construction …) from being marked as the current page,
- *   6. on the Services page, leaves #anchor scrolling to the browser (Astra's scroll-to-ID ignores the sticky chip bar).
+ *   6. on the Services page, leaves #anchor scrolling to the browser (Astra's scroll-to-ID ignores the sticky chip bar),
+ *   7. prints the "404 page" Elementor saved template on not-found requests (Elementor Free has no Theme Builder).
  *
  * @package taameer-astra-child
  */
@@ -108,6 +109,37 @@ add_filter(
 			$data['is_scroll_to_id'] = false;
 		}
 		return $data;
+	}
+);
+
+/**
+ * 404 page. Elementor Free has no Theme Builder, so the "Page not found" content is an Elementor saved template
+ * ("404 page", option tp_404_template_id, built by scripts/wp/13-404.php, edited in Templates → Saved Templates). On a
+ * not-found request it replaces Astra's 404 content, full width like the Elementor pages (Astra "page-builder" layout);
+ * the response stays a 404 and is noindex, as in the prototype. Without the template Astra's own 404 is shown.
+ */
+add_action(
+	'wp',
+	function () {
+		$id = (int) get_option( 'tp_404_template_id' );
+		if ( ! is_404() || ! $id || 'publish' !== get_post_status( $id ) || ! class_exists( '\Elementor\Plugin' ) ) {
+			return;
+		}
+		add_filter( 'astra_get_content_layout', fn() => 'page-builder' );
+		// The template's CSS in the head (it is printed after wp_head).
+		add_action( 'wp_enqueue_scripts', fn() => ( new \Elementor\Core\Files\CSS\Post( $id ) )->enqueue(), 20 );
+		remove_all_actions( 'astra_404_content_template' );
+		add_action( 'astra_404_content_template', fn() => print( do_shortcode( '[tp_template id="' . $id . '"]' ) ) );
+	}
+);
+
+add_filter(
+	'wp_robots',
+	function ( $robots ) {
+		if ( is_404() ) {
+			$robots['noindex'] = true;
+		}
+		return $robots;
 	}
 );
 

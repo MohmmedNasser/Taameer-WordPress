@@ -2,6 +2,12 @@
 
 Non-obvious decisions. Format: **Context / Decision / Reason / Alternatives rejected.** Newest on top.
 
+### D-044 — WP Phase 7 (404): Elementor saved template printed by the child theme
+- **Context:** owner prompt "WP Phase 7 — 404 Page" (2026-10-08). Elementor Free has no Theme Builder (no 404 location) and a 404 request has no page to "Edit with Elementor"; Astra Free's own 404 is a boxed text block with a search form.
+- **Decision:** the 404 content is an Elementor **saved template** ("404 page", id 460, native Containers/widgets, `13-404.php`); `functions.php` prints it on `is_404()` in place of Astra's `astra_404_content_template`, with Astra's `page-builder` layout, and `wp_robots` adds `noindex` on 404s. Featured cards are static (prototype rule); the "+" reuses `tp-location__mark`; no CTA or animations (the prototype has none).
+- **Reason:** the content stays editable in Elementor (Templates → Saved Templates) and the response stays a real 404, with ~25 lines of PHP that hold no layout or copy; same mechanism as the shared CTA (`[tp_template]`). Reusing an existing class avoided any shared CSS change.
+- **Alternatives rejected:** a published "page-not-found" Page + redirect (200 status / changed URL, indexable), layout in a PHP `404.php` (not editable, against D-038), Astra's default 404 (does not match the prototype), Elementor Pro Theme Builder (not available).
+
 ### D-043 — WP Phase 4B (first Project Detail): pages as children of Projects, static related / previous-next, masonry on the Basic Gallery
 - **Context:** owner prompt "WP Phase 4B — First Project Detail" (2026-10-07). One reference page; no CPT, Theme Builder or Loop Grid.
 - **Decisions:** (1) each project is a normal Page whose parent is the Projects page, so `/projects/<slug>/` needs no CPT or rewrite rules and matches the card links; (2) related projects and previous/next are static, computed in the build script with the prototype's rules (same type, listing order, wrap), so Phase 4C reruns the same script per slug; (3) the prototype's CSS-columns masonry is kept on the native Basic Gallery (`tp-masonry`) so the native lightbox stays; (4) the spec block is a `<dl>` in a Text Editor (semantic, editable); (5) "Projects" stays current in the menus on a project page through the existing `wp_nav_menu_objects` filter (menu links are custom URLs); (6) no entrance animations, because the prototype page has none.
