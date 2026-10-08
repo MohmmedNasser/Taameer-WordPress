@@ -50,6 +50,10 @@
      tp-letter-entry       Container <article>, CSS ID = testimonial id: anchor target of "/testimonials/#id"
      tp-letter-sheet       Container link to the full letter (Elementor lightbox; taameer.js groups the four and names the link)
      tp-letter-sheet__zoom Heading: "View original letter" label on the sheet, ink fill on hover / focus
+   Contact page (section 5g):
+     tp-contact-info       Container: contact details column (dl spec links: ink text, hairline underline)
+     tp-contact-form       WPForms widget: labels, fields, errors, note, button and confirmation as the prototype's form
+     tp-location / tp-location__mark   Container: "Visit our office" box / empty Container drawn as the 56px "+" mark
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -1091,6 +1095,124 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 }
 .elementor .e-con.tp-letter-sheet:is(:hover, :focus-visible) .elementor-element.tp-letter-sheet__zoom { background-color: var(--tp-ink); }
 .elementor .e-con.tp-letter-sheet:is(:hover, :focus-visible) .elementor-element.tp-letter-sheet__zoom .elementor-heading-title { color: var(--tp-paper); }
+
+/* ---- 5g. Contact page (/contact/): details, WPForms form, location block ----
+   Colours, border radius and button colours come from the WPForms widget's own style controls (CSS variables on the
+   widget); what they cannot express is below, scoped to .tp-contact-form so other WPForms forms are untouched. */
+
+.tp-contact-info address { margin: 0; font-style: normal; } /* Astra adds a 1.5em bottom margin */
+.tp-contact-info a { color: var(--tp-ink); text-decoration: underline; text-decoration-color: var(--tp-line); text-underline-offset: 0.15em; }
+.tp-contact-info a:hover { color: var(--tp-ink); text-decoration-color: var(--tp-ink); }
+
+/* Form: fields, then the "Fields marked * are required." note (form description), then the button, 24px apart. */
+.tp-contact-form div.wpforms-container-full:not(:empty) { margin: 0; }
+.tp-contact-form .wpforms-form { display: flex; flex-direction: column; gap: var(--tp-space-5); }
+.tp-contact-form .wpforms-field-container { order: 1; display: flex; flex-direction: column; gap: var(--tp-space-5); }
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-head-container { order: 2; margin: 0; padding: 0; }
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-submit-container { order: 3; margin: 0; padding: 0; }
+.tp-contact-form div.wpforms-container-full .wpforms-field:not(.wpforms-field-hp) { padding: 0; display: flex; flex-direction: column; gap: var(--tp-space-2); }
+.tp-contact-form div.wpforms-container-full .wpforms-head-container .wpforms-description {
+  margin: 0;
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-sm);
+  line-height: 1.7;
+  color: var(--tp-slate);
+}
+
+.tp-contact-form div.wpforms-container-full .wpforms-field-label {
+  margin: 0;
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 600;
+  line-height: 1.7;
+  letter-spacing: var(--tp-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--tp-ink);
+}
+.tp-contact-form div.wpforms-container-full .wpforms-required-label { color: var(--tp-ink); font-weight: 600; }
+
+.tp-contact-form div.wpforms-container-full .wpforms-form :is(input[type="text"], input[type="email"], select, textarea) {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--tp-touch);
+  padding: var(--tp-space-3) var(--tp-space-4);
+  font-family: var(--tp-font-body);
+  font-size: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  line-height: 1.7;
+  box-shadow: none;
+  transition: border-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+.tp-contact-form div.wpforms-container-full .wpforms-form select.wpforms-field-large { line-height: normal; }
+/* rows="6" of the prototype: six text lines + padding + border */
+.tp-contact-form div.wpforms-container-full .wpforms-form textarea.wpforms-field-large { block-size: calc(6 * 1.7em + 2 * var(--tp-space-3) + 2px); resize: vertical; }
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-field :is(input, select, textarea):hover { border-color: var(--tp-ink); }
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-field :is(input, select, textarea):focus { border-color: var(--tp-ink); box-shadow: none; }
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-field :is(input, select, textarea):focus-visible { outline: 2px solid var(--tp-charcoal); outline-offset: 3px; }
+/* Invalid field: ink border with a thick inner underline (prototype [aria-invalid="true"]). */
+/* One class more than WPForms' own :focus:invalid / .wpforms-error:focus rules. */
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-field :is(input, select, textarea)[aria-invalid="true"],
+.tp-contact-form div.wpforms-container-full .wpforms-form .wpforms-field.wpforms-has-error :is(input, select, textarea).wpforms-error {
+  border-color: var(--tp-ink);
+  box-shadow: inset 0 calc(-1 * var(--tp-space-1)) 0 var(--tp-ink);
+}
+.tp-contact-form div.wpforms-container-full .wpforms-form em.wpforms-error,
+.tp-contact-form div.wpforms-container-full .wpforms-form label.wpforms-error {
+  margin: 0;
+  padding: 0;
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-sm);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--tp-ink);
+}
+.tp-contact-form div.wpforms-container-full .wpforms-form em.wpforms-error::before,
+.tp-contact-form div.wpforms-container-full .wpforms-form label.wpforms-error::before { content: "+\00a0"; position: static; inline-size: auto; block-size: auto; background: none; -webkit-mask: none; mask: none; }
+
+/* "Send message": the Kit's primary button (Inter 500, uppercase, 0.03em), full width like the prototype's form column. */
+.tp-contact-form div.wpforms-container-full .wpforms-form button.wpforms-submit {
+  inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--tp-touch);
+  padding: 0.95rem 1.75rem;
+  font-family: var(--tp-font-body);
+  font-size: var(--tp-fs-xs);
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: var(--tp-tracking-button);
+  text-transform: uppercase;
+  transition: background-color var(--tp-dur-fast) var(--tp-ease-out);
+}
+.tp-contact-form div.wpforms-container-full .wpforms-form button.wpforms-submit:hover { background: var(--tp-charcoal); }
+.tp-contact-form div.wpforms-container-full .wpforms-form button.wpforms-submit:focus-visible { outline: 2px solid var(--tp-charcoal); outline-offset: 3px; }
+.tp-contact-form div.wpforms-container-full .wpforms-form button.wpforms-submit:focus::after { display: none; }
+
+/* Success (confirmation message): fog panel with hairline, as the prototype's .tp-form__success. */
+.tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+  margin: 0;
+  padding: var(--tp-space-7);
+  background: var(--tp-fog);
+  border: var(--tp-hairline);
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-ink);
+  font-family: var(--tp-font-body);
+  line-height: 1.7;
+}
+.tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full :is(h3, p) { margin: 0; color: var(--tp-ink); }
+.tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full h3 {
+  font-family: var(--tp-font-display);
+  font-size: clamp(1.5rem, 1.35rem + 0.7vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+.tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full:focus-visible { outline: 2px solid var(--tp-charcoal); outline-offset: 3px; }
+
+/* Location block: the 56px "+" setting-out mark (decorative, an empty Container). */
+.tp-location__mark { flex: none; background: var(--tp-ink); -webkit-mask: var(--tp-i-plus) center / contain no-repeat; mask: var(--tp-i-plus) center / contain no-repeat; }
 
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 

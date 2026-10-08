@@ -15,6 +15,9 @@
      tp-project-nav    Project detail page: names the previous / next <nav> landmark (Container tag nav has no label field)
      tp-letter-sheet   Testimonials page: groups the four letter links into one Elementor lightbox slideshow and names
                        each link "Open the original letter from …" (Container links have no attribute fields in Free)
+     tp-contact-form   Contact page (WPForms widget): when WPForms swaps the form for its confirmation message, the
+                       message becomes a focused status region, as the prototype's success panel (WPForms leaves focus
+                       on the removed button and announces nothing)
    Entrance fades are Elementor's native entrance animations (retimed in taameer.css).
    Nothing runs inside the Elementor editor, so the editor always shows the plain, editable widgets.
    ========================================================================== */
@@ -452,6 +455,19 @@
     });
   }
 
+  function contactConfirmation() {
+    document.querySelectorAll('.tp-contact-form').forEach(function (widget) {
+      new MutationObserver(function (records, observer) {
+        var done = widget.querySelector('.wpforms-confirmation-container-full, .wpforms-confirmation-container');
+        if (!done) return;
+        observer.disconnect();
+        done.setAttribute('role', 'status');
+        done.setAttribute('tabindex', '-1');
+        done.focus({ preventScroll: true }); // WPForms scrolls it into view itself
+      }).observe(widget, { childList: true, subtree: true });
+    });
+  }
+
   function init() {
     if (inEditor()) return;
     counters();
@@ -464,6 +480,7 @@
     projectFilter();
     projectNav();
     letterSheets();
+    contactConfirmation();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
