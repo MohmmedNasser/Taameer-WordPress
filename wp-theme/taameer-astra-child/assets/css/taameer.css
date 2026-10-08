@@ -46,6 +46,10 @@
      tp-masonry            Basic Gallery: CSS-columns masonry (17rem columns), images keep their own ratio, hover zoom
      tp-project-nav__link / __prev / __next / __label / __title   previous / next project links (Container link + two Headings)
      tp-project-letter     Section: client feedback quote (Text Editor blockquote keeps its own size)
+   Testimonials page (section 5f):
+     tp-letter-entry       Container <article>, CSS ID = testimonial id: anchor target of "/testimonials/#id"
+     tp-letter-sheet       Container link to the full letter (Elementor lightbox; taameer.js groups the four and names the link)
+     tp-letter-sheet__zoom Heading: "View original letter" label on the sheet, ink fill on hover / focus
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -1066,6 +1070,27 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
 
 /* Client feedback (project pages with a linked letter, phase 4C): the quote keeps the Text Editor's size. */
 .tp-project-letter blockquote { font-size: inherit; } /* Astra sizes blockquote at 1.1em */
+
+/* ---- 5f. Testimonials page (/testimonials/) ---- */
+
+/* "/testimonials/#atlas-copco" (project pages' "Read the letter"): lands below the header plus the prototype's 4rem. */
+.tp-letter-entry { scroll-margin-block-start: 4rem; }
+.tp-letter-entry blockquote { font-size: inherit; } /* Astra sizes blockquote at 1.1em */
+.tp-letter-entry .tp-link .elementor-button { text-align: start; } /* the long project link wraps on phones: lines start-aligned */
+
+.tp-letter-sheet { color: inherit; text-decoration: none; }
+.tp-letter-sheet__zoom .elementor-heading-title { display: flex; align-items: center; justify-content: center; gap: var(--tp-space-2); }
+.tp-letter-sheet__zoom .elementor-heading-title::before {
+  content: "";
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  background: currentColor;
+  -webkit-mask: var(--tp-i-plus) center / contain no-repeat;
+  mask: var(--tp-i-plus) center / contain no-repeat;
+}
+.elementor .e-con.tp-letter-sheet:is(:hover, :focus-visible) .elementor-element.tp-letter-sheet__zoom { background-color: var(--tp-ink); }
+.elementor .e-con.tp-letter-sheet:is(:hover, :focus-visible) .elementor-element.tp-letter-sheet__zoom .elementor-heading-title { color: var(--tp-paper); }
 
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 

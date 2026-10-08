@@ -178,7 +178,29 @@ Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_
 - **Animations:** none added (the prototype's project page has none); before/after slider, gallery hover zoom and the native lightbox are the interactions; reduced motion shows everything.
 - **Assets:** all 152 project images were already in the Media Library; nothing uploaded, no duplicates. Gallery attachment titles set to their alt text (lightbox captions), as in 4B.
 - **Verification:** `wp-project-detail-check.mjs <slug,slug,…>` (sections derived from the data; slugs run one after another): batch 1 393/393, batch 2 393/393, batch 3 391/391, reference 56/56. Editor open / save / re-render identical on 9 pages (gym, jvc, al-warqa-4th; atlas, faiz, mbr; beauty, jumeirah-golf, service-blocks), stored structure of all 22 unchanged by the saves. All 22 project URLs return 200 and are linked from the listing and the detail pages.
-| Testimonials | Elementor page; letters in the native lightbox | |
+
+## Implemented — WP Phase 5 (Testimonials)
+
+Page **Testimonials**, id **435**, `https://taameer.local/testimonials/` (option `tp_testimonials_page_id`), built by `scripts/wp/11-testimonials.php` from `testimonials.html` + `data/testimonials.json`. Normal Page, Elementor Full Width, title hidden. Elementor Containers + native widgets: Container 20, Heading 23, Text Editor 5, Image 4, Button 2, Shortcode 1 (the shared CTA); **HTML 0**; no Elementor Pro, CPT, Loop Grid or Theme Builder.
+
+| Section | Elementor | Notes |
+|---|---|---|
+| 1 Page hero | Fog section (as About): Text Editor breadcrumbs (Home › Testimonials), Heading eyebrow `tp-eyebrow` "Client endorsements", H1 "Letters of appreciation", Text Editor lead; Fade In Up 100 / 200 / 300 ms | Prototype `tp-reveal tp-delay-1…3` |
+| 2 Letters (`tp-letters-page`) | Container (gap 128 px) > 4 × Container `<article>` `tp-letter-entry`, **CSS ID = testimonial id**, row (2nd and 4th `row-reverse`), wrap, gap 64 px, Fade In Up | Order = `order` 1–4 |
+| — sheet | Container `<a>` `tp-letter-sheet` → full letter image (Elementor global lightbox), width `min(100%, 26rem)`, paper, 1 px line border, 2 px radius, large shadow, overflow hidden > Image (size large, srcset) + Heading `tp-letter-sheet__zoom` "View original letter" (absolute, 16 px from the foot, paper label, ink on hover / focus) | `taameer.js` `letterSheets()` sets one slideshow group (`data-elementor-lightbox-slideshow="tp-letters"`) and `aria-label` "Open the original letter from …" |
+| — text | Container width `min(100%, 22rem)`, grow (= prototype `flex: 1 1 22rem`): eyebrow "Letter of appreciation", H2 company, date (eyebrow style, slate), Text Editor `<blockquote>` excerpt in “ ” (Playfair 400, h3 size, max 38rem), by-line Container (hairline top, author Inter 600 + role small slate), Button `tp-link` "View the project: …" → `/projects/<relatedProject>/` | Fields omitted where the data has none (TODAY: no project; Jan’s Noodles: company + letter only) |
+| 3 CTA | Shortcode `[tp_template id="228"]` | Shared band, unchanged |
+
+- **Anchors:** `#atlas-copco`, `#bella-cure`, `#today-engineering`, `#jans-noodles` (stable CSS IDs on the article Containers, not generated IDs). The two project pages' "Read the letter" links (`/projects/atlas-copco-headquarters/` → `#atlas-copco`, `/projects/beauty-lounge-spa-mirdif/` → `#bella-cure`) now resolve; no project page changed. Landing: `html` scroll-padding (header + 1rem) + `.tp-letter-entry { scroll-margin-block-start: 4rem }` as the prototype; Astra's scroll-to-ID (which ignores the sticky header and also handles the hash on load) is off on Testimonials as on Services (`functions.php`).
+- **Layout:** the row wraps exactly like the prototype (side by side when the content is ≥ 832 px, i.e. viewport ≳ 900 px; below, sheet above text, flipped letters' sheets end-aligned at tablet, full width on phones). Measured at 375 / 768 / 1280: sheet, text column, excerpt width and letter rows within 1–8 px of the static page.
+- **Child theme:** `taameer.css` §5f (scroll margin, blockquote size, label "+" icon and hover fill, start-aligned wrapping project link); `taameer.js` `letterSheets()`; `functions.php` scroll-to-ID exception extended to this page.
+- **Assets:** the four letter images were already in the Media Library (ids 21–24); nothing uploaded. Alt texts are the library ones (see Known limitations).
+- **Verification:** `scripts/wp/wp-testimonials-check.mjs` 49/49; `wp-editor-check.mjs … 435 https://taameer.local/testimonials/ 40` open / save / re-render identical (63 → 63), 0 editor errors.
+
+## Planned
+
+| Page / item | Planned approach | Notes |
+|---|---|---|
 | Contact | Elementor page; form with WPForms Lite; "Open in Google Maps" link | |
 | 404 | Astra 404 or an Elementor-built approach, decided in that phase | |
 | Arabic | Polylang in the dedicated Arabic phase after the English site is verified | Language switcher is visual only until then |
@@ -189,8 +211,8 @@ Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_
 
 - Project detail (all 22 pages): section padding is the fixed 128 / 96 / 72 px of the other pages (prototype fluid 121.6 px at 1280), so pages are about 1–2 % taller; related cards and previous/next are 8–26 px taller than the prototype (Kit line heights, same as the listing cards); the cover's alt is the library alt ("title, location — image 1 of n" or a descriptive alt) instead of "title, location"; tablet 768–1023 px stacks the spec above the cover (prototype side by side from about 800 px).
 - Project galleries: 10 images keep the descriptive alt text they carry on Home / Services (one attachment has one alt in WordPress) instead of the prototype's "title, location — image i of n": palm-jumeirah-villa-02, dubai-g-residential-villa-02 / 03 / 05, kf-inc-headquarters-05, dubai-marina-triplex-villa-04, atlas-copco-headquarters-03, al-warqa-1st-g2-villa-06, al-awir-villas-02, abu-dhabi-marina-private-gym-01; the gym's before/after images likewise use the library alts ("After: the completed gym…", "Before: the same structure during construction").
-- "Read the letter" on the two letter pages links to `/testimonials/#<id>`, which returns 404 until the Testimonials page is built.
-- Links to the not-yet-built pages (`/testimonials/`, `/contact/`) return 404 until those pages exist (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
+- Testimonials: the letter images keep their library alt ("Letter of appreciation from Atlas Copco (thumbnail)" etc., written for Home's thumbnails; one attachment has one alt) instead of the prototype's "Original letter of appreciation from …"; the sheet links are named by `taameer.js` ("Open the original letter from …") as in the prototype. The date is a Heading `<p>`, not `<time datetime>`, and the letters section has no `aria-label` (Elementor Free has no custom attributes). The lightbox is Elementor's (no caption), not the prototype's.
+- Links to the not-yet-built page `/contact/` return 404 until it exists (`/testimonials/` exists since WP Phase 5). Earlier counts (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
 - Services: related project cards are static (updated by hand); the chip bar's `aria-label` ("Services on this page") is set by `taameer.js` (Elementor Free has no custom attributes) and will need its Arabic string in the Arabic phase; anchor scrolling on Services is native (Astra's scroll-to-ID is off on that page only, D-042).
 - The shared CTA band renders the same on every page but differs from the prototype's (heading on one line, shorter box at ≥ 768 px); identical to the approved homepage, so not changed in the Services phase.
 - The `tp-measure*` classes on the homepage have no effect (Elementor's `max-width: 100%` on Container widgets outranks them); About uses native Custom Width instead (D-041). Homepage left unchanged pending an owner decision.

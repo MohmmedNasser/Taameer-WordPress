@@ -13,6 +13,8 @@
                        .tp-filter__items (.tp-type-<type>), FLIP move animation, aria-pressed, live status, ?type= in the URL
      Counter widget    Under prefers-reduced-motion the native Counter shows its final number at once
      tp-project-nav    Project detail page: names the previous / next <nav> landmark (Container tag nav has no label field)
+     tp-letter-sheet   Testimonials page: groups the four letter links into one Elementor lightbox slideshow and names
+                       each link "Open the original letter from …" (Container links have no attribute fields in Free)
    Entrance fades are Elementor's native entrance animations (retimed in taameer.css).
    Nothing runs inside the Elementor editor, so the editor always shows the plain, editable widgets.
    ========================================================================== */
@@ -439,6 +441,17 @@
     if (nav && !nav.hasAttribute('aria-label')) nav.setAttribute('aria-label', 'More projects');
   }
 
+  /* ---- Testimonials: the four letter sheets open as one lightbox slideshow; each link is named after its letter ---- */
+  function letterSheets() {
+    document.querySelectorAll('.tp-letter-entry').forEach(function (entry) {
+      var link = entry.querySelector('a.tp-letter-sheet');
+      if (!link) return;
+      link.setAttribute('data-elementor-lightbox-slideshow', 'tp-letters');
+      var company = entry.querySelector('h2');
+      if (company && !link.hasAttribute('aria-label')) link.setAttribute('aria-label', 'Open the original letter from ' + company.textContent.trim());
+    });
+  }
+
   function init() {
     if (inEditor()) return;
     counters();
@@ -450,6 +463,7 @@
     scrollspy();
     projectFilter();
     projectNav();
+    letterSheets();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

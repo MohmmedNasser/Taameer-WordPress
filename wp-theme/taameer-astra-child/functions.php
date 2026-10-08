@@ -96,14 +96,15 @@ add_filter(
 
 /**
  * Astra's "scroll to ID" scrolls #links (and the URL hash on load) to the very top of the target: it only allows for
- * Astra Pro's sticky header, so on Services the section landed under the header and the chip bar. There the browser
- * scrolls natively instead, honouring the scroll-margin in taameer.css, as in the prototype. Other pages unchanged.
+ * Astra Pro's sticky header, so on Services the section landed under the header and the chip bar (and on Testimonials
+ * the letter of /testimonials/#id under the header). There the browser scrolls natively instead, honouring the
+ * scroll-margin in taameer.css, as in the prototype. Other pages unchanged.
  */
 add_filter(
 	'astra_theme_js_localize',
 	function ( $data ) {
-		$services = (int) get_option( 'tp_services_page_id' );
-		if ( $services && is_page( $services ) ) {
+		$pages = array_filter( array( (int) get_option( 'tp_services_page_id' ), (int) get_option( 'tp_testimonials_page_id' ) ) );
+		if ( $pages && is_page( $pages ) ) {
 			$data['is_scroll_to_id'] = false;
 		}
 		return $data;
