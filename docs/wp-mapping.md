@@ -124,12 +124,12 @@ Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_
 - **Filter (class-driven, no data attributes):** a Button's class `tp-filter-<type>` selects the cards with class `tp-type-<type>`; `all` shows everything. `taameer.js` adds `role="button"` / `aria-pressed`, a polite live status ("Showing 6 projects"), Space activation, the FLIP move animation of the prototype (instant under reduced motion), `?type=<type>` in the URL (deep link, `popstate`), and removes a pending `elementor-invisible` from cards it reveals. Filtered-out cards get `tp-is-filtered` (`display: none`). Counts are the Button text (editable).
 - **Content:** 22 cards = 6 Construction, 10 Renovation & Decoration, 5 Fit-out, 1 Landscaping. Order: ongoing first, then newest completion (Service Blocks & Extensions has no date: last, no year label). Wall Cladding (a showcase on Services) is not a card. The four team-experience buildings (a section on the prototype's `projects.html`) are not on this page: they stay on About (owner instruction); see Known limitations.
 - **Assets:** the 22 covers were already in the Media Library (`tp_media_map`); alt text from the library. Nothing uploaded.
-- **Links:** every card → `/projects/<slug>/` (built so far: `/projects/wadi-alshabak-villas/` only, WP Phase 4B; the other 21 return 404 until Phase 4C); Services "View construction projects" → `/projects/?type=construction` now works.
+- **Links:** every card → `/projects/<slug>/` (all 22 built: Wadi in WP Phase 4B, the other 21 in WP Phase 4C); Services "View construction projects" → `/projects/?type=construction` now works.
 - **Verification:** `scripts/wp/wp-projects-check.mjs` 40/40; `wp-editor-check.mjs … 312 https://taameer.local/projects/` open / save / re-render identical, stored structure unchanged; no wipes on this page; regression Home 20/20, About 26/26, Services 35/35, FAB 4 pages, wipes Home / About / Services.
 
 ## Implemented — WP Phase 4B (first Project Detail, reference page only)
 
-**Only ONE project is migrated: `wadi-alshabak-villas` ("Proposed G+1 Residential Villas", first card of the listing), page id 326, `https://taameer.local/projects/wadi-alshabak-villas/`. The other 21 project pages do not exist yet (Phase 4C, after owner review).** Built by `scripts/wp/10-project-detail.php` (set `$SLUG` + `$DETAIL` for the next project; related cards, previous / next and spec are computed from the listing data with the prototype's rules).
+**Only ONE project is migrated: `wadi-alshabak-villas` ("Proposed G+1 Residential Villas", first card of the listing), page id 326, `https://taameer.local/projects/wadi-alshabak-villas/`. The other 21 were built in WP Phase 4C (below).** Built by `scripts/wp/10-project-detail.php` (related cards, previous / next and spec are computed from the listing data with the prototype's rules).
 
 - **Page:** a normal WordPress Page, child of the Projects page (312), slug = project id, so the URL is `/projects/<slug>/` with no query string; Elementor Full Width template, title hidden. Option `tp_project_page_ids` (slug → id).
 - **Sections (all native; no HTML widget):**
@@ -150,11 +150,34 @@ Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_
 - **Assets:** cover, 5 gallery images and 3 related covers were already in the Media Library; nothing uploaded. Gallery attachment titles set to the alt text (lightbox caption), as for the cladding gallery.
 - **Verification:** `scripts/wp/wp-project-detail-check.mjs [slug]` 53/53; `wp-editor-check.mjs … 326 https://taameer.local/projects/wadi-alshabak-villas/ 50` open / save / re-render identical (72 → 72), stored structure hash unchanged, 0 HTML widgets.
 
-## Planned — not started (WP Phase 4C onward)
+## Implemented — WP Phase 4C (remaining project pages)
 
-| Page / item | Planned approach | Notes |
+**22 / 22 project pages completed**: Wadi (4B, page 326, unchanged) + 21 built in three batches of 7, in listing order. Same build as the reference page: `scripts/wp/10-project-detail.php`, which now takes `$SLUGS` (a run prepends `$SLUGS = [...];`; default = the reference page) and carries `$DETAIL` for all 22 (generated from `data/projects.json` + `data/testimonials.json`). Normal Pages, children of Projects (312), Elementor Full Width, title hidden, ids in `tp_project_page_ids`. No CPT, no PHP template, no Loop Grid / Theme Builder, no HTML widget, no Elementor Pro.
+
+- **Sections follow the prototype's single template (`project-page.js`) and appear only when the project has the content:**
+
+| Section | Rule (prototype) | Projects |
 |---|---|---|
-| Remaining project pages (WP Phase 4C) | 21 more Elementor pages at `/projects/<slug>/`, same build as the reference page (`10-project-detail.php`), before/after where a before image exists, testimonial block where one is linked | Starts after owner review of the reference page; no CPT or PHP templates unless approved later |
+| Hero description | `description` not empty | service-blocks-extensions |
+| Cover, plain | landscape and ≥ 1200 px: Image (width 100 %, 2 px radius, shadow) in a Container `tp-project-cover`, width `min(100%, 80vh × ratio)` | dubai-g, kf-inc, al-warqa-4th, dubai-marina-triplex, perfume-shop, mbr-city, al-warqa-1st, atlas-copco, souk-al-bahar, beauty-lounge |
+| Cover, framed | narrower than 1200 px or portrait: Container `tp-frame`, width `min(100%, native px, 80vh × ratio)` (portrait covers stay on screen) | the other 11 (portrait: jvc, al-awir, jumeirah-golf) |
+| 3D Visualization notice | `isRender` | none of the 21 (Wadi only) |
+| Before / after | `beforeImage`: section "Transformation / Before and after", Container `tp-before-after` > Image `tp-before-after__after` (first gallery image) + Image `tp-before-after__before` (Home's slider, `taameer.js`, keyboard operable) | abu-dhabi-marina-private-gym |
+| Client feedback | testimonial with `relatedProject` = this project: fog section, eyebrow "Client feedback", Text Editor blockquote (Playfair 400, h3 size), company, author, Button link "Read the letter" → `/testimonials/#<id>` | atlas-copco-headquarters (Atlas Copco), beauty-lounge-spa-mirdif (Bella Cure) |
+| Related projects | up to 3 of the same type; none → section omitted (the prototype hides it) | omitted on jumeirah-golf-estates-landscaping (only landscaping project) |
+| Gallery, prev / next, CTA | every project; gallery in JSON order (4–11 images), prev / next in listing order wrapping at both ends | all |
+
+| Batch | Pages (id) |
+|---|---|
+| 1 | jvc-residential-retail-building 339, palm-jumeirah-villa 342, al-awir-villas 345, dubai-g-residential-villa 348, abu-dhabi-marina-private-gym 351, kf-inc-headquarters 354, al-warqa-4th-villa 357 |
+| 2 | dubai-marina-triplex-villa 369, perfume-shop-al-barsha 372, mbr-city-villa 375, al-warqa-1st-g2-villa 378, faiz-couture-dress-shop 381, atlas-copco-headquarters 384, al-twar-villa 387 |
+| 3 | souk-al-bahar-apartment 399, um-nahad-villa 402, beauty-lounge-spa-mirdif 405, thai-restaurant-deira 408, jumeirah-golf-estates-landscaping 411, damac-hills-villa 414, service-blocks-extensions 417 |
+
+- **Widgets on the 22 pages:** Container 617, Heading 551, Image 87, Text Editor 48, Button 23, Basic Gallery 22, Shortcode 22 (the shared CTA only); HTML 0.
+- **Child theme:** one rule added, `taameer.css` `.tp-project-letter blockquote { font-size: inherit; }` (Astra sizes `blockquote` at 1.1em; same fix as Home's chairman quote). No JS change.
+- **Animations:** none added (the prototype's project page has none); before/after slider, gallery hover zoom and the native lightbox are the interactions; reduced motion shows everything.
+- **Assets:** all 152 project images were already in the Media Library; nothing uploaded, no duplicates. Gallery attachment titles set to their alt text (lightbox captions), as in 4B.
+- **Verification:** `wp-project-detail-check.mjs <slug,slug,…>` (sections derived from the data; slugs run one after another): batch 1 393/393, batch 2 393/393, batch 3 391/391, reference 56/56. Editor open / save / re-render identical on 9 pages (gym, jvc, al-warqa-4th; atlas, faiz, mbr; beauty, jumeirah-golf, service-blocks), stored structure of all 22 unchanged by the saves. All 22 project URLs return 200 and are linked from the listing and the detail pages.
 | Testimonials | Elementor page; letters in the native lightbox | |
 | Contact | Elementor page; form with WPForms Lite; "Open in Google Maps" link | |
 | 404 | Astra 404 or an Elementor-built approach, decided in that phase | |
@@ -164,8 +187,10 @@ Page "Projects" (id 312, `https://taameer.local/projects/`, option `tp_projects_
 
 ## Known limitations
 
-- Project detail (reference page): section padding is the fixed 128 / 96 / 72 px of the other pages (prototype fluid 121.6 px at 1280); related cards and previous/next are 8–26 px taller than the prototype (Kit line heights, same as the listing cards); the cover's alt is the library alt ("title, location — image 1 of 5") instead of "title, location"; tablet 768–1023 px stacks the spec above the cover (prototype side by side from about 800 px).
-- Links to the not-yet-built pages (`/projects/…`, `/testimonials/`, `/contact/`) return 404 until those pages exist (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
+- Project detail (all 22 pages): section padding is the fixed 128 / 96 / 72 px of the other pages (prototype fluid 121.6 px at 1280), so pages are about 1–2 % taller; related cards and previous/next are 8–26 px taller than the prototype (Kit line heights, same as the listing cards); the cover's alt is the library alt ("title, location — image 1 of n" or a descriptive alt) instead of "title, location"; tablet 768–1023 px stacks the spec above the cover (prototype side by side from about 800 px).
+- Project galleries: 10 images keep the descriptive alt text they carry on Home / Services (one attachment has one alt in WordPress) instead of the prototype's "title, location — image i of n": palm-jumeirah-villa-02, dubai-g-residential-villa-02 / 03 / 05, kf-inc-headquarters-05, dubai-marina-triplex-villa-04, atlas-copco-headquarters-03, al-warqa-1st-g2-villa-06, al-awir-villas-02, abu-dhabi-marina-private-gym-01; the gym's before/after images likewise use the library alts ("After: the completed gym…", "Before: the same structure during construction").
+- "Read the letter" on the two letter pages links to `/testimonials/#<id>`, which returns 404 until the Testimonials page is built.
+- Links to the not-yet-built pages (`/testimonials/`, `/contact/`) return 404 until those pages exist (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
 - Services: related project cards are static (updated by hand); the chip bar's `aria-label` ("Services on this page") is set by `taameer.js` (Elementor Free has no custom attributes) and will need its Arabic string in the Arabic phase; anchor scrolling on Services is native (Astra's scroll-to-ID is off on that page only, D-042).
 - The shared CTA band renders the same on every page but differs from the prototype's (heading on one line, shorter box at ≥ 768 px); identical to the approved homepage, so not changed in the Services phase.
 - The `tp-measure*` classes on the homepage have no effect (Elementor's `max-width: 100%` on Container widgets outranks them); About uses native Custom Width instead (D-041). Homepage left unchanged pending an owner decision.

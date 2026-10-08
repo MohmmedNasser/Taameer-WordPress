@@ -45,6 +45,7 @@
      tp-render-note        Text Editor: 3D Visualization notice (hairline box, "+" mark)
      tp-masonry            Basic Gallery: CSS-columns masonry (17rem columns), images keep their own ratio, hover zoom
      tp-project-nav__link / __prev / __next / __label / __title   previous / next project links (Container link + two Headings)
+     tp-project-letter     Section: client feedback quote (Text Editor blockquote keeps its own size)
    Astra parts (header, mobile menu, footer, language switcher, WhatsApp button) are styled in section 3–4.
    Breakpoints: tablet <= 1023px, mobile <= 767px (Elementor + Astra, functions.php). 640px is used once (footer).
    Logical properties only.
@@ -1062,6 +1063,9 @@ a.tp-lang__link:hover { color: var(--tp-charcoal); }
   text-underline-offset: 0.2em;
 }
 .tp-project-nav__link:hover .tp-project-nav__label .elementor-heading-title { color: var(--tp-ink); }
+
+/* Client feedback (project pages with a linked letter, phase 4C): the quote keeps the Text Editor's size. */
+.tp-project-letter blockquote { font-size: inherit; } /* Astra sizes blockquote at 1.1em */
 
 /* ---- 6. Before / after (taameer.js builds the slider; without JS the two images stack) ---- */
 

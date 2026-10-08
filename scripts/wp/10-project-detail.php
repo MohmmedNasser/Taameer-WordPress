@@ -1,25 +1,46 @@
-// 10-project-detail.php — builds ONE project detail page from project.html + data/projects.json (WP phase 4B: the approved
-// reference implementation, wadi-alshabak-villas, the first card of the Projects listing). Elementor Containers + native widgets
-// only (Heading, Text Editor, Image, Basic Gallery, Button, Shortcode); no HTML widget, no CPT, no Loop Grid, no dynamic query.
-// Page = child of /projects/ so the URL is /projects/<slug>/ (the card links already used by the listing). Related projects and
-// previous/next are STATIC cards computed here with the prototype's rules (project-page.js): up to 3 of the same type excluding
-// the current one, then Projects-grid order, wrapping at the ends. Set $SLUG and $DETAIL to build another project (phase 4C).
+// 10-project-detail.php — builds project detail pages from project.html + data/projects.json (WP phase 4B: the approved
+// reference implementation, wadi-alshabak-villas; phase 4C: the other 21, in batches through $SLUGS). Elementor Containers +
+// native widgets only (Heading, Text Editor, Image, Basic Gallery, Button, Shortcode); no HTML widget, no CPT, no Loop Grid,
+// no dynamic query. Page = child of /projects/ so the URL is /projects/<slug>/ (the card links already used by the listing).
+// Sections follow the prototype's single template (project-page.js) and appear only when the project has the content: hero
+// description, plain cover (landscape >= 1200px) or framed cover, 3D notice (isRender), before/after (before image), client
+// letter (testimonial linked to the project), related projects (none of the same type = section omitted). Related projects
+// and previous/next are STATIC, computed here with the prototype's rules: up to 3 of the same type excluding the current one,
+// then Projects-grid order, wrapping at the ends.
 // Helpers are copied from 09-projects.php (each Novamira run is standalone). Re-running replaces the page content (same ID).
 // Run on the site through Novamira (novamira/execute-php).
 
-$SLUG = 'wadi-alshabak-villas';
+// Slugs to build in this run. Default = the reference page; a run may prepend its own `$SLUGS = [...];` line (phase 4C batches).
+$SLUGS = $SLUGS ?? ['wadi-alshabak-villas'];
+// Per-project detail from data/projects.json (period, consultant, description, gallery order, before image) and
+// data/testimonials.json (the letter whose relatedProject is this project), listing order. Generated, not hand-written.
 $DETAIL = json_decode(<<<'JSON'
 {
- "wadi-alshabak-villas": {
-  "period": "13 Months",
-  "consultant": null,
-  "description": "",
-  "gallery": ["project-wadi-alshabak-villas-01.webp", "project-wadi-alshabak-villas-02.webp", "project-wadi-alshabak-villas-03.webp", "project-wadi-alshabak-villas-04.webp", "project-wadi-alshabak-villas-05.webp"]
- }
+ "wadi-alshabak-villas": {"period":"13 Months","consultant":null,"description":"","gallery":["project-wadi-alshabak-villas-01.webp","project-wadi-alshabak-villas-02.webp","project-wadi-alshabak-villas-03.webp","project-wadi-alshabak-villas-04.webp","project-wadi-alshabak-villas-05.webp"]},
+ "jvc-residential-retail-building": {"period":"7 Months","consultant":null,"description":"","gallery":["project-jvc-residential-retail-building-01.webp","project-jvc-residential-retail-building-02.webp","project-jvc-residential-retail-building-03.webp","project-jvc-residential-retail-building-04.webp","project-jvc-residential-retail-building-05.webp","project-jvc-residential-retail-building-06.webp","project-jvc-residential-retail-building-07.webp","project-jvc-residential-retail-building-08.webp","project-jvc-residential-retail-building-09.webp","project-jvc-residential-retail-building-10.webp","project-jvc-residential-retail-building-11.webp"]},
+ "palm-jumeirah-villa": {"period":"8 Months","consultant":null,"description":"","gallery":["project-palm-jumeirah-villa-01.webp","project-palm-jumeirah-villa-02.webp","project-palm-jumeirah-villa-03.webp","project-palm-jumeirah-villa-04.webp","project-palm-jumeirah-villa-05.webp"]},
+ "al-awir-villas": {"period":"13 Months","consultant":null,"description":"","gallery":["project-al-awir-villas-01.webp","project-al-awir-villas-02.webp","project-al-awir-villas-03.webp","project-al-awir-villas-04.webp","project-al-awir-villas-05.webp","project-al-awir-villas-06.webp","project-al-awir-villas-07.webp","project-al-awir-villas-08.webp","project-al-awir-villas-09.webp","project-al-awir-villas-10.webp"]},
+ "dubai-g-residential-villa": {"period":"10 Months","consultant":null,"description":"","gallery":["project-dubai-g-residential-villa-01.webp","project-dubai-g-residential-villa-02.webp","project-dubai-g-residential-villa-03.webp","project-dubai-g-residential-villa-04.webp","project-dubai-g-residential-villa-05.webp","project-dubai-g-residential-villa-06.webp","project-dubai-g-residential-villa-07.webp","project-dubai-g-residential-villa-08.webp","project-dubai-g-residential-villa-09.webp","project-dubai-g-residential-villa-10.webp","project-dubai-g-residential-villa-11.webp"]},
+ "abu-dhabi-marina-private-gym": {"period":"135 Days","consultant":null,"description":"","gallery":["project-abu-dhabi-marina-private-gym-01.webp","project-abu-dhabi-marina-private-gym-02.webp","project-abu-dhabi-marina-private-gym-03.webp","project-abu-dhabi-marina-private-gym-04.webp"],"before":"project-abu-dhabi-marina-private-gym-before.webp"},
+ "kf-inc-headquarters": {"period":"120 Days","consultant":null,"description":"","gallery":["project-kf-inc-headquarters-01.webp","project-kf-inc-headquarters-02.webp","project-kf-inc-headquarters-03.webp","project-kf-inc-headquarters-04.webp","project-kf-inc-headquarters-05.webp","project-kf-inc-headquarters-06.webp","project-kf-inc-headquarters-07.webp","project-kf-inc-headquarters-08.webp","project-kf-inc-headquarters-09.webp"]},
+ "al-warqa-4th-villa": {"period":"90 Days","consultant":null,"description":"","gallery":["project-al-warqa-4th-villa-01.webp","project-al-warqa-4th-villa-02.webp","project-al-warqa-4th-villa-03.webp","project-al-warqa-4th-villa-04.webp"]},
+ "dubai-marina-triplex-villa": {"period":"120 Days","consultant":null,"description":"","gallery":["project-dubai-marina-triplex-villa-01.webp","project-dubai-marina-triplex-villa-02.webp","project-dubai-marina-triplex-villa-03.webp","project-dubai-marina-triplex-villa-04.webp","project-dubai-marina-triplex-villa-05.webp","project-dubai-marina-triplex-villa-06.webp","project-dubai-marina-triplex-villa-07.webp","project-dubai-marina-triplex-villa-08.webp"]},
+ "perfume-shop-al-barsha": {"period":"60 Days","consultant":null,"description":"","gallery":["project-perfume-shop-al-barsha-01.webp","project-perfume-shop-al-barsha-02.webp","project-perfume-shop-al-barsha-03.webp","project-perfume-shop-al-barsha-04.webp","project-perfume-shop-al-barsha-05.webp"]},
+ "mbr-city-villa": {"period":"100 Days","consultant":null,"description":"","gallery":["project-mbr-city-villa-01.webp","project-mbr-city-villa-02.webp","project-mbr-city-villa-03.webp","project-mbr-city-villa-04.webp","project-mbr-city-villa-05.webp","project-mbr-city-villa-06.webp","project-mbr-city-villa-07.webp","project-mbr-city-villa-08.webp","project-mbr-city-villa-09.webp"]},
+ "al-warqa-1st-g2-villa": {"period":"12 Months","consultant":null,"description":"","gallery":["project-al-warqa-1st-g2-villa-01.webp","project-al-warqa-1st-g2-villa-02.webp","project-al-warqa-1st-g2-villa-03.webp","project-al-warqa-1st-g2-villa-04.webp","project-al-warqa-1st-g2-villa-05.webp","project-al-warqa-1st-g2-villa-06.webp","project-al-warqa-1st-g2-villa-07.webp"]},
+ "faiz-couture-dress-shop": {"period":"60 Days","consultant":null,"description":"","gallery":["project-faiz-couture-dress-shop-01.webp","project-faiz-couture-dress-shop-02.webp","project-faiz-couture-dress-shop-03.webp","project-faiz-couture-dress-shop-04.webp","project-faiz-couture-dress-shop-05.webp","project-faiz-couture-dress-shop-06.webp","project-faiz-couture-dress-shop-07.webp"]},
+ "atlas-copco-headquarters": {"period":"60 Days","consultant":null,"description":"","gallery":["project-atlas-copco-headquarters-01.webp","project-atlas-copco-headquarters-02.webp","project-atlas-copco-headquarters-03.webp","project-atlas-copco-headquarters-04.webp","project-atlas-copco-headquarters-05.webp","project-atlas-copco-headquarters-06.webp","project-atlas-copco-headquarters-07.webp","project-atlas-copco-headquarters-08.webp"],"letter":{"id":"atlas-copco","excerpt":"They made very good recommendations during the design phase of the project and the communication from their team was very good. It was a pleasure working with your team.","company":"Atlas Copco Services Middle East OMC","author":"Nicole Rowe, Regional Human Resources Manager, Power Technique"}},
+ "al-twar-villa": {"period":"60 Days","consultant":null,"description":"","gallery":["project-al-twar-villa-01.webp","project-al-twar-villa-02.webp","project-al-twar-villa-03.webp","project-al-twar-villa-04.webp","project-al-twar-villa-05.webp"]},
+ "souk-al-bahar-apartment": {"period":"90 Days","consultant":null,"description":"","gallery":["project-souk-al-bahar-apartment-01.webp","project-souk-al-bahar-apartment-02.webp","project-souk-al-bahar-apartment-03.webp","project-souk-al-bahar-apartment-04.webp","project-souk-al-bahar-apartment-05.webp","project-souk-al-bahar-apartment-06.webp","project-souk-al-bahar-apartment-07.webp","project-souk-al-bahar-apartment-08.webp","project-souk-al-bahar-apartment-09.webp"]},
+ "um-nahad-villa": {"period":"110 Days","consultant":null,"description":"","gallery":["project-um-nahad-villa-01.webp","project-um-nahad-villa-02.webp","project-um-nahad-villa-03.webp","project-um-nahad-villa-04.webp","project-um-nahad-villa-05.webp"]},
+ "beauty-lounge-spa-mirdif": {"period":"35 Days","consultant":null,"description":"","gallery":["project-beauty-lounge-spa-mirdif-01.webp","project-beauty-lounge-spa-mirdif-02.webp","project-beauty-lounge-spa-mirdif-03.webp","project-beauty-lounge-spa-mirdif-04.webp","project-beauty-lounge-spa-mirdif-05.webp","project-beauty-lounge-spa-mirdif-06.webp","project-beauty-lounge-spa-mirdif-07.webp"],"letter":{"id":"bella-cure","excerpt":"Taameer Plus Contracting LLC team accomplished designing and constructing work for the beauty lounge successfully, and adhered professionally to project completion budget, schedule, and quality.","company":"Bella Cure Beauty Lounge","author":"Maitha Ahli, Owner"}},
+ "thai-restaurant-deira": {"period":"40 Days","consultant":null,"description":"","gallery":["project-thai-restaurant-deira-01.webp","project-thai-restaurant-deira-02.webp","project-thai-restaurant-deira-03.webp","project-thai-restaurant-deira-04.webp","project-thai-restaurant-deira-05.webp"]},
+ "jumeirah-golf-estates-landscaping": {"period":"60 Days","consultant":null,"description":"","gallery":["project-jumeirah-golf-estates-landscaping-01.webp","project-jumeirah-golf-estates-landscaping-02.webp","project-jumeirah-golf-estates-landscaping-03.webp","project-jumeirah-golf-estates-landscaping-04.webp","project-jumeirah-golf-estates-landscaping-05.webp","project-jumeirah-golf-estates-landscaping-06.webp"]},
+ "damac-hills-villa": {"period":"110 Days","consultant":null,"description":"","gallery":["project-damac-hills-villa-01.webp","project-damac-hills-villa-02.webp","project-damac-hills-villa-03.webp","project-damac-hills-villa-04.webp","project-damac-hills-villa-05.webp","project-damac-hills-villa-06.webp"]},
+ "service-blocks-extensions": {"period":"Multiple","consultant":null,"description":"As an approved G+4 contractor, Taameer Plus has completed many turnkey projects, including structure and full fit-out for villas and service blocks, with remarkable quality.","gallery":["project-service-blocks-extensions-01.webp","project-service-blocks-extensions-02.webp","project-service-blocks-extensions-03.webp","project-service-blocks-extensions-04.webp","project-service-blocks-extensions-05.webp"]}
 }
 JSON, true);
 
-$MAP = get_option('tp_media_map', []);
 $MAP = get_option('tp_media_map', []);
 
 /* ================= helpers ================= */
@@ -396,18 +417,12 @@ JSON, true);
 $TYPES = ['construction' => 'Construction', 'renovation-decoration' => 'Renovation &amp; Decoration', 'fit-out' => 'Fit-out', 'landscaping' => 'Landscaping'];
 $esc = fn($s) => htmlspecialchars($s, ENT_NOQUOTES, 'UTF-8');
 
-/* ================= selected project ================= */
+/* ================= shared by every project ================= */
 $list = $PROJECTS;                                       // already in listing (Projects-grid) order
-$idx = array_search($SLUG, array_column($list, 'id'), true);
-if ($idx === false || !isset($DETAIL[$SLUG])) return ['error' => "unknown project $SLUG"];
-$P = $list[$idx] + $DETAIL[$SLUG];
-$typeLabel = $TYPES[$P['type']];
-$title = $esc($P['title']);
-$related = array_slice(array_values(array_filter($list, fn($x) => $x['type'] === $P['type'] && $x['id'] !== $SLUG)), 0, 3);
-$prev = $list[($idx - 1 + count($list)) % count($list)];
-$next = $list[($idx + 1) % count($list)];
 $projectsId = (int) get_option('tp_projects_page_id');
 if (!$projectsId) return ['error' => 'Projects page missing'];
+$cta_id = (int) get_option('tp_cta_template_id');
+if (!$cta_id || get_post_type($cta_id) !== 'elementor_library') return ['error' => 'CTA template missing'];
 
 // Project card (same build as the listing; no entrance animation: the prototype's related cards have none). 3 / 3 / 1 per row.
 $ABS = ['position' => 'absolute', '_offset_orientation_h' => 'start', '_offset_x' => $px(16), '_offset_orientation_v' => 'start', '_offset_y' => $px(16), 'z_index' => 2];
@@ -433,9 +448,28 @@ $card = function ($p) use ($C, $H, $IMG, $BADGE, $gap, $w, $all, $cw, $px, $cols
     $H('View project', 'p', 'link', 'accent', ['_css_classes' => 'tp-card__more'] + $typo('typography', 'Inter', 600, $fluid['xs'], 1.7, ['text_transform' => 'uppercase', 'letter_spacing' => ['unit' => 'em', 'size' => 0.03, 'sizes' => []]])),
   ]);
 };
+$H1W22 = 'calc(13.53 * clamp(2.375rem, 1.85rem + 2.9vw, 4.75rem))';   // .tp-project-title: 22ch of the H1
+$TIGHT = [[58, 58], [52, 52], [40, 40]];                               // --tp-section-pad-tight at desktop / tablet / mobile
+// Section head (eyebrow + h2) used by the gallery and the before/after section.
+$SHEAD = fn($eyebrow, $h2) => $C(['flex_gap' => $gap(16), 'margin' => $dim(0, 0, 64, 0), 'margin_mobile' => $dim(0, 0, 48, 0)], [
+  $H($eyebrow, 'p', 'eyebrow', 'accent', ['_css_classes' => 'tp-eyebrow']),
+  $H($h2, 'h2', 'h2', 'primary', $MW($H2W)),
+]);
+
+$out = [];
+foreach ($SLUGS as $SLUG) {
+
+/* ================= selected project ================= */
+$idx = array_search($SLUG, array_column($list, 'id'), true);
+if ($idx === false || !isset($DETAIL[$SLUG])) { $out[$SLUG] = ['error' => "unknown project $SLUG"]; continue; }
+$P = $list[$idx] + $DETAIL[$SLUG];
+$typeLabel = $TYPES[$P['type']];
+$title = $esc($P['title']);
+$related = array_slice(array_values(array_filter($list, fn($x) => $x['type'] === $P['type'] && $x['id'] !== $SLUG)), 0, 3);
+$prev = $list[($idx - 1 + count($list)) % count($list)];
+$next = $list[($idx + 1) % count($list)];
 
 /* ================= 1 Page hero + breadcrumbs (Home > Projects > name), H1 = title ================= */
-$H1W22 = 'calc(13.53 * clamp(2.375rem, 1.85rem + 2.9vw, 4.75rem))';   // .tp-project-title: 22ch of the H1
 $hero = $SEC([[48, 60], [32, 48], [32, 40]], array_merge($FOG, $border(0, 0, 1, 0)), [
   $T('<nav class="tp-breadcrumb" aria-label="Breadcrumb"><ol class="tp-breadcrumb__list"><li><a href="/">Home</a></li><li><a href="/projects/">Projects</a></li><li><span aria-current="page">' . $title . '</span></li></ol></nav>', null, 'secondary'),
   $C(['margin' => $dim(32, 0, 0, 0), 'flex_gap' => $gap(24)], [
@@ -445,7 +479,7 @@ $hero = $SEC([[48, 60], [32, 48], [32, 40]], array_merge($FOG, $border(0, 0, 1, 
   ]),
 ]);
 
-/* ================= 2 Overview: spec block (dl) + cover (framed, never upscaled) ================= */
+/* ================= 2 Overview: spec block (dl) + cover ================= */
 $spec = [['Type', $typeLabel], ['Location', $esc($P['location'])]];
 if ($P['period']) $spec[] = ['Duration', $esc($P['period'])];
 if ($P['status'] === 'ongoing') $spec[] = ['Completion', 'Ongoing'];
@@ -453,9 +487,20 @@ elseif ($P['completion']) $spec[] = ['Completion', date('F Y', strtotime($P['com
 if ($P['consultant']) $spec[] = ['Consultant', $esc($P['consultant'])];
 $specHtml = '<dl>' . implode('', array_map(fn($r) => "<dt>{$r[0]}</dt><dd>{$r[1]}</dd>", $spec)) . '</dl>';
 
-$cover = $IMG(basename($P['cover']), array_merge(['_border_radius' => $all(2)], $shadow('_', 12, 32, 0.09)));
+// Prototype rule (renderCover): framed with setting-out marks when narrower than 1200px or portrait, plain otherwise; never
+// wider than its source nor taller than 80vh (--tp-project-cover-h), so portrait covers stay on screen.
+$coverFile = basename($P['cover']);
+$cm = wp_get_attachment_metadata($MAP[$coverFile] ?? 0);
+if (empty($cm['width'])) { $out[$SLUG] = ['error' => "cover missing: $coverFile"]; continue; }
+$coverW = (int) $cm['width'];
+$coverH = (int) $cm['height'];
+$ratio = round($coverW / $coverH, 4);
+$framed = $coverW < 1200 || $coverH > $coverW;
+$cover = $IMG($coverFile, array_merge(['_border_radius' => $all(2)], $framed ? [] : ['width' => $w(100)], $shadow('_', 12, 32, 0.09)));
 $cover['settings']['image']['alt'] = $P['title'] . ', ' . $P['location'];     // prototype: "title, location" (gallery images carry "image i of n")
-$coverW = 487;                                                                  // native width of the cover (never upscaled)
+$coverBox = $SLUG === 'wadi-alshabak-villas'
+  ? "min(100%, {$coverW}px)"                                                    // phase 4B reference, kept as built
+  : ($framed ? "min(100%, {$coverW}px, calc(80vh * $ratio))" : "min(100%, calc(80vh * $ratio))");
 $overview = $SEC($PAD, ['css_classes' => 'tp-project-overview'], [
   $C(['flex_direction' => 'row', 'flex_direction_tablet' => 'column', 'flex_direction_mobile' => 'column', 'flex_wrap' => 'nowrap',
       'flex_align_items' => 'flex-start', 'flex_gap' => $gap(41), 'flex_gap_tablet' => $gap(32), 'flex_gap_mobile' => $gap(24)], [
@@ -463,30 +508,26 @@ $overview = $SEC($PAD, ['css_classes' => 'tp-project-overview'], [
       $T($specHtml, null, 'primary', ['_css_classes' => 'tp-spec tp-spec--stack']),
     ]),
     $C(['width' => $cw('calc((100% - 41px) * 0.7052)'), 'width_tablet' => $w(100), 'width_mobile' => $w(100)], [
-      $C(['css_classes' => 'tp-frame', 'width' => $cw("min(100%, {$coverW}px)")], [$cover]),
+      $C(['css_classes' => $framed ? 'tp-frame' : 'tp-project-cover', 'width' => $cw($coverBox)], [$cover]),
     ]),
   ]),
 ]);
 
 /* ================= 3 3D Visualization notice (only when the project is a render) ================= */
-$TIGHT = [[58, 58], [52, 52], [40, 40]];   // --tp-section-pad-tight at desktop / tablet / mobile
 $notice = $P['isRender'] ? [$SEC($TIGHT, ['css_classes' => 'tp-render-note-section'], [
   $T('<p><strong>3D Visualization.</strong> These images are 3D visualizations of the project, not photographs of the finished building.</p>', null, 'secondary', ['_css_classes' => 'tp-render-note']),
 ])] : [];
 
 /* ================= 4 Gallery: Basic Gallery (native lightbox), CSS-columns masonry (tp-masonry) ================= */
 $gallery = array_map(fn($f) => ['id' => $MAP[$f] ?? 0, 'url' => wp_get_attachment_url($MAP[$f] ?? 0)], $P['gallery']);
-if (in_array(0, array_column($gallery, 'id'), true)) return ['error' => 'gallery image missing from media map'];
+if (in_array(0, array_column($gallery, 'id'), true)) { $out[$SLUG] = ['error' => 'gallery image missing from media map']; continue; }
 // Lightbox caption = attachment title: set it to the alt text (as 08-services.php does for the cladding gallery). Idempotent.
 foreach ($gallery as $g) {
   $alt = get_post_meta($g['id'], '_wp_attachment_image_alt', true);
   if ($alt && get_the_title($g['id']) !== $alt) wp_update_post(['ID' => $g['id'], 'post_title' => $alt]);
 }
 $galleryS = $SEC($PAD, array_merge($FOG, ['css_classes' => 'tp-project-gallery-section']), [
-  $C(['flex_gap' => $gap(16), 'margin' => $dim(0, 0, 64, 0), 'margin_mobile' => $dim(0, 0, 48, 0)], [
-    $H('Gallery', 'p', 'eyebrow', 'accent', ['_css_classes' => 'tp-eyebrow']),
-    $H('Project images', 'h2', 'h2', 'primary', $MW($H2W)),
-  ]),
+  $SHEAD('Gallery', 'Project images'),
   $W('image-gallery', [
     'wp_gallery' => $gallery, 'thumbnail_size' => 'full', 'gallery_columns' => '3',
     'gallery_link' => 'file', 'open_lightbox' => 'yes', 'gallery_display_caption' => 'none',
@@ -495,7 +536,37 @@ $galleryS = $SEC($PAD, array_merge($FOG, ['css_classes' => 'tp-project-gallery-s
   ]),
 ]);
 
-/* ================= 5 Previous / next project (listing order, wraps) ================= */
+/* ================= 5 Before / after (only when the project has a before image): the Home slider (tp-before-after) ================= */
+$compare = [];
+if (!empty($P['before'])) {
+  if (empty($MAP[$P['before']])) { $out[$SLUG] = ['error' => 'before image missing from media map']; continue; }
+  $compare = [$SEC($PAD, ['css_classes' => 'tp-project-compare'], [
+    $SHEAD('Transformation', 'Before and after'),
+    $C(['css_classes' => 'tp-before-after', 'flex_gap' => $gap(12)], [
+      $IMG($P['gallery'][0], ['_css_classes' => 'tp-before-after__after', '_border_radius' => $all(6)]),
+      $IMG($P['before'], ['_css_classes' => 'tp-before-after__before', '_border_radius' => $all(6)]),
+    ]),
+  ])];
+}
+
+/* ================= 6 Client feedback (only when a testimonial links to the project) ================= */
+$letter = [];
+if (!empty($P['letter'])) {
+  $L = $P['letter'];
+  $letter = [$SEC($PAD, array_merge($FOG, ['css_classes' => 'tp-project-letter']), [
+    $C(['flex_gap' => $gap(24), 'flex_align_items' => 'flex-start', 'width' => $cw("min(100%, $MEASURE)")], [
+      $H('Client feedback', 'p', 'eyebrow', 'accent', ['_css_classes' => 'tp-eyebrow']),
+      $T('<blockquote><p>“' . $esc($L['excerpt']) . '”</p></blockquote>', null, 'primary', $typo('typography', 'Playfair Display', 400, $fluid['h3'], 1.35)),
+      $C(['flex_gap' => $gap(4)], [
+        $H($esc($L['company']), 'p', null, 'primary', $typo('typography', 'Inter', 600, $fluid['sm'], 1.7)),
+        $H($esc($L['author']), 'p', null, 'secondary', $typo('typography', 'Inter', 400, $fluid['xs'], 1.7)),
+      ]),
+      $B('Read the letter', '/testimonials/#' . $L['id'], 'link'),
+    ]),
+  ])];
+}
+
+/* ================= 7 Previous / next project (listing order, wraps) ================= */
 $navLink = fn($p, $label, $cls) => $C([
   'html_tag' => 'a', 'link' => ['url' => "/projects/{$p['id']}/", 'is_external' => '', 'nofollow' => ''],
   'css_classes' => "tp-project-nav__link tp-project-nav__$cls", 'flex_gap' => $gap(8), 'padding' => $dim(16, 0, 16, 0),
@@ -511,7 +582,7 @@ $navS = $SEC($TIGHT, array_merge(['html_tag' => 'nav', 'css_classes' => 'tp-proj
   ]),
 ]);
 
-/* ================= 6 Related projects (static cards) ================= */
+/* ================= 8 Related projects (static cards; omitted when no other project has the type, as the prototype hides it) ================= */
 $relatedS = $related ? [$SEC($PAD, ['css_classes' => 'tp-related'], [
   $ROW(0.7, 0.3,
     [[$H('Keep exploring', 'p', 'eyebrow', 'accent', ['_css_classes' => 'tp-eyebrow']), $H('Related projects', 'h2', 'h2', 'primary', $MW($H2W))]],
@@ -520,9 +591,7 @@ $relatedS = $related ? [$SEC($PAD, ['css_classes' => 'tp-related'], [
   $C($cardRowS(44), array_map($card, $related)),
 ])] : [];
 
-/* ================= 7 CTA band (shared template) ================= */
-$cta_id = (int) get_option('tp_cta_template_id');
-if (!$cta_id || get_post_type($cta_id) !== 'elementor_library') return ['error' => 'CTA template missing'];
+/* ================= 9 CTA band (shared template) ================= */
 $cta_ref = ['id' => $uid(), 'elType' => 'container', 'isInner' => false,
   'settings' => ['content_width' => 'full', 'flex_direction' => 'column', 'flex_gap' => $gap(0), 'padding' => $all(0)],
   'elements' => [$W('shortcode', ['shortcode' => '[tp_template id="' . $cta_id . '"]'])]];
@@ -533,7 +602,7 @@ $pid = (int) ($ids[$SLUG] ?? 0);
 if (!$pid || get_post_type($pid) !== 'page') {
   $existing = get_page_by_path("projects/$SLUG", OBJECT, 'page');
   $pid = $existing ? $existing->ID : wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_title' => html_entity_decode($title), 'post_name' => $SLUG, 'post_parent' => $projectsId, 'post_content' => ''], true);
-  if (is_wp_error($pid)) return ['error' => $pid->get_error_message()];
+  if (is_wp_error($pid)) { $out[$SLUG] = ['error' => $pid->get_error_message()]; continue; }
   $ids[$SLUG] = $pid;
   update_option('tp_project_page_ids', $ids, false);
 }
@@ -541,8 +610,10 @@ update_post_meta($pid, '_wp_page_template', 'elementor_header_footer');
 $page = \Elementor\Plugin::$instance->documents->get($pid, false);
 $page->set_is_built_with_elementor(true);
 $ok = $page->save([
-  'elements' => array_merge([$hero, $overview], $notice, [$galleryS, $navS], $relatedS, [$cta_ref]),
+  'elements' => array_merge([$hero, $overview], $notice, [$galleryS], $compare, $letter, [$navS], $relatedS, [$cta_ref]),
   'settings' => ['template' => 'elementor_header_footer', 'hide_title' => 'yes'],
 ]);
+$out[$SLUG] = ['page' => $pid, 'saved' => $ok, 'url' => get_permalink($pid), 'cover' => $framed ? 'framed' : 'plain', 'compare' => (bool) $compare, 'letter' => (bool) $letter, 'related' => array_column($related, 'id'), 'prev' => $prev['id'], 'next' => $next['id']];
+}
 \Elementor\Plugin::$instance->files_manager->clear_cache();
-return ['page' => $pid, 'saved' => $ok, 'url' => get_permalink($pid), 'edit' => admin_url("post.php?post=$pid&action=elementor"), 'related' => array_column($related, 'id'), 'prev' => $prev['id'], 'next' => $next['id'], 'cta' => $cta_id];
+return ['cta' => $cta_id, 'pages' => $out];
