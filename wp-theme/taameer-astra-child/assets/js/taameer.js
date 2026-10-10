@@ -18,6 +18,8 @@
      tp-contact-form   Contact page (WPForms widget): when WPForms swaps the form for its confirmation message, the
                        message becomes a focused status region, as the prototype's success panel (WPForms leaves focus
                        on the removed button and announces nothing)
+   Strings: English by default; on Arabic pages functions.php prints window.tpI18n (Polylang string translations), and
+   the before/after slider follows the writing direction (pointer and arrow keys, as the prototype's interactions.js).
    Entrance fades are Elementor's native entrance animations (retimed in taameer.css).
    Nothing runs inside the Elementor editor, so the editor always shows the plain, editable widgets.
    ========================================================================== */
@@ -25,6 +27,27 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Strings: window.tpI18n (Arabic pages) or the English defaults ---- */
+  var STRINGS = {
+    before: 'Before', after: 'After', divider: 'Before and after divider', shown: '{n}% of the before image shown',
+    servicesNav: 'Services on this page', showingOne: 'Showing 1 project', showing: 'Showing {n} projects',
+    moreProjects: 'More projects', openLetter: 'Open the original letter from {company}'
+  };
+  function t(key, vars) {
+    var text = (window.tpI18n && window.tpI18n[key]) || STRINGS[key] || '';
+    Object.keys(vars || {}).forEach(function (k) { text = text.replace('{' + k + '}', vars[k]); });
+    return text;
+  }
+  // "Showing n projects": Arabic number–noun agreement (1, 2, 3–10, 11+) when the Arabic forms are provided.
+  function showingText(n) {
+    var ar = window.tpI18n && window.tpI18n.showingTwo;
+    var key = n === 1 ? 'showingOne' : ar && n === 2 ? 'showingTwo' : ar && n > 10 ? 'showingMany' : 'showing';
+    return t(key, { n: n });
+  }
+  function isRtl(el) {
+    return getComputedStyle(el || document.documentElement).direction === 'rtl';
+  }
 
   function inEditor() {
     return document.body.classList.contains('elementor-editor-active') ||
@@ -210,9 +233,9 @@
     clip.appendChild(before);
     root.appendChild(clip);
     root.insertAdjacentHTML('beforeend',
-      '<span class="tp-ba__label tp-ba__label--before" aria-hidden="true">Before</span>' +
-      '<span class="tp-ba__label tp-ba__label--after" aria-hidden="true">After</span>' +
-      '<div class="tp-ba__handle" role="slider" tabindex="0" aria-label="Before and after divider" ' +
+      '<span class="tp-ba__label tp-ba__label--before" aria-hidden="true">' + t('before') + '</span>' +
+      '<span class="tp-ba__label tp-ba__label--after" aria-hidden="true">' + t('after') + '</span>' +
+      '<div class="tp-ba__handle" role="slider" tabindex="0" aria-label="' + t('divider') + '" ' +
       'aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>');
 
     var handle = root.querySelector('.tp-ba__handle');
@@ -223,11 +246,12 @@
       pos = Math.max(0, Math.min(100, value));
       root.style.setProperty('--tp-ba-pos', pos + '%');
       handle.setAttribute('aria-valuenow', Math.round(pos));
-      handle.setAttribute('aria-valuetext', Math.round(pos) + '% of the before image shown');
+      handle.setAttribute('aria-valuetext', t('shown', { n: Math.round(pos) }));
     }
+    // Pointer X → percentage from the inline-start edge (the right edge in RTL).
     function fromPointer(clientX) {
       var rect = root.getBoundingClientRect();
-      set(((clientX - rect.left) / rect.width) * 100);
+      set(((isRtl(root) ? rect.right - clientX : clientX - rect.left) / rect.width) * 100);
     }
 
     root.addEventListener('pointerdown', function (e) {
@@ -246,7 +270,8 @@
     root.addEventListener('pointercancel', stop);
 
     handle.addEventListener('keydown', function (e) {
-      var delta = { ArrowRight: 2, ArrowLeft: -2, ArrowUp: 2, ArrowDown: -2, PageUp: 10, PageDown: -10 }[e.key];
+      var rightward = isRtl(root) ? -1 : 1; // ArrowRight moves the divider visually right in both directions
+      var delta = { ArrowRight: 2 * rightward, ArrowLeft: -2 * rightward, ArrowUp: 2, ArrowDown: -2, PageUp: 10, PageDown: -10 }[e.key];
       if (e.key === 'Home') set(0);
       else if (e.key === 'End') set(100);
       else if (delta !== undefined) set(pos + delta);
@@ -263,7 +288,7 @@
     if (!nav) return;
     var list = nav.querySelector('.tp-chips') || nav;
     var landmark = nav.querySelector('nav');
-    if (landmark && !landmark.hasAttribute('aria-label')) landmark.setAttribute('aria-label', 'Services on this page');
+    if (landmark && !landmark.hasAttribute('aria-label')) landmark.setAttribute('aria-label', t('servicesNav'));
 
     // The bar sticks right below the header: its real height (the logo row is taller than the --tp-header-h token on
     // small screens) is exposed as --tp-masthead-h for the sticky offset and the section scroll-margin (taameer.css).
@@ -415,7 +440,7 @@
       }
       buttons.forEach(function (b) { b.link.setAttribute('aria-pressed', b.key === value ? 'true' : 'false'); });
       holder.setAttribute('data-tp-active', value);
-      status.textContent = shown === 1 ? 'Showing 1 project' : 'Showing ' + shown + ' projects';
+      status.textContent = showingText(shown);
     }
     function select(v, animate, url) {
       if (!valid(v)) v = 'all';
@@ -441,7 +466,7 @@
   /* ---- tp-project-nav: accessible name for the previous / next landmark ---- */
   function projectNav() {
     var nav = document.querySelector('nav.tp-project-nav');
-    if (nav && !nav.hasAttribute('aria-label')) nav.setAttribute('aria-label', 'More projects');
+    if (nav && !nav.hasAttribute('aria-label')) nav.setAttribute('aria-label', t('moreProjects'));
   }
 
   /* ---- Testimonials: the four letter sheets open as one lightbox slideshow; each link is named after its letter ---- */
@@ -451,7 +476,7 @@
       if (!link) return;
       link.setAttribute('data-elementor-lightbox-slideshow', 'tp-letters');
       var company = entry.querySelector('h2');
-      if (company && !link.hasAttribute('aria-label')) link.setAttribute('aria-label', 'Open the original letter from ' + company.textContent.trim());
+      if (company && !link.hasAttribute('aria-label')) link.setAttribute('aria-label', t('openLetter', { company: company.textContent.trim() }));
     });
   }
 

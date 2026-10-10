@@ -1,6 +1,6 @@
 # WordPress mapping
 
-**Approved architecture (PRD v1.8 §8.2, D-038):** WordPress on LocalWP (`https://taameer.local`) · **Astra Free** (foundation, Header/Footer Builder, navigation, mobile menu) · **Elementor Free, v3 architecture** (Containers, nested Containers, native widgets, Global Kit, responsive controls, native animations where equivalent) · **minimal Astra child theme** `wp-theme/taameer-astra-child/` for custom CSS/JS only · **Novamira CLI** for WordPress operations (`scripts/wp/`). No Atomic Elements, no Elementor Pro, no Astra Pro, no CPT/PHP templates, no Polylang yet. The static prototype is the visual source of truth.
+**Approved architecture (PRD v1.8 §8.2, D-038):** WordPress on LocalWP (`https://taameer.local`) · **Astra Free** (foundation, Header/Footer Builder, navigation, mobile menu) · **Elementor Free, v3 architecture** (Containers, nested Containers, native widgets, Global Kit, responsive controls, native animations where equivalent) · **minimal Astra child theme** `wp-theme/taameer-astra-child/` for custom CSS/JS only · **Novamira CLI** for WordPress operations (`scripts/wp/`). No Atomic Elements, no Elementor Pro, no Astra Pro, no CPT/PHP templates; Polylang (free) for the Arabic site since WP Phase 8. The static prototype is the visual source of truth.
 
 Status labels: **Implemented** = built and verified in WordPress. **Planned** = not started; the approach shown is the current intention, decided in that page's phase.
 
@@ -11,7 +11,7 @@ Status labels: **Implemented** = built and verified in WordPress. **Planned** = 
 | Item | State |
 |---|---|
 | WordPress | 7.1.2, PHP 8.2; site URL `https://taameer.local`; title "Taameer Plus Contracting LLC", tagline "Construction, Fit-out & Renovation in Dubai"; Home = static front page (page id 208) |
-| Plugins | Elementor 4.3.4 (free), WPForms Lite, Novamira. Nothing else installed |
+| Plugins | Elementor 4.3.4 (free), WPForms Lite, Novamira; Polylang 3.8.10 (free) since WP Phase 8. Nothing else installed |
 | Elementor features | Containers, Nested Elements, Optimized Markup active; Atomic Elements / v4 opt-in inactive (pinned) |
 | Theme | Astra 4.14.0 (parent) + child theme "Taameer Plus (Astra child)" active |
 | Breakpoints | Elementor and Astra: mobile ≤ 767 px, tablet ≤ 1023 px (desktop from 1024 px, the prototype's switch). The prototype's 640 px survives only in the footer grid. Visual behaviour is the source of truth |
@@ -53,9 +53,10 @@ Astra's global palette carries the same colours for the header and footer.
 
 | File | Does |
 |---|---|
-| `functions.php` | Enqueues `taameer.css` / `taameer.js` (after Astra/Elementor); sets `html.tp-js` before first paint; Astra breakpoints 1023/767; registers `[tp_template id]` (renders a published Elementor saved template); menu links with a `#` are never marked current; Astra's scroll-to-ID off on Services (D-042) |
+| `functions.php` | Enqueues `taameer.css` / `taameer.js` (after Astra/Elementor); sets `html.tp-js` before first paint; Astra breakpoints 1023/767; registers `[tp_template id]` (renders a published Elementor saved template); menu links with a `#` are never marked current; Astra's scroll-to-ID off on Services (D-042); WP Phase 8: Arabic fonts + `taameer-ar.css` + `window.tpI18n` on Arabic pages, `[tp_lang]` switcher, same slugs in both languages (`wp_unique_post_slug` + `request`), Arabic 404 template, Polylang strings for the mobile-menu label and WPForms messages (D-045) |
 | `assets/css/taameer.css` | Sticky header and Astra header/footer polish (nav hairline, "+" menu toggle, full-screen menu fade, footer grid, icons, WhatsApp button); component classes (`tp-eyebrow`, `tp-caption`, `tp-link`, `tp-frame`, `tp-frame--portrait`, `tp-service`, `tp-plus-item`, `tp-card`, `tp-lift`, `tp-letter__thumb`, `tp-stat`, `tp-measure*`); marquee and partner grayscale; About (§5b) and Services (§5c: chip bar, anchor offset, `tp-ratio-4x3`, gallery) components; before/after slider; motion (Fade In Up retimed, `tp-split`, `tp-img-reveal` + `tp-delay-1…5`, `tp-parallax`); reduced motion; five documented overrides of Astra/Elementor defaults (root font size, Astra button font size, Full Width wrapper padding, `.e-con::before`, widget `max-width`) |
-| `assets/js/taameer.js` | Split headline, image wipe and parallax (IntersectionObserver), marquee clone, before/after slider (keyboard operable), counters at final value under reduced motion, Services scrollspy (`tp-scrollspy`; header height → `--tp-masthead-h`). Nothing runs inside the Elementor editor |
+| `assets/css/taameer-ar.css` | WP Phase 8, Arabic pages only: Arabic typography (Kit variables + child-theme tokens) and the prototype's RTL exceptions (see WP Phase 8) |
+| `assets/js/taameer.js` | Split headline, image wipe and parallax (IntersectionObserver), marquee clone, before/after slider (keyboard operable), counters at final value under reduced motion, Services scrollspy (`tp-scrollspy`; header height → `--tp-masthead-h`). Strings from `window.tpI18n` on Arabic pages; before/after follows the writing direction (WP Phase 8). Nothing runs inside the Elementor editor |
 
 **Image wipes (D-039):** `tp-img-reveal` on the Image widget (hero also `tp-delay-2`); the selector carries `.elementor-element` so Elementor's widget transition rule cannot override the 1.3 s clip-path transition. Same scroll trigger as the prototype; plays once.
 
@@ -241,23 +242,94 @@ Page **Contact**, id **449**, `https://taameer.local/contact/` (option `tp_conta
 - **Editing:** Templates → Saved Templates → "404 page" → Edit with Elementor.
 - **Verification:** `scripts/wp/wp-404-check.mjs` 41/41 (404 status on 4 not-found URLs incl. `/projects/<unknown>/` and `?p=<unknown>`, noindex, title, template once + Astra default gone, full width, no HTML widget, one h1, heading order, copy, aria-hidden "404" + "+" mark position, buttons + targets 200, 3 cards (link, title, location, type, year, cover, alt) + targets 200, no CTA, sticky header with no current item, footer + WhatsApp, keyboard focus on both buttons, layout + 0 overflow at 320 / 375 / 390 / 768 / 1024 / 1280 / 1440, reduced motion, no entrance animations, 0 console errors apart from the document's own 404). Static vs WP at 375 / 1280: same layout; vertical positions within 6–8 px (fixed vs fluid section padding, as on every page). `wp-editor-check.mjs … 460 https://taameer.local/<missing>/ 30`: opens, saves, 44 → 44, 0 editor errors; afterwards only 6 default-valued settings were dropped by Elementor and the 404 check is still 41/41 with identical positions. Home regression `wp-check.mjs` 20/20 (functions.php changed). Screenshots `source/screenshots/wp-phase-7/`.
 
+## Implemented — WP Phase 8 (Arabic + Polylang)
+
+Decision record: **D-045**. Build: `scripts/wp/14-arabic.py` (driver) + `ar_elementor.py` (conversion) + `14-arabic-export.php` (read only) + `14-arabic-import.php` (writes); re-running updates every Arabic post in place (same ids). Check: `scripts/wp/wp-ar-check.mjs`.
+
+### Polylang configuration
+
+| Setting | Value |
+|---|---|
+| Plugin | Polylang (free) 3.8.10 — nothing else added |
+| Languages | English `en` (en_US, default, flag gb) · Arabic `ar` (locale `ar`, RTL, flag ae); WordPress Arabic core language pack installed |
+| URLs | Language set from the directory: English without prefix (`hide_default`), Arabic `/ar/…` (`force_lang` 1, `rewrite` on: no `/language/`); `redirect_lang` on: the Arabic home is `/ar/` (`/ar/home/` 301 → `/ar/`); browser language detection off |
+| Content | Pages and posts; **media translatable** (192 Arabic attachment copies: same files, Arabic alt / title / caption); no custom post types or taxonomies; Elementor saved templates are not translated (the Kit is one) |
+| Menus | Polylang menu locations: Primary and Mobile → "Main navigation" (en) / "Main navigation — العربية" (ar, id 237) |
+| Widgets | Footer: English widgets set to English (`pll_lang`), Arabic copies `block-102`, `nav_menu-102` ("Footer: Quick links — العربية", 235), `nav_menu-103` ("Footer: Services — العربية", 236), `block-103` |
+| Strings (Languages → Translations, Arabic) | Astra (from its `wpml-config.xml`): header Button text "Get a Quote" → «اطلب عرض سعر», its link `/contact/` → `/ar/contact/`, HTML 2 (mobile menu phone / email), footer HTML 2 (WhatsApp button label), copyright; site title / tagline; group "Taameer theme": "Menu", slider labels, "Services on this page", filter status (4 Arabic number forms), "More projects", "Open the original letter from {company}", WPForms required / email messages |
+
+### Language mapping (English id → Arabic id, same slug)
+
+| Page | EN | AR | Arabic URL |
+|---|---|---|---|
+| Home (front page) | 208 | 661 | `/ar/` |
+| About | 297 | 665 | `/ar/about/` |
+| Services | 306 | 669 | `/ar/services/` |
+| Projects | 312 | 673 | `/ar/projects/` |
+| 22 project pages | 326–417 | 677–761 | `/ar/projects/<slug>/`, children of 673 |
+| Testimonials | 435 | 765 | `/ar/testimonials/` |
+| Contact | 449 | 769 | `/ar/contact/` |
+| CTA band (saved template) | 228 | 659 "CTA band (site-wide) — العربية" | `[tp_template id="659"]` on Arabic pages |
+| 404 page (saved template) | 460 | 660 "404 page — العربية" (option `tp_404_template_id_ar`) | any `/ar/…` not-found URL |
+| WPForms Contact | 446 | 656 "Contact (العربية)" (option `tp_contact_form_id_ar`) | on `/ar/contact/` |
+
+Project pages (EN → AR): wadi-alshabak-villas 326 → 761, jvc-residential-retail-building 339 → 725, palm-jumeirah-villa 342 → 737, al-awir-villas 345 → 681, dubai-g-residential-villa 348 → 709, abu-dhabi-marina-private-gym 351 → 677, kf-inc-headquarters 354 → 729, al-warqa-4th-villa 357 → 693, dubai-marina-triplex-villa 369 → 713, perfume-shop-al-barsha 372 → 741, mbr-city-villa 375 → 733, al-warqa-1st-g2-villa 378 → 689, faiz-couture-dress-shop 381 → 717, atlas-copco-headquarters 384 → 697, al-twar-villa 387 → 685, souk-al-bahar-apartment 399 → 749, um-nahad-villa 402 → 757, beauty-lounge-spa-mirdif 405 → 701, thai-restaurant-deira 408 → 753, jumeirah-golf-estates-landscaping 411 → 721, damac-hills-villa 414 → 705, service-blocks-extensions 417 → 745.
+
+### Arabic page architecture
+
+- **Generated from the English Elementor data** (`14-arabic.py`): same Containers, widgets (Heading, Text Editor, Image, Button, Basic Gallery, Counter, Shortcode, WPForms), classes, CSS IDs (anchors such as `#construction`, `#atlas-copco` are unchanged), responsive settings and entrance animations. No HTML widget, no Elementor Pro, no CPT. Normal Pages, Elementor Full Width, title hidden, editable with Elementor.
+- **Wording** = the static `ar/` pages: every text node is looked up in the prototype's translation memory (`scripts/ar_text.py`, `scripts/ar_data.py`, as `build_ar.py`), plus strings derived from the data the same way the prototype's JS does (months «سبتمبر 2024», filter counts «الإنشاءات 6», letter by-lines, gallery alt «… — الصورة i من n»). The dry run (`14-arabic.py --dry`) lists any English string without Arabic: none.
+- **Prototype details reproduced:** Latin runs and phone numbers in `<bdi>`; `dir="ltr"` on tel / mailto / WhatsApp / Instagram links; «…» around letter excerpts and the chairman's words; the label «ترجمة عن الأصل الإنجليزي» under each translated letter excerpt (Home, Testimonials, project letters; class `tp-translated`).
+- **Links:** internal URLs get `/ar/` (`/projects/?type=construction` → `/ar/projects/?type=construction`, `/testimonials/#bella-cure` → `/ar/testimonials/#bella-cure`); media, tel, mailto and external links unchanged.
+- **Header / footer:** Astra's (one builder for both languages); the language switcher is `[tp_lang]` in Header HTML 1, Header HTML 2 (mobile menu) and Footer HTML 1 (English shows «EN | عربي», Arabic «عربي | English», as the prototype); menus, footer widgets and texts per language as above. The English header / footer look unchanged; the «عربي» item is now a link.
+
+### RTL and Arabic typography (`wp-theme/taameer-astra-child/assets/css/taameer-ar.css`, Arabic pages only)
+
+| Topic | Implementation |
+|---|---|
+| Direction | `<html lang="ar" dir="rtl">` and `body.rtl` from Polylang's Arabic locale; Astra and Elementor load their RTL styles; the child theme's logical properties mirror rows, "+" marks, frames, chips, cards and spec blocks |
+| Physical values | The 15 asymmetric paddings / margins / borders in the English data are swapped in the Arabic data (e.g. the 404 "404" end padding, Home chairman hairline) |
+| Prototype `[dir="rtl"]` exceptions | Image wipe opens from the right (`inset(0 0 0 100%)`); before/after clip from the inline start and handle `translateX(50%)`; marquee keyframes `tp-marquee-rtl`; arrows of `tp-link`, `tp-card__more`, previous / next mirrored; menu underline grows from the right; chairman's opening mark «; tel / mailto Button text isolated LTR |
+| Fonts | El Messiri 500 + IBM Plex Sans Arabic 400/500/600 (Google Fonts, Arabic pages only, as the prototype, D-034) |
+| Global Kit | Arabic values through the Kit's CSS variables (`--e-global-typography-<id>-…`): display styles (Headings, H1–H4, Quote, Stat) El Messiri 500; Lead, Body, Small, Button, Eyebrow, Caption, Text link IBM Plex Sans Arabic; letter-spacing 0, no uppercase, quote not italic; line heights H1 1.35, headings / eyebrow 1.4, text 1.85; xs / sm / base / lg sizes +8 % (prototype tokens) |
+| Per-widget fonts | Rewritten in the Arabic page data (Playfair → El Messiri 500, Inter → IBM Plex Sans Arabic, same rules), so the Elementor editor shows the Arabic settings |
+| Child-theme components | `--tp-font-*`, tracking tokens and the fixed English line heights (menu, switcher, breadcrumbs, spec, footer, form) given their Arabic values; one rule removes tracking / uppercase from every element on Arabic pages (Arabic letters must join) |
+| Scripts (`taameer.js`, shared) | Strings from `window.tpI18n` (Polylang, Arabic pages only); before/after pointer and arrow keys follow the visual direction in RTL (prototype `interactions.js`); filter status uses the Arabic number forms (1 / 2 / 3–10 / 11+) |
+
+### Contact (Arabic)
+
+WPForms form 656 = form 446 with Arabic labels, options, placeholder «اختر خدمة», note «الحقول المميزة بعلامة * مطلوبة.», button «إرسال الرسالة» / «جارٍ الإرسال…», confirmation «شكراً لرسالتك …» (prototype text); same fields, AJAX, honeypot + modern anti-spam; notification to `{admin_email}` with subject "New enquiry (Arabic site) from {name} — taameer.ae" (no production SMTP in this phase). Validation messages are WPForms global settings, translated for Arabic pages by `functions.php` (`wpforms_frontend_strings` + Polylang strings): «يرجى تعبئة هذا الحقل.», «يرجى إدخال عنوان بريد إلكتروني صحيح، مثل name@example.com.». The English form is unchanged.
+
+### 404 (Arabic)
+
+`/ar/<anything missing>/` → real 404 status, `noindex`, Arabic template 660 (RTL, «لم نعثر على هذه الصفحة», buttons to `/ar/` and `/ar/projects/`, the 3 featured cards to `/ar/projects/<slug>/`). The switcher on a 404 links to the same path in the other language (another 404). English 404 unchanged.
+
 ## Planned
 
 | Page / item | Planned approach | Notes |
 |---|---|---|
-| Arabic | Polylang in the dedicated Arabic phase after the English site is verified | Language switcher is visual only until then |
 | SEO plugin | Yoast or Rank Math, deferred | No meta descriptions until then |
 | Final cleanup | Remove WordPress starter content (Hello world, Sample Page, Privacy Policy draft, empty "Elementor #" drafts) | Deferred, D-040 |
 
 ## Known limitations
 
+- **Arabic (WP Phase 8):**
+  - **Re-running `14-arabic.py` regenerates the Arabic pages from the English ones** and overwrites manual Elementor edits made to Arabic pages (and the Arabic menus, footer widgets, form and string translations it writes). Once the client edits Arabic content in WordPress, edit both languages by hand (or extend the script) instead of re-running it.
+  - Arabic copy is the prototype's (`ar/`) and still needs the client's approval (PRD; `docs/ar-copy-review.md`). Three Arabic strings exist only in WordPress (the prototype had no equivalent): the form's sending state «جارٍ الإرسال…», WPForms' no-JavaScript notice «يرجى تفعيل JavaScript في متصفحك لإكمال هذا النموذج.», and the notification subject (English, "New enquiry (Arabic site) from …", for the office).
+  - Same differences as the English pages (fixed vs fluid section padding, shared CTA band, Projects listing without the team-experience section, static featured / related cards, Contact form limitations, title separator "–" and no meta description until the SEO phase).
+  - One Global Kit: the Arabic fonts in Site Settings → Global Fonts are not visible (they are overridden for Arabic in `taameer-ar.css`); per-widget fonts on Arabic pages show El Messiri / IBM Plex Sans Arabic in the editor.
+  - Media are translatable: each image has an English and an Arabic attachment (same file). Alt text / captions are edited per language (Media Library language filter). Ten images keep the descriptive alt text they have on Home / Services (as in English), translated.
+  - The Arabic pages load the English Google fonts as well (Astra / Kit) besides El Messiri and IBM Plex Sans Arabic; Latin runs inside Arabic text use IBM Plex Sans Arabic's Latin glyphs, as the prototype.
+  - Astra Free has one header and footer for both languages: per-language content comes from Polylang (menus, widgets, string translations of the Astra elements); the WhatsApp button sits at the right edge in both languages, as the prototype (`dir="ltr"` on the link).
+  - On a 404 the switcher links to the same path in the other language (which is also a 404), not to the home page.
+
 - Project detail (all 22 pages): section padding is the fixed 128 / 96 / 72 px of the other pages (prototype fluid 121.6 px at 1280), so pages are about 1–2 % taller; related cards and previous/next are 8–26 px taller than the prototype (Kit line heights, same as the listing cards); the cover's alt is the library alt ("title, location — image 1 of n" or a descriptive alt) instead of "title, location"; tablet 768–1023 px stacks the spec above the cover (prototype side by side from about 800 px).
 - Project galleries: 10 images keep the descriptive alt text they carry on Home / Services (one attachment has one alt in WordPress) instead of the prototype's "title, location — image i of n": palm-jumeirah-villa-02, dubai-g-residential-villa-02 / 03 / 05, kf-inc-headquarters-05, dubai-marina-triplex-villa-04, atlas-copco-headquarters-03, al-warqa-1st-g2-villa-06, al-awir-villas-02, abu-dhabi-marina-private-gym-01; the gym's before/after images likewise use the library alts ("After: the completed gym…", "Before: the same structure during construction").
 - Testimonials: the letter images keep their library alt ("Letter of appreciation from Atlas Copco (thumbnail)" etc., written for Home's thumbnails; one attachment has one alt) instead of the prototype's "Original letter of appreciation from …"; the sheet links are named by `taameer.js` ("Open the original letter from …") as in the prototype. The date is a Heading `<p>`, not `<time datetime>`, and the letters section has no `aria-label` (Elementor Free has no custom attributes). The lightbox is Elementor's (no caption), not the prototype's.
 - Contact (WP Phase 6): required-field errors use one WPForms message ("Please fill in this field.") instead of the prototype's per-field wording ("Please enter your full name."), and there is no "Please correct N fields below." summary (WPForms Lite has neither); Phone is a single-line text field (`type=text`, no Phone field in Lite) and the fields carry no `autocomplete` hints; "Select a service" is a disabled placeholder (cannot be chosen back once a type is picked); the required note is plain text (screen readers read "star"; the prototype said "with an asterisk"); the form has no accessible name (prototype: `aria-labelledby` the H2); the dropdown arrow is WPForms' chevron; spam protection is WPForms' honeypot + decoy field + modern anti-spam token instead of the single prototype honeypot (a filled honeypot sends no email; the visitor sees WPForms' response, not the success panel); a real submission is sent (the prototype sent nothing) and takes a few seconds locally with "Sending…" on the button; the submit button uses the Kit button weight 500 (prototype 600) and is 2 px shorter; the validation messages are global WPForms settings (any later WPForms form shares them); notification recipient is the WordPress admin email until go-live.
-- 404 (WP Phase 7): the browser title uses WordPress's separator ("Page not found – Taameer…", prototype "—") and there is no meta description / Open Graph until the SEO plugin phase; the "404" figure's end padding is physical (right), to flip in the Arabic phase; section padding is the fixed 128 / 96 / 72 px of every page (6–8 px lower than the prototype at 375 / 1280); the "+" reuses Contact's `tp-location__mark` class (same drawing, no new CSS); the featured cards are static (update by hand if the featured projects change); in the editor the template is shown without header / footer.
+- 404 (WP Phase 7): the browser title uses WordPress's separator ("Page not found – Taameer…", prototype "—") and there is no meta description / Open Graph until the SEO plugin phase; the "404" figure's end padding is physical (right) in the English template (the Arabic copy has it on the left, WP Phase 8); section padding is the fixed 128 / 96 / 72 px of every page (6–8 px lower than the prototype at 375 / 1280); the "+" reuses Contact's `tp-location__mark` class (same drawing, no new CSS); the featured cards are static (update by hand if the featured projects change); in the editor the template is shown without header / footer.
 - Links to `/contact/` resolve since WP Phase 6 (`/testimonials/` since WP Phase 5). Earlier counts (13 URLs on Services; Home and About had 17 and 10 including `/services/…`, which exists since WP Phase 3; `/about/` since WP Phase 2).
-- Services: related project cards are static (updated by hand); the chip bar's `aria-label` ("Services on this page") is set by `taameer.js` (Elementor Free has no custom attributes) and will need its Arabic string in the Arabic phase; anchor scrolling on Services is native (Astra's scroll-to-ID is off on that page only, D-042).
+- Services: related project cards are static (updated by hand); the chip bar's `aria-label` ("Services on this page", Arabic «الخدمات في هذه الصفحة» since WP Phase 8) is set by `taameer.js` (Elementor Free has no custom attributes); anchor scrolling on Services is native (Astra's scroll-to-ID is off on that page only, D-042).
 - The shared CTA band renders the same on every page but differs from the prototype's (heading on one line, shorter box at ≥ 768 px); identical to the approved homepage, so not changed in the Services phase.
 - The `tp-measure*` classes on the homepage have no effect (Elementor's `max-width: 100%` on Container widgets outranks them); About uses native Custom Width instead (D-041). Homepage left unchanged pending an owner decision.
 - Floating controls: Astra's scroll-to-top sits 12 px above the WhatsApp button (`taameer.css` §4; fixed after WP Phase 2, they used to overlap). At ≥ 1024 px, scrolled to the very bottom, the WhatsApp button covers the footer's "عربي" link, as in the prototype.

@@ -1,0 +1,171 @@
+/* ==========================================================================
+   taameer-ar.css — Arabic pages only (WP Phase 8, D-045)
+   Enqueued by functions.php when Polylang's current language is Arabic (/ar/…), after taameer.css. English pages never
+   load this file, so nothing here can change the approved English site.
+   1. Arabic typography = the prototype's :lang(ar) tokens (assets/css/tokens.css, D-034 / D-035):
+      El Messiri 500 for headings, pull-quotes and stat numbers; IBM Plex Sans Arabic for everything else;
+      no letter-spacing, no uppercase, no italics; taller line heights; small sizes about 8 % larger.
+      Elementor Free has one Global Kit for both languages, so its global fonts are overridden here through the Kit's
+      CSS variables (--e-global-typography-<id>-…); per-widget custom fonts are set in the Arabic pages' own data
+      (scripts/wp/ar_elementor.py), so the editor shows them.
+   2. RTL: layout follows <html dir="rtl"> (Polylang) through logical properties and Elementor's RTL stylesheet; only the
+      prototype's direction exceptions ([dir="rtl"] rules in animations.css, components.css, theme.css) are repeated:
+      image wipe, before/after clip and handle, marquee direction, arrows, menu underline origin, quotation mark.
+   ========================================================================== */
+
+/* ---- 1. Typography ---- */
+
+body:lang(ar) {
+  --tp-font-display: "El Messiri", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --tp-font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --tp-fs-xs: clamp(0.8125rem, 0.79rem + 0.1vw, 0.9rem);
+  --tp-fs-sm: clamp(0.9375rem, 0.91rem + 0.1vw, 1.0125rem);
+  --tp-tracking-eyebrow: 0;
+  --tp-tracking-button: 0;
+}
+
+/* Kit global fonts (Site Settings → Global Fonts) — same ids as the Kit, Arabic values. */
+body[class*="elementor-kit-"]:lang(ar) {
+  --e-global-typography-primary-font-family: "El Messiri";
+  --e-global-typography-primary-font-weight: 500;
+  --e-global-typography-primary-line-height: 1.4em;
+  --e-global-typography-primary-letter-spacing: 0em;
+
+  --e-global-typography-h1-font-family: "El Messiri";
+  --e-global-typography-h1-font-weight: 500;
+  --e-global-typography-h1-line-height: 1.35em;
+  --e-global-typography-h1-letter-spacing: 0em;
+  --e-global-typography-h2-font-family: "El Messiri";
+  --e-global-typography-h2-font-weight: 500;
+  --e-global-typography-h2-line-height: 1.4em;
+  --e-global-typography-h2-letter-spacing: 0em;
+  --e-global-typography-h3-font-family: "El Messiri";
+  --e-global-typography-h3-font-weight: 500;
+  --e-global-typography-h3-line-height: 1.4em;
+  --e-global-typography-h3-letter-spacing: 0em;
+  --e-global-typography-h4-font-family: "El Messiri";
+  --e-global-typography-h4-font-weight: 500;
+  --e-global-typography-h4-line-height: 1.4em;
+  --e-global-typography-h4-letter-spacing: 0em;
+  --e-global-typography-quote-font-family: "El Messiri";
+  --e-global-typography-quote-font-weight: 500;
+  --e-global-typography-quote-line-height: 1.4em;
+  --e-global-typography-quote-font-style: normal;
+  --e-global-typography-stat-font-family: "El Messiri";
+  --e-global-typography-stat-font-weight: 500;
+
+  --e-global-typography-secondary-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-secondary-font-size: clamp(1.1875rem, 1.12rem + 0.26vw, 1.4rem);
+  --e-global-typography-secondary-line-height: 1.85em;
+  --e-global-typography-text-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-text-font-size: clamp(1.0625rem, 1.03rem + 0.14vw, 1.1875rem);
+  --e-global-typography-text-line-height: 1.85em;
+  --e-global-typography-small-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-small-font-size: clamp(0.9375rem, 0.91rem + 0.1vw, 1.0125rem);
+  --e-global-typography-small-line-height: 1.85em;
+  --e-global-typography-accent-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-accent-font-size: clamp(0.8125rem, 0.79rem + 0.1vw, 0.9rem);
+  --e-global-typography-accent-line-height: 1.85em;
+  --e-global-typography-accent-text-transform: none;
+  --e-global-typography-accent-letter-spacing: 0em;
+  --e-global-typography-eyebrow-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-eyebrow-font-size: clamp(0.8125rem, 0.79rem + 0.1vw, 0.9rem);
+  --e-global-typography-eyebrow-line-height: 1.4em;
+  --e-global-typography-eyebrow-text-transform: none;
+  --e-global-typography-eyebrow-letter-spacing: 0em;
+  --e-global-typography-caption-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-caption-font-size: clamp(0.8125rem, 0.79rem + 0.1vw, 0.9rem);
+  --e-global-typography-caption-text-transform: none;
+  --e-global-typography-caption-letter-spacing: 0em;
+  --e-global-typography-link-font-family: "IBM Plex Sans Arabic";
+  --e-global-typography-link-font-size: clamp(0.9375rem, 0.91rem + 0.1vw, 1.0125rem);
+  --e-global-typography-link-line-height: 1.85em;
+  --e-global-typography-link-text-transform: none;
+  --e-global-typography-link-letter-spacing: 0em;
+}
+
+/* Astra's own typography (header, footer, form fields, 404 fallback). */
+body:lang(ar),
+body:lang(ar) button,
+body:lang(ar) input,
+body:lang(ar) select,
+body:lang(ar) textarea,
+body:lang(ar) .ast-builder-html-element,
+body:lang(ar) .main-header-menu .menu-link { font-family: var(--tp-font-body); }
+
+body:lang(ar) :is(h1, h2, h3, h4, h5, h6):not(.tp-footer-heading) { font-family: var(--tp-font-display); font-weight: 500; }
+
+/* Arabic is never tracked, uppercased or italicised (it breaks letter joining): the prototype sets these tokens to
+   0 / none / normal for every component; one rule here covers Astra, Elementor and WPForms alike. */
+body:lang(ar) *,
+body:lang(ar) *::before,
+body:lang(ar) *::after { letter-spacing: 0 !important; text-transform: none !important; }
+body:lang(ar) :is(em, i, cite, blockquote, address) { font-style: normal; }
+
+/* Taller Arabic line heights where taameer.css fixes the English ones (1.7 = English body → 1.85; 1.15 = English
+   heading → 1.4), as the prototype's components inherit --tp-lh-body / --tp-lh-heading. */
+body:lang(ar) #masthead .main-header-menu > .menu-item,
+body:lang(ar) #colophon .widget_nav_menu li,
+body:lang(ar) .tp-render-note p,
+body:lang(ar) .tp-lang,
+body:lang(ar) .ast-mobile-popup-content .ast-custom-button,
+body:lang(ar) .tp-breadcrumb__list,
+body:lang(ar) .tp-spec dt,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-head-container .wpforms-description,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-field-label,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-form label.wpforms-error,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-form button.wpforms-submit,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full { line-height: 1.85; }
+body:lang(ar) .ast-mobile-popup-content .main-header-menu .menu-item > .menu-link,
+body:lang(ar) #colophon .tp-footer-heading,
+body:lang(ar) .tp-spec dd,
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-confirmation-container-full h3 { line-height: 1.4; }
+body:lang(ar) .tp-contact-form div.wpforms-container-full .wpforms-form :is(input[type="text"], input[type="email"], select, textarea) {
+  font-size: clamp(1.0625rem, 1.03rem + 0.14vw, 1.1875rem);
+  line-height: 1.85;
+}
+
+/* Phone numbers and e-mail addresses read left to right inside Arabic text (prototype: dir="ltr" on these links;
+   Elementor Buttons have no attribute field, so the CTA band's buttons get it here). */
+body:lang(ar) a:is([href^="tel:"], [href^="mailto:"]) .elementor-button-text { direction: ltr; unicode-bidi: isolate; }
+
+/* ---- 2. RTL exceptions (prototype [dir="rtl"] rules) ---- */
+
+/* Header nav underline grows from the inline start. */
+body:lang(ar) #masthead .main-header-menu > .menu-item > .menu-link::after { transform-origin: right; }
+
+/* Arrows point inline-end: mirrored, and the hover nudge goes the other way. */
+body:lang(ar) .tp-link .elementor-button-content-wrapper::after,
+body:lang(ar) .tp-card__more .elementor-heading-title::after { transform: scaleX(-1); }
+body:lang(ar) .tp-link .elementor-button:hover .elementor-button-content-wrapper::after { transform: translateX(calc(-1 * var(--tp-space-1))) scaleX(-1); }
+body:lang(ar) .tp-project-nav__prev .elementor-heading-title::before { transform: none; }
+body:lang(ar) .tp-project-nav__next .elementor-heading-title::after { transform: scaleX(-1); }
+
+/* Chairman's opening mark: Arabic guillemet (prototype --tp-quote-open). */
+body:lang(ar) .elementor-element.tp-chair-lead::before { content: "\00AB"; }
+
+/* Image wipe opens from the inline start (right). */
+@media (prefers-reduced-motion: no-preference) {
+  .tp-js body:lang(ar) .elementor-element.tp-img-reveal { clip-path: inset(0 0 0 100%); }
+  .tp-js body:lang(ar) .elementor-element.tp-img-reveal.is-visible { clip-path: inset(0); }
+}
+
+/* Before / after: the "before" image is revealed from the inline start; the handle centres on the divider. */
+body:lang(ar) .tp-ba__before { clip-path: inset(0 0 0 calc(100% - var(--tp-ba-pos, 50%))); }
+body:lang(ar) .tp-ba__handle { transform: translateX(50%); }
+
+/* Partner marquee runs the other way: the cloned track sits to the left in RTL. */
+@media (prefers-reduced-motion: no-preference) {
+  body:lang(ar) .tp-marquee.is-ready .tp-marquee__track { animation-name: tp-marquee-rtl; }
+}
+@keyframes tp-marquee-rtl {
+  to { transform: translateX(100%); }
+}
+
+/* Testimonial excerpts are translations of the English letters: the label under each excerpt (prototype .tp-caption). */
+.tp-translated {
+  margin-block: var(--tp-space-3) 0;
+  font-size: var(--tp-fs-xs);
+  line-height: 1.4;
+  color: var(--tp-slate);
+}

@@ -11,7 +11,10 @@
  *      (Elementor Free has no Template widget / global widgets),
  *   5. keeps in-page menu links (/services/#construction …) from being marked as the current page,
  *   6. on the Services page, leaves #anchor scrolling to the browser (Astra's scroll-to-ID ignores the sticky chip bar),
- *   7. prints the "404 page" Elementor saved template on not-found requests (Elementor Free has no Theme Builder).
+ *   7. prints the "404 page" Elementor saved template on not-found requests (Elementor Free has no Theme Builder),
+ *   8. Arabic (Polylang Free, WP Phase 8, D-045): Arabic-only fonts + taameer-ar.css, the [tp_lang] language switcher,
+ *      the same page slugs in both languages (/about/ ↔ /ar/about/), per-language saved templates (404) and the
+ *      Polylang strings used by taameer.js and the WPForms messages.
  *
  * @package taameer-astra-child
  */
@@ -19,6 +22,53 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'TP_CHILD_VERSION', '1.0.0' );
+
+/** Current Polylang language slug ('en' when Polylang is off). */
+function tp_lang() {
+	return function_exists( 'pll_current_language' ) && pll_current_language() ? pll_current_language() : 'en';
+}
+
+/** The page of an option-stored English page id (tp_projects_page_id …) in the current language. */
+function tp_page_option( $option ) {
+	$id = (int) get_option( $option );
+	if ( $id && function_exists( 'pll_get_post' ) ) {
+		$id = (int) pll_get_post( $id, tp_lang() ) ?: $id;
+	}
+	return $id;
+}
+
+/** Strings shown by taameer.js and WPForms, translated in Languages → Translations (group "Taameer theme"). */
+function tp_strings() {
+	return array(
+		'before'      => 'Before',
+		'after'       => 'After',
+		'divider'     => 'Before and after divider',
+		'shown'       => '{n}% of the before image shown',
+		'servicesNav' => 'Services on this page',
+		'showingOne'  => 'Showing 1 project',
+		'showingTwo'  => 'Showing 2 projects',
+		'showing'     => 'Showing {n} projects',
+		'showingMany' => 'Showing {n} projects (11 or more)',
+		'moreProjects' => 'More projects',
+		'openLetter'  => 'Open the original letter from {company}',
+	);
+}
+
+add_action(
+	'init',
+	function () {
+		if ( ! function_exists( 'pll_register_string' ) ) {
+			return;
+		}
+		foreach ( tp_strings() as $key => $text ) {
+			pll_register_string( 'tp-js-' . $key, $text, 'Taameer theme' );
+		}
+		pll_register_string( 'tp-menu-label', 'Menu', 'Taameer theme' );
+		foreach ( array( 'Please fill in this field.', 'Please enter a valid email address, for example name@example.com.', 'Please enable JavaScript in your browser to complete this form.' ) as $text ) {
+			pll_register_string( 'tp-wpforms', $text, 'Taameer theme' );
+		}
+	}
+);
 
 /**
  * Styles and scripts. Loaded after Astra and Elementor so component classes win without !important.
@@ -43,6 +93,25 @@ add_action(
 			TP_CHILD_VERSION . '.' . filemtime( $dir . '/assets/js/taameer.js' ),
 			array( 'strategy' => 'defer', 'in_footer' => false )
 		);
+
+		// Arabic pages only: the prototype's Arabic fonts (D-034: El Messiri 500, IBM Plex Sans Arabic 400/500/600), the
+		// Arabic typography + RTL rules, and the translated script strings. English pages load none of this.
+		if ( 'ar' === tp_lang() ) {
+			wp_enqueue_style(
+				'taameer-ar-fonts',
+				'https://fonts.googleapis.com/css2?family=El+Messiri:wght@500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap',
+				array(),
+				null
+			);
+			wp_enqueue_style(
+				'taameer-ar',
+				$uri . '/assets/css/taameer-ar.css',
+				array( 'taameer' ),
+				TP_CHILD_VERSION . '.' . filemtime( $dir . '/assets/css/taameer-ar.css' )
+			);
+			$strings = array_map( 'pll__', tp_strings() );
+			wp_add_inline_script( 'taameer', 'window.tpI18n = ' . wp_json_encode( $strings, JSON_UNESCAPED_UNICODE ) . ';', 'before' );
+		}
 	},
 	20
 );
@@ -82,7 +151,7 @@ add_filter(
 		// A project page (child of /projects/) keeps "Projects" current, as on the prototype's project page. The menu links
 		// are custom URLs, so WordPress does not mark the parent page itself.
 		$parent = is_page() ? wp_get_post_parent_id( get_queried_object_id() ) : 0;
-		if ( $parent && (int) get_option( 'tp_projects_page_id' ) === $parent ) {
+		if ( $parent && tp_page_option( 'tp_projects_page_id' ) === $parent ) {
 			$path = wp_parse_url( get_permalink( $parent ), PHP_URL_PATH );
 			foreach ( $items as $item ) {
 				if ( rtrim( (string) wp_parse_url( $item->url, PHP_URL_PATH ), '/' ) === rtrim( (string) $path, '/' ) && false === strpos( (string) $item->url, '#' ) ) {
@@ -104,7 +173,7 @@ add_filter(
 add_filter(
 	'astra_theme_js_localize',
 	function ( $data ) {
-		$pages = array_filter( array( (int) get_option( 'tp_services_page_id' ), (int) get_option( 'tp_testimonials_page_id' ) ) );
+		$pages = array_filter( array( tp_page_option( 'tp_services_page_id' ), tp_page_option( 'tp_testimonials_page_id' ) ) );
 		if ( $pages && is_page( $pages ) ) {
 			$data['is_scroll_to_id'] = false;
 		}
@@ -122,6 +191,11 @@ add_action(
 	'wp',
 	function () {
 		$id = (int) get_option( 'tp_404_template_id' );
+		// Arabic not-found URLs (/ar/…) show the Arabic copy of the template (saved templates are not Polylang content).
+		$ar = (int) get_option( 'tp_404_template_id_ar' );
+		if ( 'ar' === tp_lang() && $ar && 'publish' === get_post_status( $ar ) ) {
+			$id = $ar;
+		}
 		if ( ! is_404() || ! $id || 'publish' !== get_post_status( $id ) || ! class_exists( '\Elementor\Plugin' ) ) {
 			return;
 		}
@@ -159,4 +233,136 @@ add_shortcode(
 		}
 		return \Elementor\Plugin::instance()->frontend->get_builder_content_for_display( $id, true );
 	}
+);
+
+/* --------------------------------------------------------------------------------------------------------------------
+ * Arabic / Polylang Free (WP Phase 8, D-045)
+ * ------------------------------------------------------------------------------------------------------------------ */
+
+/**
+ * Same slugs in both languages: /about/ ↔ /ar/about/, /projects/<slug>/ ↔ /ar/projects/<slug>/ (as the prototype's final
+ * URLs). Polylang Free has no shared slugs, so WordPress would rename an Arabic page "about-2" on every save. A slug is
+ * kept when the pages already using it (same type and parent) are all in another language.
+ */
+add_filter(
+	'wp_unique_post_slug',
+	function ( $slug, $post_id, $status, $type, $parent, $original ) {
+		global $wpdb;
+		if ( $slug === $original || ! $post_id || ! function_exists( 'pll_get_post_language' ) || ! is_post_type_hierarchical( $type ) ) {
+			return $slug;
+		}
+		$lang = pll_get_post_language( $post_id );
+		if ( ! $lang ) {
+			return $slug;
+		}
+		$others = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = %s AND post_parent = %d AND ID != %d", $original, $type, $parent, $post_id ) );
+		foreach ( $others as $other ) {
+			if ( pll_get_post_language( (int) $other ) === $lang ) {
+				return $slug;
+			}
+		}
+		return $original;
+	},
+	10,
+	6
+);
+
+/**
+ * …and the page of the requested language is the one served: WordPress looks a page path up without a language, so
+ * /about/ could return the Arabic "about". The path is resolved among the pages of the URL's language (Polylang puts
+ * lang=ar in the query for /ar/…; no prefix = the default language).
+ */
+add_filter(
+	'request',
+	function ( $vars ) {
+		if ( empty( $vars['pagename'] ) || ! function_exists( 'pll_default_language' ) || is_admin() ) {
+			return $vars;
+		}
+		$lang  = ! empty( $vars['lang'] ) ? $vars['lang'] : pll_default_language();
+		$path  = trim( $vars['pagename'], '/' );
+		$parts = explode( '/', $path );
+		// Polylang does not filter single-post (name) queries by language: the language is checked here.
+		$found = get_posts(
+			array(
+				'post_type'   => 'page',
+				'name'        => sanitize_title( end( $parts ) ),
+				'lang'        => '',
+				'post_status' => array( 'publish', 'private', 'draft', 'pending', 'future' ),
+				'numberposts' => 10,
+			)
+		);
+		foreach ( $found as $page ) {
+			if ( pll_get_post_language( $page->ID ) === $lang && get_page_uri( $page ) === $path ) {
+				unset( $vars['pagename'] );
+				$vars['page_id'] = $page->ID;
+				break;
+			}
+		}
+		return $vars;
+	},
+	20
+);
+
+/**
+ * [tp_lang] — the header / mobile menu / footer language switcher (Astra HTML elements). Same markup as the prototype:
+ * current language, separator, link to the same page in the other language. On a not-found URL it links to the same
+ * path in the other language, which is that language's 404.
+ */
+add_shortcode(
+	'tp_lang',
+	function () {
+		$ar    = 'ar' === tp_lang();
+		$other = $ar ? 'en' : 'ar';
+		$url   = '';
+		if ( is_404() ) {
+			$path = (string) wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/', PHP_URL_PATH ); // phpcs:ignore
+			$path = preg_replace( '#^/ar(/|$)#', '/', $path );
+			$url  = home_url( $ar ? $path : '/ar' . $path );
+		} elseif ( function_exists( 'pll_the_languages' ) ) {
+			$langs = pll_the_languages( array( 'raw' => 1, 'hide_if_empty' => 0, 'hide_if_no_translation' => 0 ) );
+			$url   = isset( $langs[ $other ]['url'] ) ? $langs[ $other ]['url'] : '';
+		}
+		if ( ! $url ) {
+			$url = function_exists( 'pll_home_url' ) ? pll_home_url( $other ) : home_url( '/' );
+		}
+		$current = $ar
+			? '<span class="tp-lang__current" aria-current="true" lang="ar"><abbr title="العربية">عربي</abbr></span>'
+			: '<span class="tp-lang__current" aria-current="true"><abbr title="English">EN</abbr></span>';
+		$link    = $ar
+			? '<a class="tp-lang__link" href="' . esc_url( $url ) . '" lang="en" hreflang="en">English</a>'
+			: '<a class="tp-lang__link" href="' . esc_url( $url ) . '" lang="ar" hreflang="ar">عربي</a>';
+		return '<p class="tp-lang">' . $current . '<span class="tp-lang__sep" aria-hidden="true">|</span>' . $link . '</p>';
+	}
+);
+
+/** Astra's mobile menu label ("Menu") is not an Astra translatable option: translated through Polylang. */
+add_filter(
+	'astra_get_option_mobile-header-menu-label',
+	fn( $label ) => function_exists( 'pll__' ) ? pll__( $label ) : $label
+);
+
+/** WPForms validation messages are global settings: on Arabic pages they come from Polylang string translations. */
+add_filter(
+	'wpforms_frontend_strings',
+	function ( $strings ) {
+		if ( 'ar' !== tp_lang() || ! function_exists( 'pll__' ) ) {
+			return $strings;
+		}
+		foreach ( array( 'val_required', 'val_email', 'val_email_suggestion' ) as $key ) {
+			if ( ! empty( $strings[ $key ] ) && is_string( $strings[ $key ] ) ) {
+				$strings[ $key ] = pll__( $strings[ $key ] );
+			}
+		}
+		return $strings;
+	}
+);
+
+/** WPForms has no Arabic language pack: its no-JavaScript notice is translated through Polylang too. */
+add_filter(
+	'gettext_wpforms-lite',
+	function ( $translation, $text ) {
+		return 'Please enable JavaScript in your browser to complete this form.' === $text && 'ar' === tp_lang() && function_exists( 'pll__' ) ? pll__( $text ) : $translation;
+	},
+	10,
+	2
 );
