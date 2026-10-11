@@ -325,7 +325,7 @@ Yoast SEO free prints Open Graph + X card on the 56 pages. og:title / og:descrip
 | Page / item | Planned approach | Notes |
 |---|---|---|
 | SEO, further batches | Yoast SEO free (D-046); one batch at a time with the owner's approval | Open items: Known limitations → SEO |
-| Final cleanup | Remove WordPress starter content (Hello world, Sample Page, Privacy Policy draft, empty "Elementor #" drafts) | Deferred, D-040. Done 2026-10-11: Hello world (post 1) and Sample Page (page 2) moved to Trash (not deleted); their URLs answer 404, the sitemap index lists only `page-sitemap.xml`, `/author/taameer/` is noindex (Yoast default for authors without posts). Left: Privacy Policy draft, "Elementor #" drafts, emptying the Trash |
+| Final cleanup | Remove WordPress starter content (Hello world, Sample Page, Privacy Policy draft, empty "Elementor #" drafts) | Deferred, D-040. Done 2026-10-11: Hello world (post 1) and Sample Page (page 2) moved to Trash, then permanently deleted the same day (Trash empty); their URLs answer 404, the sitemap index lists only `page-sitemap.xml`, `/author/taameer/` is noindex (Yoast default for authors without posts). Left: Privacy Policy draft, "Elementor #" drafts |
 
 ## Known limitations
 

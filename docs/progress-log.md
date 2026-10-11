@@ -2,6 +2,16 @@
 
 One entry per completed task, newest on top. Format: Did / Files / Issues / Next.
 
+### 2026-10-11 — Final cleanup — Trash emptied (Hello world, Sample Page permanently deleted)
+- Did: owner-approved permanent deletion of the only two Trash items.
+  - Checks first: Git `main` at `091dd12`, clean. The Trash held exactly post 1 "Hello world!" and page 2 "Sample Page" (plus revisions 1064 / 1065 and comment 1 `post-trashed`); no menu, front page, posts page or privacy page reference.
+  - Backup: full database export with LocalWP's `mysqldump` 8.4.0 (single transaction; credentials in a temporary defaults file, deleted after use). Item export as JSON: the 4 posts, 8 post meta rows, comment 1 (no comment meta), 5 term relationship rows (Yoast stores no indexables locally). Both in the session scratchpad, not in the repo.
+  - Backup verified: dump footer "Dump completed", UTF-8 readable, 37 tables = live; row counts of posts 981, postmeta 4638, comments 1, options 329, terms 236, term_relationships 933 = live; posts 1, 2, 1064, 1065 and comment 1 present.
+  - Deletion: `wp_delete_post(1, true)` and `wp_delete_post(2, true)` through Novamira, behind a guard that re-read the Trash in the same request.
+- Verified: deleted exactly posts −4 (1, 2, 1064, 1065), postmeta −8, comments −1, term_relationships −3; no other table count changed. Trash 0. Category 1 (`uncategorized`, `en`, count 0) and its Arabic translation 13 unchanged (the `term_language` / `term_translations` rows with object id 1 belong to category 1, not to post 1, and were kept). `/hello-world/`, `/sample-page/`, `?p=1`, `?page_id=2` → 404; both Uncategorized archives 200. `wp-seo-check.mjs` 142/142; `wp-ar-404-check.mjs` 42/42 (0 non-GET requests, Mailpit 0 → 0).
+- Issues: none. Not deleted (deferred, D-040): Privacy Policy draft and the "Elementor #" page drafts (4 page drafts), one post auto-draft. Rollback only from the backup (import the SQL export, or re-insert the JSON rows).
+- Next: owner review; no commit, push or deploy without approval. SEO script reusability not started (plan awaiting approval).
+
 ### 2026-10-11 — WP Phase 9 — empty category archives noindex (D-047)
 - Did: read-only inspection: Git (`main`, `f62884e`, clean); HTTP: both Uncategorized archives answered 200 `index, follow`, "Nothing found"; `/page/2/` already 404 noindex; not in the sitemap. Novamira PHP reads only: Yoast `noindex-tax-category` false, `wpseo_taxonomy_meta` empty, terms 1 (`en`) / 13 (`ar`) count 0, 0 published posts, 0 tags. Proposal approved by the owner. Then a `wpseo_robots_array` filter in the child theme. It sets `noindex` only on a category archive's main query (not 404) with no posts, when Yoast presents that same category term. Every other directive is kept.
 - Files: `wp-theme/taameer-astra-child/functions.php` (filter), `scripts/wp/wp-seo-check.mjs` (part E: both archives 200, page language, empty, `noindex, follow`, not in the sitemap), `docs/decisions.md` (D-047), `docs/wp-mapping.md`, `CLAUDE.md`.
