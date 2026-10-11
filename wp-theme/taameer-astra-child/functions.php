@@ -14,7 +14,9 @@
  *   7. prints the "404 page" Elementor saved template on not-found requests (Elementor Free has no Theme Builder),
  *   8. Arabic (Polylang Free, WP Phase 8, D-045): Arabic-only fonts + taameer-ar.css, the [tp_lang] language switcher,
  *      the same page slugs in both languages (/about/ ↔ /ar/about/), per-language saved templates (404) and the
- *      Polylang strings used by taameer.js and the WPForms messages.
+ *      Polylang strings used by taameer.js and the WPForms messages,
+ *   9. SEO (Yoast SEO free, WP Phase 9, D-046): removes Yoast's HTML comment and the X "Est. reading time" label; the
+ *      SEO data itself lives in Yoast's fields.
  *
  * @package taameer-astra-child
  */
@@ -216,6 +218,16 @@ add_filter(
 		return $robots;
 	}
 );
+
+/**
+ * SEO (Yoast SEO free, WP Phase 9, D-046): titles, descriptions, Open Graph and the sitemap come from Yoast (per-page
+ * fields, scripts/wp/15-seo.php, 15-seo-social.php); hreflang stays Polylang's. Two filters, output only: no "optimized
+ * with Yoast SEO" HTML comment, and no "Est. reading time" label in the X card.
+ */
+add_filter( 'wpseo_debug_markers', '__return_false' );
+
+// No "Est. reading time" label / data in the X (Twitter) card (Yoast's Slack "enhanced data"; pages never get "Written by").
+add_filter( 'wpseo_enhanced_slack_data', '__return_empty_array' );
 
 /**
  * [tp_template id="123"] — prints a published Elementor saved template (with its CSS).

@@ -1,0 +1,506 @@
+[
+ {
+  "path": "/",
+  "lang": "en",
+  "source": "index.html",
+  "title": "Taameer Plus Contracting LLC — Construction, Fit-out & Renovation in Dubai",
+  "yoast_title": "%%sitename%% %%sep%% %%sitedesc%%",
+  "description": "Approved G+4 general contractor in Dubai since 2015: turnkey construction, design & build, fit-out, decoration, renovation and maintenance across the UAE.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ },
+ {
+  "path": "/about/",
+  "lang": "en",
+  "source": "about.html",
+  "title": "About Us — Taameer Plus Contracting LLC",
+  "yoast_title": "About Us %%sep%% %%sitename%%",
+  "description": "About Taameer Plus Contracting LLC, an approved G+4 general contractor in Dubai since 2015: the Chairman’s message, our aims, leadership team, partners and official trade licenses.",
+  "og_image": "chairman-fahim-al-ali.webp"
+ },
+ {
+  "path": "/services/",
+  "lang": "en",
+  "source": "services.html",
+  "title": "Our Services — Taameer Plus Contracting LLC",
+  "yoast_title": "Our Services %%sep%% %%sitename%%",
+  "description": "Construction, design & build, decoration and fit-out, renovation, maintenance and turnkey projects by Taameer Plus, a pioneer general contractor in the UAE. See related projects and our wall cladding showcase.",
+  "og_image": "project-kf-inc-headquarters-05.webp"
+ },
+ {
+  "path": "/projects/",
+  "lang": "en",
+  "source": "projects.html",
+  "title": "Projects — Taameer Plus Contracting LLC",
+  "yoast_title": "Projects %%sep%% %%sitename%%",
+  "description": "Browse the Taameer Plus portfolio: construction, renovation and decoration, fit-out and landscaping projects delivered across Dubai and Abu Dhabi.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ },
+ {
+  "path": "/projects/wadi-alshabak-villas/",
+  "lang": "en",
+  "source": "project.html?id=wadi-alshabak-villas",
+  "title": "Proposed G+1 Residential Villas, Wadi Alshabak, Dubai — Taameer Plus Contracting LLC",
+  "yoast_title": "Proposed G+1 Residential Villas, Wadi Alshabak, Dubai %%sep%% %%sitename%%",
+  "description": "Proposed G+1 Residential Villas — a construction project in Wadi Alshabak, Dubai delivered by Taameer Plus Contracting LLC. Ongoing project. View the project details and image gallery.",
+  "og_image": "project-wadi-alshabak-villas-01.webp"
+ },
+ {
+  "path": "/projects/palm-jumeirah-villa/",
+  "lang": "en",
+  "source": "project.html?id=palm-jumeirah-villa",
+  "title": "Private Villa Renovation — Taameer Plus Contracting LLC",
+  "yoast_title": "Private Villa Renovation %%sep%% %%sitename%%",
+  "description": "Private Villa Renovation — a renovation & decoration project in Palm Jumeirah, UAE delivered by Taameer Plus Contracting LLC. Completed November 2025. View the project details and image gallery.",
+  "og_image": "project-palm-jumeirah-villa-02.webp"
+ },
+ {
+  "path": "/projects/al-awir-villas/",
+  "lang": "en",
+  "source": "project.html?id=al-awir-villas",
+  "title": "Proposed G+1 Residential Villas, Al Awir 1, Dubai — Taameer Plus Contracting LLC",
+  "yoast_title": "Proposed G+1 Residential Villas, Al Awir 1, Dubai %%sep%% %%sitename%%",
+  "description": "Proposed G+1 Residential Villas — a construction project in Al Awir 1, Dubai delivered by Taameer Plus Contracting LLC. Completed August 2025. View the project details and image gallery.",
+  "og_image": "project-al-awir-villas-01.webp"
+ },
+ {
+  "path": "/projects/dubai-g-residential-villa/",
+  "lang": "en",
+  "source": "project.html?id=dubai-g-residential-villa",
+  "title": "Proposed G Residential Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Proposed G Residential Villa %%sep%% %%sitename%%",
+  "description": "Proposed G Residential Villa — a construction project in Dubai, UAE delivered by Taameer Plus Contracting LLC. Completed July 2025. View the project details and image gallery.",
+  "og_image": "project-dubai-g-residential-villa-01.webp"
+ },
+ {
+  "path": "/projects/kf-inc-headquarters/",
+  "lang": "en",
+  "source": "project.html?id=kf-inc-headquarters",
+  "title": "Fit-out of KF INC Headquarters Office — Taameer Plus Contracting LLC",
+  "yoast_title": "Fit-out of KF INC Headquarters Office %%sep%% %%sitename%%",
+  "description": "Fit-out of KF INC Headquarters Office — a fit-out project in Al Saadiyat Island, Abu Dhabi delivered by Taameer Plus Contracting LLC. Completed July 2024. View the project details and image gallery.",
+  "og_image": "project-kf-inc-headquarters-01.webp"
+ },
+ {
+  "path": "/projects/abu-dhabi-marina-private-gym/",
+  "lang": "en",
+  "source": "project.html?id=abu-dhabi-marina-private-gym",
+  "title": "Construction & Fit-out of Private Gym — Taameer Plus Contracting LLC",
+  "yoast_title": "Construction & Fit-out of Private Gym %%sep%% %%sitename%%",
+  "description": "Construction & Fit-out of Private Gym — a construction project in Marina, Abu Dhabi delivered by Taameer Plus Contracting LLC. Completed September 2024. View the project details and image gallery.",
+  "og_image": "project-abu-dhabi-marina-private-gym-01.webp"
+ },
+ {
+  "path": "/projects/jvc-residential-retail-building/",
+  "lang": "en",
+  "source": "project.html?id=jvc-residential-retail-building",
+  "title": "Full Renovation of Residential & Retail Building (G+4P+H+22+R) — Taameer Plus Contracting LLC",
+  "yoast_title": "Full Renovation of Residential & Retail Building (G+4P+H+22+R) %%sep%% %%sitename%%",
+  "description": "Full Renovation of Residential & Retail Building (G+4P+H+22+R) — a renovation & decoration project in JVC, Al Barsha 4th, Dubai delivered by Taameer Plus Contracting LLC. Completed March 2026. View the project details and image gallery.",
+  "og_image": "project-jvc-residential-retail-building-01.webp"
+ },
+ {
+  "path": "/projects/al-warqa-4th-villa/",
+  "lang": "en",
+  "source": "project.html?id=al-warqa-4th-villa",
+  "title": "Renovation & Decoration of Private Villa, Al Warqa 4th, Dubai — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of Private Villa, Al Warqa 4th, Dubai %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of Private Villa — a renovation & decoration project in Al Warqa 4th, Dubai delivered by Taameer Plus Contracting LLC. Completed April 2024. View the project details and image gallery.",
+  "og_image": "project-al-warqa-4th-villa-01.webp"
+ },
+ {
+  "path": "/projects/dubai-marina-triplex-villa/",
+  "lang": "en",
+  "source": "project.html?id=dubai-marina-triplex-villa",
+  "title": "Renovation & Decoration of G+2 Triplex Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of G+2 Triplex Villa %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of G+2 Triplex Villa — a renovation & decoration project in Dubai Marina, Dubai delivered by Taameer Plus Contracting LLC. Completed February 2024. View the project details and image gallery.",
+  "og_image": "project-dubai-marina-triplex-villa-01.webp"
+ },
+ {
+  "path": "/projects/perfume-shop-al-barsha/",
+  "lang": "en",
+  "source": "project.html?id=perfume-shop-al-barsha",
+  "title": "Perfume Shop Fit-out & Decoration — Taameer Plus Contracting LLC",
+  "yoast_title": "Perfume Shop Fit-out & Decoration %%sep%% %%sitename%%",
+  "description": "Perfume Shop Fit-out & Decoration — a fit-out project in Al Barsha 1st, Dubai delivered by Taameer Plus Contracting LLC. Completed December 2023. View the project details and image gallery.",
+  "og_image": "project-perfume-shop-al-barsha-01.webp"
+ },
+ {
+  "path": "/projects/al-warqa-1st-g2-villa/",
+  "lang": "en",
+  "source": "project.html?id=al-warqa-1st-g2-villa",
+  "title": "Construction of G+2 Private Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Construction of G+2 Private Villa %%sep%% %%sitename%%",
+  "description": "Construction of G+2 Private Villa — a construction project in Al Warqa 1st, Dubai delivered by Taameer Plus Contracting LLC. Completed November 2023. View the project details and image gallery.",
+  "og_image": "project-al-warqa-1st-g2-villa-01.webp"
+ },
+ {
+  "path": "/projects/al-twar-villa/",
+  "lang": "en",
+  "source": "project.html?id=al-twar-villa",
+  "title": "Renovation & Decoration of Private Villa, Villa #5, Al Twar 2, Dubai — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of Private Villa, Villa #5, Al Twar 2, Dubai %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of Private Villa — a renovation & decoration project in Villa #5, Al Twar 2, Dubai delivered by Taameer Plus Contracting LLC. Completed July 2023. View the project details and image gallery.",
+  "og_image": "project-al-twar-villa-01.webp"
+ },
+ {
+  "path": "/projects/atlas-copco-headquarters/",
+  "lang": "en",
+  "source": "project.html?id=atlas-copco-headquarters",
+  "title": "Renovation & Decoration of Atlas Copco Headquarters — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of Atlas Copco Headquarters %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of Atlas Copco Headquarters — a renovation & decoration project in Gold & Diamond Park by EMAAR, Dubai delivered by Taameer Plus Contracting LLC. Completed August 2023. View the project details and image gallery.",
+  "og_image": "project-atlas-copco-headquarters-01.webp"
+ },
+ {
+  "path": "/projects/faiz-couture-dress-shop/",
+  "lang": "en",
+  "source": "project.html?id=faiz-couture-dress-shop",
+  "title": "Renovation & Decoration of Dress Shop (Faiz Couture) — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of Dress Shop (Faiz Couture) %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of Dress Shop (Faiz Couture) — a renovation & decoration project in Al Bustan Shopping Centre, Dubai delivered by Taameer Plus Contracting LLC. Completed November 2023. View the project details and image gallery.",
+  "og_image": "project-faiz-couture-dress-shop-01.webp"
+ },
+ {
+  "path": "/projects/mbr-city-villa/",
+  "lang": "en",
+  "source": "project.html?id=mbr-city-villa",
+  "title": "Renovation & Decoration of G+1 Private Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of G+1 Private Villa %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of G+1 Private Villa — a renovation & decoration project in MBR City by EMAAR, Dubai delivered by Taameer Plus Contracting LLC. Completed December 2023. View the project details and image gallery.",
+  "og_image": "project-mbr-city-villa-01.webp"
+ },
+ {
+  "path": "/projects/souk-al-bahar-apartment/",
+  "lang": "en",
+  "source": "project.html?id=souk-al-bahar-apartment",
+  "title": "Renovation & Decoration of Residential Flat — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation & Decoration of Residential Flat %%sep%% %%sitename%%",
+  "description": "Renovation & Decoration of Residential Flat — a renovation & decoration project in Souk Al Bahar by EMAAR, Dubai Mall, Dubai delivered by Taameer Plus Contracting LLC. Completed June 2023. View the project details and image gallery.",
+  "og_image": "project-souk-al-bahar-apartment-01.webp"
+ },
+ {
+  "path": "/projects/um-nahad-villa/",
+  "lang": "en",
+  "source": "project.html?id=um-nahad-villa",
+  "title": "Fit-out & Decoration of Private Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Fit-out & Decoration of Private Villa %%sep%% %%sitename%%",
+  "description": "Fit-out & Decoration of Private Villa — a fit-out project in Um Nahad, Dubai delivered by Taameer Plus Contracting LLC. Completed December 2022. View the project details and image gallery.",
+  "og_image": "project-um-nahad-villa-01.webp"
+ },
+ {
+  "path": "/projects/thai-restaurant-deira/",
+  "lang": "en",
+  "source": "project.html?id=thai-restaurant-deira",
+  "title": "Fit-out of Thai Restaurant — Taameer Plus Contracting LLC",
+  "yoast_title": "Fit-out of Thai Restaurant %%sep%% %%sitename%%",
+  "description": "Fit-out of Thai Restaurant — a fit-out project in Muteena, Deira, Dubai delivered by Taameer Plus Contracting LLC. Completed October 2022. View the project details and image gallery.",
+  "og_image": "project-thai-restaurant-deira-01.webp"
+ },
+ {
+  "path": "/projects/damac-hills-villa/",
+  "lang": "en",
+  "source": "project.html?id=damac-hills-villa",
+  "title": "Renovation of Private Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Renovation of Private Villa %%sep%% %%sitename%%",
+  "description": "Renovation of Private Villa — a renovation & decoration project in DAMAC Hills by DAMAC, Dubai delivered by Taameer Plus Contracting LLC. Completed April 2018. View the project details and image gallery.",
+  "og_image": "project-damac-hills-villa-01.webp"
+ },
+ {
+  "path": "/projects/beauty-lounge-spa-mirdif/",
+  "lang": "en",
+  "source": "project.html?id=beauty-lounge-spa-mirdif",
+  "title": "Fit-out of Ladies Beauty Lounge & Spa — Taameer Plus Contracting LLC",
+  "yoast_title": "Fit-out of Ladies Beauty Lounge & Spa %%sep%% %%sitename%%",
+  "description": "Fit-out of Ladies Beauty Lounge & Spa — a fit-out project in The 77 Hub Mall, Mirdif, Dubai delivered by Taameer Plus Contracting LLC. Completed November 2022. View the project details and image gallery.",
+  "og_image": "project-beauty-lounge-spa-mirdif-01.webp"
+ },
+ {
+  "path": "/projects/jumeirah-golf-estates-landscaping/",
+  "lang": "en",
+  "source": "project.html?id=jumeirah-golf-estates-landscaping",
+  "title": "Fit-out & Landscaping for Private Villa — Taameer Plus Contracting LLC",
+  "yoast_title": "Fit-out & Landscaping for Private Villa %%sep%% %%sitename%%",
+  "description": "Fit-out & Landscaping for Private Villa — a landscaping project in Jumeirah Golf Estates by WASL, Dubai delivered by Taameer Plus Contracting LLC. Completed October 2021. View the project details and image gallery.",
+  "og_image": "project-jumeirah-golf-estates-landscaping-01.webp"
+ },
+ {
+  "path": "/projects/service-blocks-extensions/",
+  "lang": "en",
+  "source": "project.html?id=service-blocks-extensions",
+  "title": "Service Blocks & Extensions — Taameer Plus Contracting LLC",
+  "yoast_title": "Service Blocks & Extensions %%sep%% %%sitename%%",
+  "description": "As an approved G+4 contractor, Taameer Plus has completed many turnkey projects, including structure and full fit-out for villas and service blocks, with remarkable quality.",
+  "og_image": "project-service-blocks-extensions-01.webp"
+ },
+ {
+  "path": "/testimonials/",
+  "lang": "en",
+  "source": "testimonials.html",
+  "title": "Testimonials — Taameer Plus Contracting LLC",
+  "yoast_title": "Testimonials %%sep%% %%sitename%%",
+  "description": "Letters of appreciation from Atlas Copco, Bella Cure Beauty Lounge, TODAY Engineering Consultants and Jan’s Noodles Restaurant, with the original signed letters.",
+  "og_image": "letter-atlas-copco-md.webp"
+ },
+ {
+  "path": "/ar/projects/al-twar-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=al-twar-villa",
+  "title": "تجديد وديكور فيلا خاصة، فيلا رقم 5، الطوار 2، دبي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور فيلا خاصة، فيلا رقم 5، الطوار 2، دبي %%sep%% %%sitename%%",
+  "description": "تجديد وديكور فيلا خاصة — مشروع في مجال التجديد والديكور في فيلا رقم 5، الطوار 2، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في يوليو 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-al-twar-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/al-awir-villas/",
+  "lang": "ar",
+  "source": "ar/project.html?id=al-awir-villas",
+  "title": "فلل سكنية مقترحة G+1، العوير 1، دبي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "فلل سكنية مقترحة G+1، العوير 1، دبي %%sep%% %%sitename%%",
+  "description": "فلل سكنية مقترحة G+1 — مشروع في مجال الإنشاءات في العوير 1، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أغسطس 2025. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-al-awir-villas-01.webp"
+ },
+ {
+  "path": "/ar/projects/al-warqa-1st-g2-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=al-warqa-1st-g2-villa",
+  "title": "إنشاء فيلا خاصة G+2 — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "إنشاء فيلا خاصة G+2 %%sep%% %%sitename%%",
+  "description": "إنشاء فيلا خاصة G+2 — مشروع في مجال الإنشاءات في الورقاء 1، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في نوفمبر 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-al-warqa-1st-g2-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/al-warqa-4th-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=al-warqa-4th-villa",
+  "title": "تجديد وديكور فيلا خاصة، الورقاء 4، دبي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور فيلا خاصة، الورقاء 4، دبي %%sep%% %%sitename%%",
+  "description": "تجديد وديكور فيلا خاصة — مشروع في مجال التجديد والديكور في الورقاء 4، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أبريل 2024. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-al-warqa-4th-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/atlas-copco-headquarters/",
+  "lang": "ar",
+  "source": "ar/project.html?id=atlas-copco-headquarters",
+  "title": "تجديد وديكور المقر الرئيسي لشركة Atlas Copco — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور المقر الرئيسي لشركة Atlas Copco %%sep%% %%sitename%%",
+  "description": "تجديد وديكور المقر الرئيسي لشركة Atlas Copco — مشروع في مجال التجديد والديكور في غولد آند دايموند بارك من EMAAR، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أغسطس 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-atlas-copco-headquarters-01.webp"
+ },
+ {
+  "path": "/ar/projects/beauty-lounge-spa-mirdif/",
+  "lang": "ar",
+  "source": "ar/project.html?id=beauty-lounge-spa-mirdif",
+  "title": "تشطيبات داخلية لصالون تجميل وسبا نسائي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية لصالون تجميل وسبا نسائي %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية لصالون تجميل وسبا نسائي — مشروع في مجال التشطيبات الداخلية في ذا 77 هب مول، مردف، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في نوفمبر 2022. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-beauty-lounge-spa-mirdif-01.webp"
+ },
+ {
+  "path": "/ar/projects/damac-hills-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=damac-hills-villa",
+  "title": "تجديد فيلا خاصة، داماك هيلز من DAMAC، دبي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد فيلا خاصة، داماك هيلز من DAMAC، دبي %%sep%% %%sitename%%",
+  "description": "تجديد فيلا خاصة — مشروع في مجال التجديد والديكور في داماك هيلز من DAMAC، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أبريل 2018. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-damac-hills-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/dubai-g-residential-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=dubai-g-residential-villa",
+  "title": "فيلا سكنية مقترحة G — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "فيلا سكنية مقترحة G %%sep%% %%sitename%%",
+  "description": "فيلا سكنية مقترحة G — مشروع في مجال الإنشاءات في دبي، الإمارات نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في يوليو 2025. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-dubai-g-residential-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/dubai-marina-triplex-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=dubai-marina-triplex-villa",
+  "title": "تجديد وديكور فيلا تريبلكس G+2 — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور فيلا تريبلكس G+2 %%sep%% %%sitename%%",
+  "description": "تجديد وديكور فيلا تريبلكس G+2 — مشروع في مجال التجديد والديكور في دبي مارينا، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في فبراير 2024. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-dubai-marina-triplex-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/faiz-couture-dress-shop/",
+  "lang": "ar",
+  "source": "ar/project.html?id=faiz-couture-dress-shop",
+  "title": "تجديد وديكور متجر فساتين (Faiz Couture) — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور متجر فساتين (Faiz Couture) %%sep%% %%sitename%%",
+  "description": "تجديد وديكور متجر فساتين (Faiz Couture) — مشروع في مجال التجديد والديكور في مركز البستان للتسوق، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في نوفمبر 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-faiz-couture-dress-shop-01.webp"
+ },
+ {
+  "path": "/ar/projects/jumeirah-golf-estates-landscaping/",
+  "lang": "ar",
+  "source": "ar/project.html?id=jumeirah-golf-estates-landscaping",
+  "title": "تشطيبات داخلية وتنسيق حدائق لفيلا خاصة — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية وتنسيق حدائق لفيلا خاصة %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية وتنسيق حدائق لفيلا خاصة — مشروع في مجال تنسيق الحدائق والمساحات الخارجية في عقارات جميرا للجولف من WASL، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أكتوبر 2021. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-jumeirah-golf-estates-landscaping-01.webp"
+ },
+ {
+  "path": "/ar/projects/jvc-residential-retail-building/",
+  "lang": "ar",
+  "source": "ar/project.html?id=jvc-residential-retail-building",
+  "title": "تجديد شامل لمبنى سكني وتجاري (G+4P+H+22+R) — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد شامل لمبنى سكني وتجاري (G+4P+H+22+R) %%sep%% %%sitename%%",
+  "description": "تجديد شامل لمبنى سكني وتجاري (G+4P+H+22+R) — مشروع في مجال التجديد والديكور في قرية جميرا الدائرية (JVC)، البرشاء 4، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في مارس 2026. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-jvc-residential-retail-building-01.webp"
+ },
+ {
+  "path": "/ar/projects/mbr-city-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=mbr-city-villa",
+  "title": "تجديد وديكور فيلا خاصة G+1 — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور فيلا خاصة G+1 %%sep%% %%sitename%%",
+  "description": "تجديد وديكور فيلا خاصة G+1 — مشروع في مجال التجديد والديكور في مدينة محمد بن راشد من EMAAR، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في ديسمبر 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-mbr-city-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/palm-jumeirah-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=palm-jumeirah-villa",
+  "title": "تجديد فيلا خاصة، نخلة جميرا، الإمارات — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد فيلا خاصة، نخلة جميرا، الإمارات %%sep%% %%sitename%%",
+  "description": "تجديد فيلا خاصة — مشروع في مجال التجديد والديكور في نخلة جميرا، الإمارات نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في نوفمبر 2025. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-palm-jumeirah-villa-02.webp"
+ },
+ {
+  "path": "/ar/projects/perfume-shop-al-barsha/",
+  "lang": "ar",
+  "source": "ar/project.html?id=perfume-shop-al-barsha",
+  "title": "تشطيبات داخلية وديكور لمتجر عطور — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية وديكور لمتجر عطور %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية وديكور لمتجر عطور — مشروع في مجال التشطيبات الداخلية في البرشاء 1، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في ديسمبر 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-perfume-shop-al-barsha-01.webp"
+ },
+ {
+  "path": "/ar/projects/service-blocks-extensions/",
+  "lang": "ar",
+  "source": "ar/project.html?id=service-blocks-extensions",
+  "title": "الملاحق الخدمية والتوسعات — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "الملاحق الخدمية والتوسعات %%sep%% %%sitename%%",
+  "description": "بصفتها مقاولاً معتمداً من فئة G+4، أنجزت تعمير بلس العديد من مشاريع تسليم المفتاح، بما في ذلك الهيكل الإنشائي والتشطيبات الداخلية الكاملة للفلل والملاحق الخدمية، بجودة متميزة.",
+  "og_image": "project-service-blocks-extensions-01.webp"
+ },
+ {
+  "path": "/ar/projects/souk-al-bahar-apartment/",
+  "lang": "ar",
+  "source": "ar/project.html?id=souk-al-bahar-apartment",
+  "title": "تجديد وديكور شقة سكنية — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تجديد وديكور شقة سكنية %%sep%% %%sitename%%",
+  "description": "تجديد وديكور شقة سكنية — مشروع في مجال التجديد والديكور في سوق البحار من EMAAR، دبي مول، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في يونيو 2023. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-souk-al-bahar-apartment-01.webp"
+ },
+ {
+  "path": "/ar/projects/thai-restaurant-deira/",
+  "lang": "ar",
+  "source": "ar/project.html?id=thai-restaurant-deira",
+  "title": "تشطيبات داخلية لمطعم تايلندي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية لمطعم تايلندي %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية لمطعم تايلندي — مشروع في مجال التشطيبات الداخلية في المطينة، ديرة، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في أكتوبر 2022. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-thai-restaurant-deira-01.webp"
+ },
+ {
+  "path": "/ar/projects/um-nahad-villa/",
+  "lang": "ar",
+  "source": "ar/project.html?id=um-nahad-villa",
+  "title": "تشطيبات داخلية وديكور فيلا خاصة — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية وديكور فيلا خاصة %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية وديكور فيلا خاصة — مشروع في مجال التشطيبات الداخلية في أم نهد، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في ديسمبر 2022. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-um-nahad-villa-01.webp"
+ },
+ {
+  "path": "/ar/projects/wadi-alshabak-villas/",
+  "lang": "ar",
+  "source": "ar/project.html?id=wadi-alshabak-villas",
+  "title": "فلل سكنية مقترحة G+1، وادي الشباك، دبي — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "فلل سكنية مقترحة G+1، وادي الشباك، دبي %%sep%% %%sitename%%",
+  "description": "فلل سكنية مقترحة G+1 — مشروع في مجال الإنشاءات في وادي الشباك، دبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. مشروع قيد التنفيذ. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-wadi-alshabak-villas-01.webp"
+ },
+ {
+  "path": "/ar/",
+  "lang": "ar",
+  "source": "ar/index.html",
+  "title": "تعمير بلس للمقاولات ش.ذ.م.م — إنشاءات وتشطيبات داخلية وتجديد في دبي",
+  "yoast_title": "%%sitename%% %%sep%% %%sitedesc%%",
+  "description": "مقاول عام معتمد G+4 في دبي منذ عام 2015: إنشاءات بنظام تسليم المفتاح، والتصميم والتنفيذ، والتشطيبات الداخلية، والديكور، والتجديد، والصيانة في أنحاء الإمارات.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ },
+ {
+  "path": "/ar/about/",
+  "lang": "ar",
+  "source": "ar/about.html",
+  "title": "من نحن — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "من نحن %%sep%% %%sitename%%",
+  "description": "تعرّف على تعمير بلس للمقاولات ش.ذ.م.م، مقاول عام معتمد G+4 في دبي منذ عام 2015: رسالة رئيس مجلس الإدارة، وأهدافنا، وفريق القيادة، والشركاء، والتراخيص التجارية الرسمية.",
+  "og_image": "chairman-fahim-al-ali.webp"
+ },
+ {
+  "path": "/ar/services/",
+  "lang": "ar",
+  "source": "ar/services.html",
+  "title": "خدماتنا — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "خدماتنا %%sep%% %%sitename%%",
+  "description": "الإنشاءات، والتصميم والتنفيذ، والديكور والتشطيبات الداخلية، والتجديد، والصيانة، ومشاريع تسليم المفتاح من تعمير بلس، مقاول عام رائد في الإمارات. اطلع على المشاريع ذات الصلة ومعرض تكسية الجدران.",
+  "og_image": "project-kf-inc-headquarters-05.webp"
+ },
+ {
+  "path": "/ar/projects/",
+  "lang": "ar",
+  "source": "ar/projects.html",
+  "title": "مشاريعنا — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "مشاريعنا %%sep%% %%sitename%%",
+  "description": "تصفّح سجل أعمال تعمير بلس: مشاريع الإنشاءات والتجديد والديكور والتشطيبات الداخلية وتنسيق الحدائق المنجزة في أنحاء دبي وأبوظبي.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ },
+ {
+  "path": "/ar/projects/kf-inc-headquarters/",
+  "lang": "ar",
+  "source": "ar/project.html?id=kf-inc-headquarters",
+  "title": "تشطيبات داخلية لمكتب المقر الرئيسي لشركة KF INC — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "تشطيبات داخلية لمكتب المقر الرئيسي لشركة KF INC %%sep%% %%sitename%%",
+  "description": "تشطيبات داخلية لمكتب المقر الرئيسي لشركة KF INC — مشروع في مجال التشطيبات الداخلية في جزيرة السعديات، أبوظبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في يوليو 2024. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-kf-inc-headquarters-01.webp"
+ },
+ {
+  "path": "/ar/projects/abu-dhabi-marina-private-gym/",
+  "lang": "ar",
+  "source": "ar/project.html?id=abu-dhabi-marina-private-gym",
+  "title": "إنشاء وتشطيبات داخلية لصالة رياضية خاصة — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "إنشاء وتشطيبات داخلية لصالة رياضية خاصة %%sep%% %%sitename%%",
+  "description": "إنشاء وتشطيبات داخلية لصالة رياضية خاصة — مشروع في مجال الإنشاءات في المارينا، أبوظبي نفّذته تعمير بلس للمقاولات ش.ذ.م.م. اكتمل في سبتمبر 2024. اطلع على تفاصيل المشروع ومعرض الصور.",
+  "og_image": "project-abu-dhabi-marina-private-gym-01.webp"
+ },
+ {
+  "path": "/ar/testimonials/",
+  "lang": "ar",
+  "source": "ar/testimonials.html",
+  "title": "آراء العملاء — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "آراء العملاء %%sep%% %%sitename%%",
+  "description": "خطابات شكر وتقدير من Atlas Copco وBella Cure Beauty Lounge وTODAY Engineering Consultants ومطعم Jan’s Noodles، مع الخطابات الأصلية الموقّعة.",
+  "og_image": "letter-atlas-copco-md.webp"
+ },
+ {
+  "path": "/ar/contact/",
+  "lang": "ar",
+  "source": "ar/contact.html",
+  "title": "اتصل بنا — تعمير بلس للمقاولات ش.ذ.م.م",
+  "yoast_title": "اتصل بنا %%sep%% %%sitename%%",
+  "description": "تواصل مع تعمير بلس للمقاولات في دبي للحصول على استشارات متخصصة وخدمات الهندسة القيمية وعروض مشاريع تسليم المفتاح: العنوان والهاتف والبريد الإلكتروني وواتساب ونموذج استفسار.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ },
+ {
+  "path": "/contact/",
+  "lang": "en",
+  "source": "contact.html",
+  "title": "Contact — Taameer Plus Contracting LLC",
+  "yoast_title": "Contact %%sep%% %%sitename%%",
+  "description": "Contact Taameer Plus Contracting in Dubai for expert consultations, value engineering and turnkey proposals: address, phone, email, WhatsApp and an enquiry form.",
+  "og_image": "project-dubai-g-residential-villa-02.webp"
+ }
+]

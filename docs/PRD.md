@@ -3,8 +3,8 @@
 
 | | |
 |---|---|
-| **Version** | 1.8 — WordPress architecture: Astra Free + Elementor Free v3 (D-038) |
-| **Date** | 6 October 2026 (v1.0: 30 September 2026) |
+| **Version** | 1.9 — SEO plugin: Yoast SEO (free) (D-046); 1.8: WordPress architecture: Astra Free + Elementor Free v3 (D-038) |
+| **Date** | 10 October 2026 (v1.0: 30 September 2026) |
 | **Prepared by** | Mohammed (Frontend Developer) |
 | **Client** | Taameer Plus Contracting LLC, Dubai, UAE |
 | **Domain** | www.taameer.ae |
@@ -280,7 +280,7 @@ Child theme CSS uses logical properties. How direction-specific values and Arabi
 | Responsive | 360px to 2560px, tested at 375, 768, 1280, 1920 (WordPress phases: 320, 375, 390, 768, 1024, 1280, 1440). The prototype uses 640/768/1024 px breakpoints; WordPress aligns Elementor and Astra at mobile ≤ 767 px and tablet ≤ 1023 px (desktop from 1024 px). **The visual behaviour is the source of truth**, not exact breakpoint numbers |
 | Performance | WebP images with responsive sizes, lazy loading, no layout shift, no render-blocking third-party scripts |
 | Images | Photographs: WebP, longest edge at most 1600 px, under 400 KB, converted on the server before upload. Logos and images with transparency: PNG (SVG if a vector logo is supplied) |
-| Dependencies | No front-end frameworks or JS libraries (no GSAP, no animation libraries). Theme: Astra Free + child theme. Plugins limited to: Elementor (free), WPForms Lite, Novamira (development tooling), Polylang (Arabic phase), one SEO plugin (deferred, D-040) |
+| Dependencies | No front-end frameworks or JS libraries (no GSAP, no animation libraries). Theme: Astra Free + child theme. Plugins limited to: Elementor (free), WPForms Lite, Novamira (development tooling), Polylang (Arabic phase), Yoast SEO (free) (WP Phase 9, D-046) |
 | Accessibility | WCAG 2.1 AA: semantic HTML, keyboard navigation, focus states, alt text, contrast, ARIA on custom components |
 | Content source | All images and data from the client's company profile are approved for publication. Stock images fill gaps only and are logged with source and license |
 | Maintainability | Child theme code documented; no page content in theme code |
@@ -297,7 +297,7 @@ Child theme CSS uses logical properties. How direction-specific values and Arabi
 | Page builder | Elementor Free, v3 architecture: Containers + native widgets (no Atomic Elements) |
 | Multilingual | Polylang (free), in the Arabic phase only |
 | Forms | WPForms Lite |
-| SEO | Yoast SEO (free) or Rank Math (free): deferred until the main migration is substantially complete |
+| SEO | Yoast SEO (free), WP Phase 9 (D-046); hreflang stays with Polylang |
 | Local development | LocalWP, site `https://taameer.local` (Mailpit for form email testing) |
 | WordPress tooling | Novamira CLI (`scripts/wp/`); the Novamira MCP server is not relied on |
 | AI tooling | Claude Code, guided by `CLAUDE.md` and this PRD. Single-agent only (no sub-agents). Every task logged in `docs/` |
@@ -341,7 +341,7 @@ The WordPress work has its own phase numbers. The former "Phase 4 — WordPress 
 - Remaining English pages (About, Services, Projects with static cards and filtering, project pages, Testimonials, Contact, 404), page by page with owner review; all 22 projects reachable with galleries and lightbox
 - English site verified as a whole
 - Arabic/RTL with Polylang (gate: client approves Arabic copy)
-- SEO plugin, final cleanup (WordPress starter content), content review
+- SEO with Yoast SEO (free) (WP Phase 9, in batches, D-046), final cleanup (WordPress starter content), content review
 - Handover: contact form delivers email (verified in Mailpit locally); Lighthouse mobile Performance ≥ 80 and Accessibility ≥ 95 on every page; pages exported as Elementor JSON templates; editing guide and handover session
 
 ---
@@ -390,6 +390,7 @@ The source PDF contains spelling and grammar errors that are corrected on the we
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 30 Sep 2026 | Initial draft |
+| 1.9 | 10 Oct 2026 | SEO plugin chosen: Yoast SEO (free) (D-046); §10, §11, §12 updated |
 | 1.8 | 6 Oct 2026 | WordPress architecture aligned with the approved WP Phase 1 build (D-038, D-039, D-040): Astra Free + minimal Astra child theme + Elementor Free v3 (Containers + native widgets) replace Hello Elementor + Atomic Elements; E1–E3 exceptions, CPTs and `archive-project.php` / `single-project.php` are no longer the approved architecture; Elementor Free limitations documented; projects as static cards + one Elementor page each; Global Kit and eyebrow style recorded; Polylang, SEO plugin, starter-content cleanup and licence files deferred; WP phases replace former Phases 4–5 |
 | 1.7 | Phase 3 review | Arabic fonts fixed (El Messiri 500 headings, IBM Plex Sans Arabic body); R10 option (b) approved: E1 extended with a `:lang(ar)` typography variable override; spike extended with a per-language variable override check |
 | 1.6 | Phase 2 review | Prototype performance is reference only; Lighthouse gate (≥ 80) moved to Phase 5; header mobile menu added to E2; `tp-marquee` added to animations; services hover image swap replaced by static rows; Div Blocks accepted for missing semantic elements; interactions use only href/alt (no data attributes); spike extended with tag and filter checks; CRM integration out of scope; form success message added to open questions |
