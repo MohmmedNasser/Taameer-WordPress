@@ -1,26 +1,27 @@
 /**
  * wp-seo-check.mjs — SEO checks of the English / Arabic WordPress site (WP Phase 9, Yoast SEO free + Polylang, D-046).
  *   node scripts/wp/wp-seo-check.mjs
- * Expected titles / descriptions come from scripts/wp/seo-meta.json (generated from the static prototype by 15-seo-meta.mjs).
+ * Expected titles / descriptions come from scripts/wp/seo-meta.json (generated from the static prototype by 15-seo-meta.mjs);
+ * site URL and brand from scripts/wp/seo-config.json. Each page is fetched once (A and D share the response).
  * Plain HTTP (no browser):
- *   A. every page of seo-meta.json (56): 200, lang / dir, <title> and meta description = expected, "—" separator,
+ *   A. every page of seo-meta.json: 200, lang / dir, <title> and meta description = expected, "—" separator,
  *      exactly one canonical (= its own URL), exactly one hreflang en + ar pointing at the translation pair, no Yoast
- *      HTML comment, titles and descriptions unique per site
+ *      HTML comment, titles and descriptions unique per site, the same number of pages per language and every
+ *      page's translation listed
  *   B. 404 (English and Arabic): 404 status, noindex, prototype title in the page's language
  *   C. robots.txt and the Yoast sitemap: reachable, nothing public disallowed, every page of A listed
  *   D. social metadata (C2) of the 56 pages: og:title / og:description = the SEO title / description, og:url = canonical,
  *      og:locale per language, og:image = the prototype's og:image file (seo-meta.json og_image; a "-md" copy → its
  *      original, the Media Library holds only that), exactly one og:image with width / height / type equal to the real
- *      file, the image URL answers 200 as image/webp, twitter:card summary_large_image, no "Est. reading time" label
+ *      file in the uploads folder (any year / month), the image URL answers 200 as image/webp, twitter:card summary_large_image, no "Est. reading time" label
  *   E. empty category archives (Uncategorized, English + Arabic, D-047): 200, page language, empty, "noindex, follow",
  *      not in the sitemap
  */
 import { readFileSync } from 'node:fs';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-const WP = 'https://taameer.local';
+const { wp: WP, brand: BRAND, sep: SEP } = JSON.parse(readFileSync(new URL('./seo-config.json', import.meta.url), 'utf8'));
 const META = JSON.parse(readFileSync(new URL('./seo-meta.json', import.meta.url), 'utf8'));
-const BRAND = { en: 'Taameer Plus Contracting LLC', ar: 'تعمير بلس للمقاولات ش.ذ.م.م' };
 
 let pass = 0, fail = 0;
 function check(ok, label, detail = '') {
@@ -34,6 +35,8 @@ async function get(path) {
   const r = await fetch(WP + path, { redirect: 'manual' });
   return { status: r.status, body: await r.text() };
 }
+const pages = new Map();
+const getPage = async (path) => (pages.has(path) ? pages.get(path) : pages.set(path, await get(path)).get(path));
 function head(html) {
   const h = html.split('</head>')[0];
   const links = [...h.matchAll(/<link\b[^>]*>/g)].map((m) => m[0]);
@@ -53,7 +56,7 @@ function head(html) {
 // A. pages
 const twin = (p) => (p.startsWith('/ar/') ? p.slice(3) : '/ar' + p);
 for (const m of META) {
-  const { status, body } = await get(m.path);
+  const { status, body } = await getPage(m.path);
   const h = head(body);
   const url = WP + m.path;
   const langOk = m.lang === 'ar' ? /lang="ar"/.test(h.html) && /dir="rtl"/.test(h.html) : /lang="en-US"/.test(h.html) && !/dir="rtl"/.test(h.html);
@@ -63,7 +66,7 @@ for (const m of META) {
     status !== 200 && `status ${status}`,
     !langOk && `html ${h.html}`,
     (h.titles.length !== 1 || h.titles[0] !== m.title) && `title ${JSON.stringify(h.titles)}`,
-    !h.titles[0]?.includes(' — ') && 'separator',
+    !h.titles[0]?.includes(SEP) && 'separator',
     (h.descriptions.length !== 1 || h.descriptions[0] !== m.description) && `description ${JSON.stringify(h.descriptions).slice(0, 120)}`,
     (h.canonicals.length !== 1 || h.canonicals[0] !== url) && `canonical ${JSON.stringify(h.canonicals)}`,
     !hrefOk && `hreflang ${JSON.stringify(h.hreflang)}`,
@@ -72,9 +75,13 @@ for (const m of META) {
   ].filter(Boolean);
   check(!problems.length, `${m.path} title, description, canonical, hreflang, ${m.lang}`, problems.join('; '));
 }
+const paths = new Set(META.map((m) => m.path));
+check(META.filter((m) => m.lang === 'en').length === META.filter((m) => m.lang === 'ar').length, 'same number of pages per language',
+  `en ${META.filter((m) => m.lang === 'en').length}, ar ${META.filter((m) => m.lang === 'ar').length}`);
+const untranslated = META.filter((m) => !paths.has(twin(m.path))).map((m) => m.path);
+check(!untranslated.length, 'every page has its translation in seo-meta.json', untranslated.join(', '));
 for (const lang of ['en', 'ar']) {
   const own = META.filter((m) => m.lang === lang);
-  check(own.length === 28, `${lang}: 28 pages`, String(own.length));
   check(new Set(own.map((m) => m.title)).size === own.length, `${lang}: titles unique`);
   check(new Set(own.map((m) => m.description)).size === own.length, `${lang}: descriptions unique`);
 }
@@ -85,7 +92,7 @@ for (const [path, lang, title] of [['/no-such-page-seo/', 'en', 'Page not found'
   const h = head(body);
   check(status === 404, `${path} status 404`, String(status));
   check(h.robots.length === 1 && /noindex/.test(h.robots[0]), `${path} noindex`, JSON.stringify(h.robots));
-  check(h.titles.length === 1 && h.titles[0] === `${title} — ${BRAND[lang]}`, `${path} title (${lang})`, JSON.stringify(h.titles));
+  check(h.titles.length === 1 && h.titles[0] === `${title}${SEP}${BRAND[lang]}`, `${path} title (${lang})`, JSON.stringify(h.titles));
   check(h.canonicals.length === 0, `${path} no canonical`);
 }
 
@@ -104,7 +111,7 @@ for (const c of children) {
   [...s.body.matchAll(/<loc>([^<]+)<\/loc>/g)].forEach((x) => listed.add(x[1]));
 }
 const missing = META.filter((m) => !listed.has(WP + m.path)).map((m) => m.path);
-check(!missing.length, 'every page (56) is in the sitemap', missing.join(', '));
+check(!missing.length, `every page (${META.length}) is in the sitemap`, missing.join(', '));
 
 // D. social metadata
 function webpSize(buf) {
@@ -115,9 +122,11 @@ function webpSize(buf) {
   return [0, 0];
 }
 const LOCALE = { en: 'en_US', ar: 'ar_AR' };
+// The Media Library file of that name, in any year / month upload folder.
+const uploaded = (url, file) => url.startsWith(`${WP}/wp-content/uploads/`) && /^\d{4}\/\d{2}\/[^/]+$/.test(url.slice(`${WP}/wp-content/uploads/`.length)) && url.endsWith('/' + file);
 const images = {};
 for (const m of META) {
-  const { body } = await get(m.path);
+  const { body } = await getPage(m.path);
   const h = head(body);
   const og = Object.fromEntries(h.og.filter(([k]) => k !== 'og:locale:alternate'));
   const ogImages = h.og.filter(([k]) => k === 'og:image').map(([, v]) => v);
@@ -129,7 +138,7 @@ for (const m of META) {
     og['og:url'] !== WP + m.path && `og:url ${og['og:url']}`,
     og['og:locale'] !== LOCALE[m.lang] && `og:locale ${og['og:locale']}`,
     og['og:site_name'] !== BRAND[m.lang] && `og:site_name ${og['og:site_name']}`,
-    (ogImages.length !== 1 || ogImages[0] !== `${WP}/wp-content/uploads/2026/10/${file}`) && `og:image ${JSON.stringify(ogImages)}`,
+    (ogImages.length !== 1 || !uploaded(ogImages[0], file)) && `og:image ${JSON.stringify(ogImages)}`,
     og['og:image:type'] !== 'image/webp' && `og:image:type ${og['og:image:type']}`,
     tw['twitter:card'] !== 'summary_large_image' && `twitter:card ${tw['twitter:card']}`,
     Object.keys(tw).some((k) => /^twitter:(label|data)/.test(k)) && `twitter label ${JSON.stringify(tw)}`,

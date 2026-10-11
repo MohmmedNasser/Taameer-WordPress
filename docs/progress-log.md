@@ -2,6 +2,13 @@
 
 One entry per completed task, newest on top. Format: Did / Files / Issues / Next.
 
+### 2026-10-11 — WP Phase 9 — SEO script reusability (scripts + docs only)
+- Did: owner-approved plan, limited to script files and their docs; no WordPress write was run. Shared `seo-config.json` (URLs, Novamira site, brand, tagline, separator) for the generator and the check. `15-seo.php` / `15-seo-social.php`: no fixed 56; every `$META` entry (and, for C2, its image) must resolve and every published page must be in `$META`, otherwise they stop before any write; the dry run also reports the separator and the Arabic 404 title; the image helper is a closure. New runner `15-seo-run.mjs` builds the Novamira input (base64 `$META`, `$DRY`) in the OS temp folder, dry run by default, `--write` required to write, only the two SEO scripts accepted. `15-seo-meta.mjs`: dead Sample Page filter removed, all title-pattern errors listed at once, clear error for a missing project location. `wp-seo-check.mjs`: no fixed 28 (same count per language + every translation present), og:image accepted in any upload year / month, each page fetched once.
+- Verified (read-only): dry runs through the runner: `15-seo.php` 56/56 `same`, separator and Arabic 404 title `same`; `15-seo-social.php` 56/56 `same`. `wp-seo-check.mjs` 142/142. `15-seo-meta.mjs` regenerated `seo-meta.json` with the same content (only two entries in another order, following the sitemap; the previous file was kept). Runner rejects unknown scripts / flags (exit 2) and leaves no temp file. Follow-up after the static review: the runner's exit code is 1 when Novamira fails or the script's report has `error` (Novamira itself answers `success: true` then), 0 otherwise; tested with dry runs only: normal run exit 0, a scratchpad copy with a 55-page `seo-meta.json` stops with "META and published pages differ, nothing written" and exit 1.
+- Files: `scripts/wp/seo-config.json` (new), `scripts/wp/15-seo-run.mjs` (new), `scripts/wp/15-seo-meta.mjs`, `15-seo.php`, `15-seo-social.php`, `wp-seo-check.mjs`, `docs/wp-mapping.md`, `CLAUDE.md`.
+- Issues: the `--write` path of the runner was not run (no write permission); it differs from the dry run only by omitting `$DRY`. Novamira CLI 1.3.4 available (1.3.3 installed, not updated).
+- Next: owner review; commit only with approval.
+
 ### 2026-10-11 — Final cleanup — Trash emptied (Hello world, Sample Page permanently deleted)
 - Did: owner-approved permanent deletion of the only two Trash items.
   - Checks first: Git `main` at `091dd12`, clean. The Trash held exactly post 1 "Hello world!" and page 2 "Sample Page" (plus revisions 1064 / 1065 and comment 1 `post-trashed`); no menu, front page, posts page or privacy page reference.

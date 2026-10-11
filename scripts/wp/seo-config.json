@@ -1,0 +1,8 @@
+{
+ "wp": "https://taameer.local",
+ "static": "http://localhost:5173",
+ "site": "taameer.local",
+ "brand": { "en": "Taameer Plus Contracting LLC", "ar": "تعمير بلس للمقاولات ش.ذ.م.م" },
+ "tagline": { "en": "Construction, Fit-out & Renovation in Dubai", "ar": "إنشاءات وتشطيبات داخلية وتجديد في دبي" },
+ "sep": " — "
+}
