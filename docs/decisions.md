@@ -2,6 +2,15 @@
 
 Non-obvious decisions. Format: **Context / Decision / Reason / Alternatives rejected.** Newest on top.
 
+### D-047 — WP Phase 9 (SEO): empty category archives are noindex through a child-theme filter
+- **Context:** WordPress cannot delete the default category, and Polylang made it an Arabic translation. Since the starter-content cleanup (2026-10-11), `/category/uncategorized/` (term 1) and `/ar/category/uncategorized-ar/` (term 13) are empty ("Nothing found"). They still answer 200 with `index, follow`: Yoast's default `noindex-tax-category = false`, and there is no per-term Yoast value. They are not in the sitemap and nothing links to them. The owner asked for empty category archives in both languages to be kept out of the index, with no database or WordPress setting change, and with archives that have posts left indexable.
+- **Decision:** one `wpseo_robots_array` filter in the child theme's `functions.php`. It sets only `index` → `noindex`; every other directive is kept, as Yoast's own `set_robots_no_index` does, and Yoast then drops the index-only directives itself, so the output is `noindex, follow`. It applies only when all of these hold:
+  1. the main query (`$wp_the_query`) is a category archive and not a 404, with a `WP_Term` queried object;
+  2. Yoast is presenting a `term` / `category` indexable with the same term id;
+  3. the main query has no posts (`found_posts` and `post_count` both 0). Polylang limits the query to the page's language.
+- **Reason:** this filter is the only option the owner's constraints leave open (no database or settings change, empty and non-empty archives treated differently), and it is reversible by deleting the filter. Yoast's filter is used because Yoast prints the robots tag (core `wp_robots` is replaced by Yoast's values). The archives keep their 200 status; Yoast omits the canonical on noindex pages (its standard behaviour), and Polylang prints no hreflang on these empty archives.
+- **Alternatives rejected:** Yoast setting "Show categories in search results" off (database change; also noindexes categories with posts); per-term Yoast noindex on terms 1 / 13 (database change; stays noindex after posts are added); answering 404 for empty archives (changes status, canonical and hreflang; more risk); also covering tags (none exist; not requested).
+
 ### D-046 — WP Phase 9 (SEO): Yoast SEO free; per-page data from the prototype's `<head>`, stored in Yoast's fields
 - **Context:** owner prompt "WP Phase 9 — SEO" (2026-10-10), run in batches approved one at a time: **B** SEO plugin, **C1** titles and meta descriptions, **C2** social metadata. D-040 and PRD §10–12 had deferred "one SEO plugin": Yoast SEO (free) or Rank Math (free). Polylang Free already prints hreflang; the prototype's `<head>` (title, description, og:image per page) is the source of the wording.
 - **Decision:**

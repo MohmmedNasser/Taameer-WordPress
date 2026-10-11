@@ -12,6 +12,8 @@
  *      og:locale per language, og:image = the prototype's og:image file (seo-meta.json og_image; a "-md" copy → its
  *      original, the Media Library holds only that), exactly one og:image with width / height / type equal to the real
  *      file, the image URL answers 200 as image/webp, twitter:card summary_large_image, no "Est. reading time" label
+ *   E. empty category archives (Uncategorized, English + Arabic, D-047): 200, page language, empty, "noindex, follow",
+ *      not in the sitemap
  */
 import { readFileSync } from 'node:fs';
 
@@ -146,6 +148,18 @@ for (const m of META) {
 }
 for (const [url, img] of Object.entries(images)) {
   if (img.size[0] < 1200 || img.size[1] < 630) console.log(`NOTE  ${url.split('/').pop()} ${img.size.join('x')}: below the 1200 x 630 social-card recommendation`);
+}
+
+// E. empty category archives (D-047): still 200 in their language, noindex but follow, not in the sitemap. A category
+// with posts stays indexable (no post exists here: checked by a read-only simulation, docs/progress-log.md).
+for (const [path, lang] of [['/category/uncategorized/', 'en'], ['/ar/category/uncategorized-ar/', 'ar']]) {
+  const { status, body } = await get(path);
+  const h = head(body);
+  check(status === 200, `${path} status 200`, String(status));
+  check(lang === 'ar' ? /lang="ar"/.test(h.html) && /dir="rtl"/.test(h.html) : /lang="en-US"/.test(h.html), `${path} language (${lang})`, h.html);
+  check(/no-results/.test(body), `${path} is empty ("Nothing found")`);
+  check(h.robots.length === 1 && /(^|, )noindex(,|$)/.test(h.robots[0]) && /(^|, )follow(,|$)/.test(h.robots[0]), `${path} noindex, follow`, JSON.stringify(h.robots));
+  check(!listed.has(WP + path), `${path} not in the sitemap`);
 }
 
 console.log(`\n${pass}/${pass + fail} passed`);

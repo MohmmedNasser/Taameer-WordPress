@@ -230,6 +230,38 @@ add_filter( 'wpseo_debug_markers', '__return_false' );
 add_filter( 'wpseo_enhanced_slack_data', '__return_empty_array' );
 
 /**
+ * Empty category archives are noindex (D-047): the default category cannot be deleted, so "Uncategorized" (English) and
+ * its Polylang translation (Arabic) answer 200 with "Nothing found". Only the main query of a category archive Yoast is
+ * presenting as a category term, with no posts at all (Polylang limits it to the page's language); a category with posts
+ * stays indexable without any change. Only `index` is changed, every other directive is kept (as Yoast's own noindex).
+ */
+add_filter(
+	'wpseo_robots_array',
+	function ( $robots, $presentation = null ) {
+		$query = $GLOBALS['wp_the_query'] ?? null;
+		$model = $presentation->model ?? null;
+		if (
+			! is_array( $robots )
+			|| ! $query instanceof WP_Query
+			|| ! $query->is_category()
+			|| $query->is_404()
+			|| ! $query->get_queried_object() instanceof WP_Term
+			|| 'term' !== ( $model->object_type ?? '' )
+			|| 'category' !== ( $model->object_sub_type ?? '' )
+			|| (int) $query->get_queried_object_id() !== (int) ( $model->object_id ?? 0 )
+			|| 0 !== (int) $query->found_posts
+			|| 0 !== (int) $query->post_count
+		) {
+			return $robots;
+		}
+		$robots['index'] = 'noindex';
+		return $robots;
+	},
+	10,
+	2
+);
+
+/**
  * [tp_template id="123"] — prints a published Elementor saved template (with its CSS).
  * Used through Elementor's free Shortcode widget, so editing the template updates every page that uses it.
  */

@@ -2,6 +2,24 @@
 
 One entry per completed task, newest on top. Format: Did / Files / Issues / Next.
 
+### 2026-10-11 — WP Phase 9 — empty category archives noindex (D-047)
+- Did: read-only inspection: Git (`main`, `f62884e`, clean); HTTP: both Uncategorized archives answered 200 `index, follow`, "Nothing found"; `/page/2/` already 404 noindex; not in the sitemap. Novamira PHP reads only: Yoast `noindex-tax-category` false, `wpseo_taxonomy_meta` empty, terms 1 (`en`) / 13 (`ar`) count 0, 0 published posts, 0 tags. Proposal approved by the owner. Then a `wpseo_robots_array` filter in the child theme. It sets `noindex` only on a category archive's main query (not 404) with no posts, when Yoast presents that same category term. Every other directive is kept.
+- Files: `wp-theme/taameer-astra-child/functions.php` (filter), `scripts/wp/wp-seo-check.mjs` (part E: both archives 200, page language, empty, `noindex, follow`, not in the sitemap), `docs/decisions.md` (D-047), `docs/wp-mapping.md`, `CLAUDE.md`.
+- Verified: `php -l` clean. `wp-seo-check.mjs` 142/142 (132 before plus 10 new; the 56 pages are still not noindex). `wp-ar-404-check.mjs` 42/42; Home `wp-check.mjs` 20/20. HTTP: `/`, `/ar/`, `/about/` and `/projects/` keep `index, follow, max-…`; 404s keep `noindex, follow`. Read-only Novamira simulation of the filter, 11 cases, globals restored, no writes:
+  - empty EN / AR category → `noindex`;
+  - category with posts (`found_posts` / `post_count` set to 3) → `index`;
+  - `post_count` > 0 → `index`;
+  - page or tag presentation → `index`;
+  - term-id mismatch → `index`;
+  - no presentation → `index`;
+  - 404 → `index` (the 404 itself is noindex through `wp_robots`);
+  - page query → `index`;
+  - existing `nofollow` and extra directives kept.
+
+  No database or WordPress setting changed; no content deleted.
+- Issues: a category with real posts could not be tested live (it would need a post, which is a database change); it is covered by the simulation above. Category feeds (`/category/…/feed/`) still answer 200 (feeds are not HTML pages; unchanged).
+- Next: owner review of the diff; no commit, push or deploy without approval.
+
 ### 2026-10-11 — WP Phase 9 — documentation review, Arabic 404 check, starter-content cleanup (Hello world, Sample Page)
 - Did (documentation): reviewed the C1 / C2 documentation against `seo-meta.json`, the scripts and read-only site queries; D-046 written (reason for Yoast over Rank Math: Polylang workflow compatibility and lower migration risk, no comparative test), progress-log entries for Batch B and C1, wp-mapping C1 section; PRD v1.9 (§10, §11, §12: Yoast SEO free, D-046; change log). Corrections found in review: D-046 cited "PRD 8.2" (now §10–12); the 404s are not without Open Graph (Yoast prints `og:locale` / `og:title` / `og:site_name`, no image / description / URL); Yoast indexables are not stored in LocalWP's `local` environment (`should_index_indexables` false, table empty), so the scripts trigger the build rather than "rebuild" it.
 - Did (check): new `scripts/wp/wp-ar-404-check.mjs` (read-only: aborts any non-GET request to the site, never opens Contact; Mailpit count compared before / after). `wp-ar-check.mjs` was not used because its Contact block always submits the form (`ONLY=` filters part A only).
