@@ -16,6 +16,12 @@
  *      file in the uploads folder (any year / month), the image URL answers 200 as image/webp, twitter:card summary_large_image, no "Est. reading time" label
  *   E. empty category archives (Uncategorized, English + Arabic, D-047): 200, page language, empty, "noindex, follow",
  *      not in the sitemap
+ *   F. schema (C3, D-048) of the 56 pages: one valid JSON-LD @graph, exactly one organization node (any organization
+ *      type or "#organization" @id), typed Organization + GeneralContractor (any order), @id / name / url of the page's
+ *      language, logo = image, telephone / email / foundingDate / address / sameAs = the prototype's JSON-LD (index.html,
+ *      read from disk), English description on English pages and none on Arabic pages (the prototype has no Arabic one),
+ *      WebSite.publisher pointing at that node (and WebPage.about, where Yoast prints it), every @id reference resolving
+ *      inside the graph
  */
 import { readFileSync } from 'node:fs';
 
@@ -169,6 +175,64 @@ for (const [path, lang] of [['/category/uncategorized/', 'en'], ['/ar/category/u
   check(/no-results/.test(body), `${path} is empty ("Nothing found")`);
   check(h.robots.length === 1 && /(^|, )noindex(,|$)/.test(h.robots[0]) && /(^|, )follow(,|$)/.test(h.robots[0]), `${path} noindex, follow`, JSON.stringify(h.robots));
   check(!listed.has(WP + path), `${path} not in the sitemap`);
+}
+
+// F. schema Organization (C3, D-048) of the 56 pages. Expected business details = the prototype's JSON-LD (index.html,
+// read from disk; the Arabic pages carry the same block); name / url = the WordPress site in the page's language (Yoast).
+// No Arabic description exists in the prototype, so Arabic pages must have none (no English text on Arabic pages).
+const PROTO = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(readFileSync(new URL('../../index.html', import.meta.url), 'utf8'))[1]);
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const ORG_TYPES = new Set(['Organization', 'Corporation', 'LocalBusiness', 'HomeAndConstructionBusiness', 'ProfessionalService', 'GeneralContractor']);
+const isRef = (v) => v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 1 && typeof v['@id'] === 'string';
+function ids(v, defined = new Set(), refs = []) {
+  if (Array.isArray(v)) v.forEach((x) => ids(x, defined, refs));
+  else if (v && typeof v === 'object') {
+    if (isRef(v)) refs.push(v['@id']);
+    else {
+      if (typeof v['@id'] === 'string') defined.add(v['@id']);
+      Object.values(v).forEach((x) => ids(x, defined, refs));
+    }
+  }
+  return { defined, refs };
+}
+for (const m of META) {
+  const { body } = await getPage(m.path);
+  const blocks = [...body.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/g)].map((x) => x[1]);
+  let graph = null;
+  try { graph = blocks.length === 1 ? JSON.parse(blocks[0])['@graph'] : null; } catch { graph = null; }
+  if (!Array.isArray(graph)) {
+    check(false, `${m.path} schema: one valid JSON-LD @graph`, `${blocks.length} block(s)`);
+    continue;
+  }
+  const types = (n) => [].concat(n['@type'] || []);
+  // Any node that is an organization: an organization type (incl. LocalBusiness subtypes) or an "#organization" @id.
+  const orgs = graph.filter((n) => types(n).some((t) => ORG_TYPES.has(t)) || String(n['@id'] || '').endsWith('#organization'));
+  const org = orgs[0] || {};
+  const home = WP + (m.lang === 'ar' ? '/ar/' : '/');
+  const website = graph.find((n) => types(n).includes('WebSite')) || {};
+  const webpage = graph.find((n) => types(n).includes('WebPage')) || {};
+  const { defined, refs } = ids(graph);
+  const orgRefs = refs.filter((r) => r.endsWith('#organization'));
+  const problems = [
+    orgs.length !== 1 && `${orgs.length} organization nodes`,
+    !same([...types(org)].sort(), ['Organization', PROTO['@type']].sort()) && `@type ${JSON.stringify(org['@type'])}`,
+    org['@id'] !== `${home}#organization` && `@id ${org['@id']}`,
+    org.name !== BRAND[m.lang] && `name ${org.name}`,
+    org.url !== home && `url ${org.url}`,
+    !(org.logo && org.logo['@id'] && org.logo.contentUrl?.endsWith('/' + PROTO.logo.split('/').pop())) && `logo ${JSON.stringify(org.logo?.contentUrl)}`,
+    org.image?.['@id'] !== org.logo?.['@id'] && 'image ≠ logo',
+    org.telephone !== PROTO.telephone && `telephone ${org.telephone}`,
+    org.email !== PROTO.email && `email ${org.email}`,
+    org.foundingDate !== PROTO.foundingDate && `foundingDate ${org.foundingDate}`,
+    !same(org.address, PROTO.address) && `address ${JSON.stringify(org.address)}`,
+    !(Array.isArray(org.sameAs) && PROTO.sameAs.every((u) => org.sameAs.includes(u)) && new Set(org.sameAs).size === org.sameAs.length) && `sameAs ${JSON.stringify(org.sameAs)}`,
+    (m.lang === 'en' ? org.description !== PROTO.description : 'description' in org) && `description (${m.lang}) ${JSON.stringify(org.description)?.slice(0, 60)}`,
+    website.publisher?.['@id'] !== org['@id'] && `WebSite.publisher ${JSON.stringify(website.publisher)}`,
+    webpage.about && webpage.about['@id'] !== org['@id'] && `WebPage.about ${JSON.stringify(webpage.about)}`,
+    orgRefs.some((r) => r !== org['@id']) && `references to another organization ${JSON.stringify(orgRefs)}`,
+    refs.some((r) => !defined.has(r)) && `unresolved @id ${JSON.stringify(refs.filter((r) => !defined.has(r)))}`,
+  ].filter(Boolean);
+  check(!problems.length, `${m.path} schema: one ${PROTO['@type']} organization, prototype details, ${m.lang} description rule, links resolve`, problems.join('; '));
 }
 
 console.log(`\n${pass}/${pass + fail} passed`);

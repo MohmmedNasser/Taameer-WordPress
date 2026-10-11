@@ -16,7 +16,8 @@
  *      the same page slugs in both languages (/about/ ↔ /ar/about/), per-language saved templates (404) and the
  *      Polylang strings used by taameer.js and the WPForms messages,
  *   9. SEO (Yoast SEO free, WP Phase 9, D-046): removes Yoast's HTML comment and the X "Est. reading time" label; the
- *      SEO data itself lives in Yoast's fields.
+ *      SEO data itself lives in Yoast's fields; the schema Organization gets the GeneralContractor type and the business
+ *      details Yoast free cannot hold (D-048, tp_schema_business()).
  *
  * @package taameer-astra-child
  */
@@ -259,6 +260,62 @@ add_filter(
 	},
 	10,
 	2
+);
+
+/**
+ * Business details of the schema Organization (D-048, WP Phase 9 C3), from the prototype's JSON-LD (index.html,
+ * contact.html; the same block in ar/). Yoast SEO free prints the Organization node (name = site title, translated by
+ * Polylang; logo = the theme logo; url) but cannot set its schema type or a postal address, so these values are kept
+ * here. Edit them here; scripts/wp/16-schema.php validates them. A language with an empty description gets none (the
+ * prototype has no Arabic description; to be supplied by the client).
+ */
+function tp_schema_business() {
+	return array(
+		'type'         => 'GeneralContractor',
+		'description'  => array(
+			'en' => 'Dubai-based general contractor established in 2015: construction, design and build, fit-out, renovation, maintenance and turnkey projects.',
+			'ar' => '',
+		),
+		'telephone'    => '+97143290500',
+		'email'        => 'info@taameer.ae',
+		'foundingDate' => '2015',
+		'address'      => array(
+			'@type'           => 'PostalAddress',
+			'streetAddress'   => 'Sky Business Building, Office M30, Festival City',
+			'addressLocality' => 'Dubai',
+			'addressCountry'  => 'AE',
+		),
+		'sameAs'       => array( 'https://instagram.com/taameer_contracting' ),
+	);
+}
+
+/**
+ * Adds the business details to Yoast's existing Organization node (same @id, so WebSite.publisher and WebPage.about keep
+ * pointing at it; no second node). The type becomes [Organization, GeneralContractor]. A property Yoast already prints
+ * (e.g. from Yoast SEO → Settings → Site representation) is kept, never duplicated; sameAs is merged without duplicates.
+ * Note: Yoast's organization description is one value, so if it is filled it is printed on Arabic pages too (unless
+ * Polylang translates it); requests without a Polylang language (e.g. Yoast's REST head endpoint) use the English values.
+ */
+add_filter(
+	'wpseo_schema_organization',
+	function ( $data ) {
+		if ( ! is_array( $data ) ) {
+			return $data;
+		}
+		$business      = tp_schema_business();
+		$data['@type'] = array_values( array_unique( array_merge( (array) ( $data['@type'] ?? 'Organization' ), array( $business['type'] ) ) ) );
+		$description   = $business['description'][ tp_lang() ] ?? '';
+		if ( '' !== $description && empty( $data['description'] ) ) {
+			$data['description'] = $description;
+		}
+		foreach ( array( 'telephone', 'email', 'foundingDate', 'address' ) as $key ) {
+			if ( empty( $data[ $key ] ) ) {
+				$data[ $key ] = $business[ $key ];
+			}
+		}
+		$data['sameAs'] = array_values( array_unique( array_merge( (array) ( $data['sameAs'] ?? array() ), $business['sameAs'] ) ) );
+		return $data;
+	}
 );
 
 /**
