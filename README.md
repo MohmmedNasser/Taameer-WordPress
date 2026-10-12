@@ -1,40 +1,62 @@
-# Taameer Plus — static prototype
+# Taameer Plus — Corporate Website
 
-Bilingual (EN / AR) corporate site prototype for Taameer Plus Contracting LLC. Vanilla HTML/CSS/JS, no build step. Being rebuilt in WordPress with Astra Free + Elementor Free (Containers + native widgets) and a minimal Astra child theme (`wp-theme/taameer-astra-child/`, build scripts in `scripts/wp/`; PRD v1.8, D-038). Read `CLAUDE.md` first, then `docs/PRD.md`.
+Bilingual (English / Arabic RTL) corporate website for **Taameer Plus Contracting LLC**, a Dubai contractor.
 
-## Run locally
-Some sections are rendered from `data/*.json` with `fetch()`, which browsers block on `file://`. Serve the folder:
+**Live site:** https://taameer.ifree.page
 
-```
-npx serve .   # serve.json turns off clean URLs: they redirect and drop ?id= / ?type=
-```
-Then open http://localhost:3000. (VS Code Live Server also works.)
+## Overview
+The project has two parts:
 
-## Scripts
-| Script | Purpose |
+1. **Static prototype** (complete): vanilla HTML/CSS/JS, no frameworks or build step. It is the visual and structural source of truth.
+2. **WordPress build**: Astra Free + Elementor Free (v3 Containers and native widgets) + a minimal Astra child theme. Every page stays editable in Elementor.
+
+Content comes from the client's company profile PDF and the current site taameer.ae. Read `CLAUDE.md` first, then `docs/PRD.md`.
+
+## WordPress status
+| Phase | Status |
 |---|---|
-| `python scripts/extract_pdf.py` | PDF → text + images (`--raw`, `--export`) |
-| `python scripts/fetch_site.py` | Mirror images/docs from taameer.ae (polite, skips existing) |
-| `python scripts/site_to_text.py` | Site HTML → `source/site-content.md` |
-| `python scripts/build_site_images.py` | Merge site + PDF images (keeps higher res, dedupes), writes `docs/image-map.md` |
-| `python scripts/image_meta.py` | Refresh `imageMeta` (width/height/-md) in `data/projects.json` |
-| `python scripts/contrast.py` | WCAG contrast of every token text/background pair |
-| `python scripts/check-partials.py` | Header/footer/sprite/WhatsApp/CTA blocks identical on every page of each language (Arabic skeleton = English skeleton); active nav state; SEO head, canonical/hreflang; language switcher; one h1 |
-| `node scripts/screenshot.mjs` | Playwright: 4 widths × LTR/RTL + reduced motion; console/network/overflow |
-| `node scripts/interaction-test.mjs` | Playwright: skip link, mobile menu, before/after, breadcrumbs, lightbox (keys, swipe, focus trap; LTR/RTL), service chip nav, related projects |
-| `python scripts/check-links.py` | Every internal link, anchor, `project.html?id=` and image reference resolves, in both languages; every language-switcher and hreflang/canonical target maps to a page |
-| `node scripts/projects-test.mjs` | Playwright: projects filter, all 22 project ids, project template parts, not-found, testimonials lightbox, contact form validation, 404 (`ONLY=filter,ids,…` to run a block) |
-| `python scripts/gen-wp-tables.py` | Regenerates the global variable / global class tables in `docs/wp-mapping.md` |
-| `node scripts/lighthouse-run.mjs` | Lighthouse (mobile) on all 8 pages → `source/lighthouse/phase-2/` (`PREFIX=ar/ … source/lighthouse/phase-3` for the Arabic pages) |
-| `python scripts/build_ar.py` | Generates `ar/*.html` from the English pages + `scripts/ar_text.py` / `ar_data.py` (edit those, not the generated pages); fills `data/*.json` Arabic with `python scripts/ar_data.py` |
-| `node scripts/ar-test.mjs` | Playwright on the Arabic pages: overflow/console at 4 widths (+ reduced motion), no letter-spacing/uppercase/italics on Arabic text, switcher, menu, marquee, before/after, lightbox, filter, project, services, contact, 404 (`ONLY=…`) |
-| `node scripts/ar-screenshots.mjs` | Full-page screenshots of the 8 Arabic pages at 4 widths → `source/screenshots/phase-3/` |
-| `python scripts/gen-ar-review.py` | Writes `docs/ar-copy-review.md` (English \| Arabic per page, ⚠ for client confirmation) |
+| Home, About, Services | Done |
+| Projects listing + 22 project pages | Done |
+| Testimonials, Contact (WPForms Lite), 404 | Done |
+| Arabic site (Polylang Free, `/ar/`, 28 pages) | Done |
+| SEO (Yoast SEO Free: titles, descriptions, social, `GeneralContractor` schema) | In progress |
+| Final cleanup and handover | Started |
 
-Image pipeline order: `extract_pdf.py --export` → `build_site_images.py` → `image_meta.py`.
+## Tech stack
+- **Theme:** Astra Free + child theme `wp-theme/taameer-astra-child/` (CSS/JS for effects Elementor Free cannot do: sticky header, frame marks, split headline, image wipe, parallax, marquee, before/after)
+- **Builder:** Elementor Free (no Pro features)
+- **Plugins:** Polylang Free, WPForms Lite, Yoast SEO Free
+- **Fonts:** Playfair Display + Inter (EN), El Messiri + IBM Plex Sans Arabic (AR)
+- **Tooling:** LocalWP (`https://taameer.local`), Novamira CLI, Playwright checks
 
-Playwright is not a dependency. If it is not resolvable, point `PW_MODULE` at an installed copy, e.g.
-`PW_MODULE=~/AppData/Local/npm-cache/_npx/<hash>/node_modules/playwright node scripts/screenshot.mjs`
-(serve first: `python -m http.server 5173`).
+## Project structure
+```
+index.html, *.html, ar/   Static prototype (EN + generated AR)
+assets/                   CSS, JS, images, company profile PDF
+data/                     projects, team, testimonials, site JSON
+wp-theme/                 Astra child theme
+scripts/                  Content/image pipeline and prototype QA
+scripts/wp/               WordPress build scripts (01–16) and browser checks (wp-*-check.mjs)
+docs/                     PRD, decisions, progress log, WordPress mapping, image map
+source/                   Extracted source content and screenshots
+```
 
-Requires Python 3 with `pymupdf pillow`; Node 18+ with Playwright for screenshots.
+## Run the prototype locally
+Some sections load `data/*.json` with `fetch()`, so serve the folder:
+```
+npx serve .                  # http://localhost:3000
+python -m http.server 5173   # used by the WordPress comparison checks
+```
+
+## Rebuild WordPress
+Run the build scripts in order through Novamira:
+```
+NODE_OPTIONS=--use-system-ca novamira --site taameer.local run novamira/execute-php --input @file.json --yes
+```
+`01`–`13` build the English site, `python scripts/wp/14-arabic.py` the Arabic site, and `node scripts/wp/15-seo-run.mjs <script>` applies SEO (dry run by default, `--write` to apply). Details are in `CLAUDE.md` → *Current state*.
+
+## Checks
+- Prototype: `python scripts/check-partials.py`, `python scripts/check-links.py`, `python scripts/contrast.py`, `node scripts/interaction-test.mjs`
+- WordPress: `node scripts/wp/wp-<page>-check.mjs` (one per page), `wp-ar-check.mjs`, `wp-seo-check.mjs`, `wp-editor-check.mjs`
+
+Requires Python 3 (`pymupdf`, `pillow`) and Node 18+ with Playwright.
