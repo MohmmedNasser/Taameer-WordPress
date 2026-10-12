@@ -8,19 +8,22 @@ Bilingual (English / Arabic RTL) corporate website for **Taameer Plus Contractin
 The project has two parts:
 
 1. **Static prototype** (complete): vanilla HTML/CSS/JS, no frameworks or build step. It is the visual and structural source of truth.
-2. **WordPress build**: Astra Free + Elementor Free (v3 Containers and native widgets) + a minimal Astra child theme. Every page stays editable in Elementor.
+2. **WordPress build** (complete): Astra Free + Elementor Free (v3 Containers and native widgets) + a minimal Astra child theme. Every page stays editable in Elementor.
 
 Content comes from the client's company profile PDF and the current site taameer.ae. Read `CLAUDE.md` first, then `docs/PRD.md`.
 
-## WordPress status
+## Status: completed
+All phases are complete and the site is live.
+
 | Phase | Status |
 |---|---|
+| Static prototype (EN + AR) | Done |
 | Home, About, Services | Done |
 | Projects listing + 22 project pages | Done |
 | Testimonials, Contact (WPForms Lite), 404 | Done |
 | Arabic site (Polylang Free, `/ar/`, 28 pages) | Done |
-| SEO (Yoast SEO Free: titles, descriptions, social, `GeneralContractor` schema) | In progress |
-| Final cleanup and handover | Started |
+| SEO (Yoast SEO Free: titles, descriptions, social, `GeneralContractor` schema) | Done |
+| Final cleanup and handover | Done |
 
 ## Tech stack
 - **Theme:** Astra Free + child theme `wp-theme/taameer-astra-child/` (CSS/JS for effects Elementor Free cannot do: sticky header, frame marks, split headline, image wipe, parallax, marquee, before/after)
